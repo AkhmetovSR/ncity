@@ -13,54 +13,80 @@ interface Vacancy {
 }
 
 export default function ParserButton() {
-    const [isLoading, setIsLoading] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
+    const [isParsing, setIsParsing] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [vacancies, setVacancies] = useState<Vacancy[]>([]);
-    const [parsingResult, setParsingResult] = useState<{ success: boolean; message: string; jobsCount?: number } | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    const [modalTitle, setModalTitle] = useState('');
+    const [modalMessage, setModalMessage] = useState('');
+    const [modalType, setModalType] = useState<'success' | 'error' | 'info'>('info');
 
-    const runParser = async () => {
-        setIsLoading(true);
-        setError(null);
-        setParsingResult(null);
-        setVacancies([]);
+    // Скачивание страниц
+    const downloadPages = async () => {
+        setIsDownloading(true);
+        setModalType('info');
+        setModalMessage('🔄 Скачивание страниц...');
+        setShowModal(true);
 
         try {
-            // Запускаем парсер
-            const response = await fetch('/api/parse?mode=online', {
+            const response = await fetch('/api/download', {
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
+                headers: { 'Content-Type': 'application/json' }
             });
 
             const data = await response.json();
 
             if (data.success) {
-                setParsingResult({
-                    success: true,
-                    message: 'Парсинг успешно завершен!',
-                    jobsCount: data.jobsCount
-                });
+                setModalType('success');
+                setModalMessage(`✅ ${data.message}\n📁 Папка: ${data.pagesDir}`);
+            } else {
+                setModalType('error');
+                setModalMessage(`❌ Ошибка: ${data.error || 'Неизвестная ошибка'}`);
+            }
+        } catch (err: any) {
+            setModalType('error');
+            setModalMessage(`❌ Ошибка соединения: ${err.message}`);
+        } finally {
+            setIsDownloading(false);
+        }
+    };
+
+    // Локальный парсинг
+    const parseLocal = async () => {
+        setIsParsing(true);
+        setModalType('info');
+        setModalMessage('🔄 Парсинг скачанных страниц...');
+        setVacancies([]);
+        setShowModal(true);
+
+        try {
+            // Запускаем парсер
+            const response = await fetch('/api/parse-local', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setModalType('success');
+                setModalMessage(`✅ ${data.message}\n📊 Найдено вакансий: ${data.jobsCount}`);
 
                 // Загружаем спарсенные вакансии
                 await loadVacancies();
             } else {
-                setParsingResult({
-                    success: false,
-                    message: data.error || 'Ошибка при парсинге'
-                });
+                setModalType('error');
+                setModalMessage(`❌ ${data.message || data.error}`);
             }
-
-            setShowModal(true);
         } catch (err: any) {
-            setError(err.message || 'Ошибка соединения с сервером');
-            setShowModal(true);
+            setModalType('error');
+            setModalMessage(`❌ Ошибка: ${err.message}`);
         } finally {
-            setIsLoading(false);
+            setIsParsing(false);
         }
     };
 
+    // Загрузка вакансий из результатов парсинга
     const loadVacancies = async () => {
         try {
             const response = await fetch('/api/vacancies');
@@ -76,53 +102,62 @@ export default function ParserButton() {
     const closeModal = () => {
         setShowModal(false);
         setTimeout(() => {
-            setParsingResult(null);
-            setError(null);
+            setVacancies([]);
+            setModalMessage('');
         }, 300);
     };
 
     return (
         <>
-            <button
-                className={styles.parserButton}
-                onClick={runParser}
-                disabled={isLoading}
-            >
-                {isLoading ? (
-                    <>
-                        <span className={styles.spinner}></span>
-                        Парсинг...
-                    </>
-                ) : (
-                    '🔄 Обновить вакансии'
-                )}
-            </button>
+            <div className={styles.buttonContainer}>
+                <button
+                    className={`${styles.button} ${styles.downloadButton}`}
+                    onClick={downloadPages}
+                    disabled={isDownloading || isParsing}
+                >
+                    {isDownloading ? (
+                        <>
+                            <span className={styles.spinner}></span>
+                            Скачивание...
+                        </>
+                    ) : (
+                        '📥 Скачать страницы'
+                    )}
+                </button>
+
+                <button
+                    className={`${styles.button} ${styles.parseButton}`}
+                    onClick={parseLocal}
+                    disabled={isDownloading || isParsing}
+                >
+                    {isParsing ? (
+                        <>
+                            <span className={styles.spinner}></span>
+                            Парсинг...
+                        </>
+                    ) : (
+                        '🔍 Парсить локально'
+                    )}
+                </button>
+            </div>
 
             {/* Модальное окно */}
             {showModal && (
                 <div className={styles.modalOverlay} onClick={closeModal}>
                     <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                         <div className={styles.modalHeader}>
-                            <h3>📊 Результат парсинга</h3>
+                            <h3>
+                                {modalType === 'success' && '✅ Успех'}
+                                {modalType === 'error' && '❌ Ошибка'}
+                                {modalType === 'info' && '🔄 Выполнение'}
+                            </h3>
                             <button className={styles.closeButton} onClick={closeModal}>×</button>
                         </div>
 
                         <div className={styles.modalBody}>
-                            {error && (
-                                <div className={styles.error}>
-                                    ❌ {error}
-                                </div>
-                            )}
-
-                            {parsingResult && (
-                                <div className={parsingResult.success ? styles.success : styles.error}>
-                                    {parsingResult.success ? '✅ ' : '❌ '}
-                                    {parsingResult.message}
-                                    {parsingResult.jobsCount !== undefined && (
-                                        <p>📊 Найдено вакансий: <strong>{parsingResult.jobsCount}</strong></p>
-                                    )}
-                                </div>
-                            )}
+                            <div className={styles[modalType]}>
+                                {modalMessage}
+                            </div>
 
                             {/* Список вакансий */}
                             {vacancies.length > 0 && (
@@ -170,12 +205,6 @@ export default function ParserButton() {
                                             </div>
                                         ))}
                                     </div>
-                                </div>
-                            )}
-
-                            {!error && !parsingResult && !vacancies.length && (
-                                <div className={styles.info}>
-                                    ⏳ Запускаем парсер...
                                 </div>
                             )}
                         </div>

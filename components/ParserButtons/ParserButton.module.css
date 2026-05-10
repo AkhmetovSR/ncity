@@ -1,36 +1,49 @@
-.parserButton {
+.buttonContainer {
     position: fixed;
-    bottom: 80px;
+    bottom: 20px;
     right: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    display: flex;
+    gap: 12px;
+    z-index: 1000;
+}
+
+.button {
+    padding: 10px 18px;
     border: none;
-    padding: 12px 24px;
     border-radius: 50px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     transition: all 0.3s ease;
-    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.parserButton:hover:not(:disabled) {
+.button:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
-.parserButton:disabled {
+.button:disabled {
     opacity: 0.7;
     cursor: not-allowed;
 }
 
+.downloadButton {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+}
+
+.parseButton {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+}
+
 .spinner {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border: 2px solid rgba(255,255,255,0.3);
     border-top-color: white;
     border-radius: 50%;
@@ -61,7 +74,7 @@
     background: white;
     border-radius: 20px;
     width: 90%;
-    max-width: 600px;
+    max-width: 700px;
     max-height: 80vh;
     display: flex;
     flex-direction: column;
@@ -80,7 +93,6 @@
 .modalHeader h3 {
     margin: 0;
     font-size: 20px;
-    color: #333;
 }
 
 .closeButton {
@@ -90,7 +102,6 @@
     cursor: pointer;
     color: #999;
     transition: color 0.2s;
-    line-height: 1;
 }
 
 .closeButton:hover {
@@ -118,11 +129,6 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
-    transition: background 0.2s;
-}
-
-.closeModalButton:hover {
-    background: #5a67d8;
 }
 
 .success {
@@ -132,6 +138,7 @@
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 20px;
+    white-space: pre-line;
 }
 
 .error {
@@ -141,6 +148,7 @@
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 20px;
+    white-space: pre-line;
 }
 
 .info {
@@ -152,95 +160,6 @@
     text-align: center;
 }
 
-.vacanciesList {
-    margin-top: 20px;
-}
-
-.vacanciesList h4 {
-    margin: 0 0 12px 0;
-    color: #333;
-    font-size: 16px;
-}
-
-.vacanciesScroll {
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.vacancyItem {
-    padding: 12px;
-    border-bottom: 1px solid #f0f0f0;
-    transition: background 0.2s;
-}
-
-.vacancyItem:hover {
-    background: #f9f9f9;
-}
-
-.vacancyProfession {
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 6px;
-    font-size: 14px;
-}
-
-.vacancyDetails {
-    display: flex;
-    gap: 15px;
-    font-size: 12px;
-    color: #666;
-}
-
-.moreInfo {
-    padding: 12px;
-    text-align: center;
-    color: #999;
-    font-size: 13px;
-    font-style: italic;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateY(30px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-/* Для мобильных устройств */
-@media (max-width: 768px) {
-    .parserButton {
-        bottom: 20px;
-        right: 20px;
-        padding: 10px 18px;
-        font-size: 14px;
-    }
-
-    .modal {
-        width: 95%;
-        max-height: 90vh;
-    }
-
-    .modalBody {
-        padding: 16px;
-    }
-}
-
-
-/* Существующие стили остаются, добавляем новые */
-
 .vacanciesSection {
     margin-top: 20px;
 }
@@ -248,12 +167,10 @@
 .vacanciesSection h4 {
     margin: 0 0 12px 0;
     color: #333;
-    font-size: 16px;
-    font-weight: 600;
 }
 
 .vacanciesList {
-    max-height: 500px;
+    max-height: 400px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -265,13 +182,6 @@
     border-radius: 12px;
     padding: 12px;
     border: 1px solid #e9ecef;
-    transition: all 0.2s ease;
-}
-
-.vacancyCard:hover {
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transform: translateY(-1px);
 }
 
 .vacancyHeader {
@@ -295,15 +205,15 @@
 .vacancyProfession {
     font-weight: 600;
     color: #333;
-    font-size: 15px;
+    font-size: 14px;
     flex: 1;
 }
 
 .vacancyDetails {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 8px;
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .detailItem {
@@ -315,25 +225,38 @@
 
 .detailIcon {
     font-size: 14px;
-    min-width: 20px;
 }
 
-/* Адаптация для мобильных */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 @media (max-width: 768px) {
+    .buttonContainer {
+        bottom: 16px;
+        right: 16px;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .button {
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+
     .vacancyDetails {
         grid-template-columns: 1fr;
-        gap: 6px;
-    }
-
-    .vacancyCard {
-        padding: 10px;
-    }
-
-    .vacancyProfession {
-        font-size: 14px;
-    }
-
-    .detailItem {
-        font-size: 12px;
     }
 }

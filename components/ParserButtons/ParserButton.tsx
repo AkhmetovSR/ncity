@@ -15,15 +15,18 @@ interface Vacancy {
 export default function ParserButton() {
     const [isLoading, setIsLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [result, setResult] = useState<{ success: boolean; message: string; jobsCount?: number; vacancies?: Vacancy[] } | null>(null);
+    const [vacancies, setVacancies] = useState<Vacancy[]>([]);
+    const [parsingResult, setParsingResult] = useState<{ success: boolean; message: string; jobsCount?: number } | null>(null);
     const [error, setError] = useState<string | null>(null);
 
     const runParser = async () => {
         setIsLoading(true);
         setError(null);
-        setResult(null);
+        setParsingResult(null);
+        setVacancies([]);
 
         try {
+            // Запускаем парсер
             const response = await fetch('/api/parse?mode=online', {
                 method: 'GET',
                 headers: {
@@ -34,16 +37,16 @@ export default function ParserButton() {
             const data = await response.json();
 
             if (data.success) {
-                setResult({
+                setParsingResult({
                     success: true,
                     message: 'Парсинг успешно завершен!',
                     jobsCount: data.jobsCount
                 });
 
-                // После успешного парсинга загружаем вакансии
+                // Загружаем спарсенные вакансии
                 await loadVacancies();
             } else {
-                setResult({
+                setParsingResult({
                     success: false,
                     message: data.error || 'Ошибка при парсинге'
                 });
@@ -63,7 +66,7 @@ export default function ParserButton() {
             const response = await fetch('/api/vacancies');
             const data = await response.json();
             if (Array.isArray(data) && data.length > 0) {
-                setResult(prev => prev ? { ...prev, vacancies: data } : null);
+                setVacancies(data);
             }
         } catch (err) {
             console.error('Ошибка загрузки вакансий:', err);
@@ -72,9 +75,8 @@ export default function ParserButton() {
 
     const closeModal = () => {
         setShowModal(false);
-        // Очищаем результат через 3 секунды после закрытия
         setTimeout(() => {
-            setResult(null);
+            setParsingResult(null);
             setError(null);
         }, 300);
     };
@@ -101,7 +103,7 @@ export default function ParserButton() {
                 <div className={styles.modalOverlay} onClick={closeModal}>
                     <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                         <div className={styles.modalHeader}>
-                            <h3>Результат парсинга</h3>
+                            <h3>📊 Результат парсинга</h3>
                             <button className={styles.closeButton} onClick={closeModal}>×</button>
                         </div>
 
@@ -112,46 +114,66 @@ export default function ParserButton() {
                                 </div>
                             )}
 
-                            {result && (
-                                <>
-                                    {result.success ? (
-                                        <div className={styles.success}>
-                                            ✅ {result.message}
-                                            {result.jobsCount !== undefined && (
-                                                <p>📊 Найдено вакансий: <strong>{result.jobsCount}</strong></p>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <div className={styles.error}>
-                                            ❌ {result.message}
-                                        </div>
+                            {parsingResult && (
+                                <div className={parsingResult.success ? styles.success : styles.error}>
+                                    {parsingResult.success ? '✅ ' : '❌ '}
+                                    {parsingResult.message}
+                                    {parsingResult.jobsCount !== undefined && (
+                                        <p>📊 Найдено вакансий: <strong>{parsingResult.jobsCount}</strong></p>
                                     )}
-
-                                    {result.vacancies && result.vacancies.length > 0 && (
-                                        <div className={styles.vacanciesList}>
-                                            <h4>📋 Последние вакансии:</h4>
-                                            <div className={styles.vacanciesScroll}>
-                                                {result.vacancies.slice(0, 10).map((vacancy, idx) => (
-                                                    <div key={idx} className={styles.vacancyItem}>
-                                                        <div className={styles.vacancyProfession}>{vacancy.profession}</div>
-                                                        <div className={styles.vacancyDetails}>
-                                                            <span>💰 {vacancy.salary || 'не указана'}</span>
-                                                            <span>📍 {vacancy.district}</span>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                                {result.vacancies.length > 10 && (
-                                                    <div className={styles.moreInfo}>
-                                                        ...и еще {result.vacancies.length - 10} вакансий
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
-                                </>
+                                </div>
                             )}
 
-                            {!error && !result && (
+                            {/* Список вакансий */}
+                            {vacancies.length > 0 && (
+                                <div className={styles.vacanciesSection}>
+                                    <h4>📋 Спарсенные вакансии ({vacancies.length})</h4>
+                                    <div className={styles.vacanciesList}>
+                                        {vacancies.map((vacancy, idx) => (
+                                            <div key={idx} className={styles.vacancyCard}>
+                                                <div className={styles.vacancyHeader}>
+                                                    <span className={styles.vacancyNumber}>#{idx + 1}</span>
+                                                    <span className={styles.vacancyProfession}>{vacancy.profession}</span>
+                                                </div>
+                                                <div className={styles.vacancyDetails}>
+                                                    {vacancy.salary && (
+                                                        <div className={styles.detailItem}>
+                                                            <span className={styles.detailIcon}>💰</span>
+                                                            <span>{vacancy.salary}</span>
+                                                        </div>
+                                                    )}
+                                                    {vacancy.district && (
+                                                        <div className={styles.detailItem}>
+                                                            <span className={styles.detailIcon}>📍</span>
+                                                            <span>{vacancy.district}</span>
+                                                        </div>
+                                                    )}
+                                                    {vacancy.organization && (
+                                                        <div className={styles.detailItem}>
+                                                            <span className={styles.detailIcon}>🏢</span>
+                                                            <span>{vacancy.organization}</span>
+                                                        </div>
+                                                    )}
+                                                    {vacancy.date && (
+                                                        <div className={styles.detailItem}>
+                                                            <span className={styles.detailIcon}>📅</span>
+                                                            <span>{vacancy.date}</span>
+                                                        </div>
+                                                    )}
+                                                    {vacancy.schedule && (
+                                                        <div className={styles.detailItem}>
+                                                            <span className={styles.detailIcon}>⏰</span>
+                                                            <span>{vacancy.schedule}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {!error && !parsingResult && !vacancies.length && (
                                 <div className={styles.info}>
                                     ⏳ Запускаем парсер...
                                 </div>

@@ -1,6 +1,6 @@
 import {Geist, Geist_Mono} from "next/font/google";
 import "@/app/globals.css";
-import Menu from "../components/Menu/Menu.tsx";
+import Menu from "../components/Menu/Menu";
 // import Providers from '@/components/Providers/Providers';
 // import main from "@/components/Main/Home/Menu.module.css";
 // import Menu from "@/components/Main/Menu/Menu";

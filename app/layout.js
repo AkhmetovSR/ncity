@@ -5,6 +5,7 @@ import Menu from "../components/Menu/Menu.tsx";
 // import main from "@/components/Main/Home/Menu.module.css";
 // import Menu from "@/components/Main/Menu/Menu";
 import s from "./layout.module.css";
+import ParserButton from "../components/ParserButtons/ParserButton" // 👈 Импорт кнопки
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -31,14 +32,16 @@ export default function RootLayout({children}) {
         <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {/*<Providers>*/}
             <div className={s.Main}>
-                <div >
+                <div className={s.Content}>
                     {children}
                 </div>
-                <div >
+                <div className={s.Menu}>
                     <Menu/>
                 </div>
-                <div >Для просмотра, пожалуйста <br/>переверните устройство.</div>
+                <div className={s.Blocked}>Для просмотра, пожалуйста <br/>переверните устройство.</div>
             </div>
+        {/* 👇 Кнопка парсера */}
+        <ParserButton />
         {/*</Providers>*/}
         </body>
         </html>

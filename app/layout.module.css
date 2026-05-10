@@ -4,3 +4,19 @@
     height: 100%;
     border: 2px solid red;
 }
+.Content{
+    display: grid;
+    height: 80%;
+    width: 100%;
+    border: 2px solid blue;
+}
+.Menu{
+    position: absolute;
+    width: 100%;
+    border: 2px solid yellow;
+    /*height: 5%;*/
+    bottom: 5%;
+}
+.Blocked{
+
+}

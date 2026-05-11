@@ -5,7 +5,7 @@ import Menu from "../components/Menu/Menu";
 // import main from "@/components/Main/Home/Menu.module.css";
 // import Menu from "@/components/Main/Menu/Menu";
 import s from "./layout.module.css";
-import ParserButton from "../components/ParserButtons/ParserButton" // 👈 Импорт кнопки
+import ParserButton from "@/components/Parser/ParserButton" // 👈 Импорт кнопки
 
 const geistSans = Geist({
     variable: "--font-geist-sans",

@@ -1,29 +1,53 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
-import iconv from 'iconv-lite';
+import { config } from '@/lib/config';
 
 export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
-const BASE_URL = 'https://ir-center.ru';
-const VACANCY_PATH = '/sznregion/dsktop/czninfo.asp';
-const BASE_PARAMS = 'rn=%E3%20%CD%FF%E3%E0%ED%FC&rg=86&Profession=&sort=';
-const MAX_PAGES = 10;
-const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
-
 async function randomDelay() {
-    const min = 1500;
-    const max = 3500;
+    const min = config.MIN_DELAY_MS;
+    const max = config.MAX_DELAY_MS;
     const delay = Math.floor(Math.random() * (max - min + 1) + min);
     console.log(`   ⏳ Пауза ${Math.round(delay / 1000)} сек...`);
     await new Promise(resolve => setTimeout(resolve, delay));
 }
 
+// Функция для удаления старых файлов
+async function cleanOldPages(pagesDir: string): Promise<void> {
+    try {
+        const files = await fs.readdir(pagesDir);
+        const maxAgeDays = config.PAGES_MAX_AGE_DAYS || 3;
+        const maxAgeMs = maxAgeDays * 24 * 60 * 60 * 1000;
+        const cutoffDate = Date.now() - maxAgeMs;
+
+        let deletedCount = 0;
+
+        for (const file of files) {
+            const filePath = path.join(pagesDir, file);
+            const stats = await fs.stat(filePath);
+
+            if (stats.mtimeMs < cutoffDate) {
+                await fs.unlink(filePath);
+                console.log(`   🗑️ Удален старый файл: ${file} (${new Date(stats.mtime).toLocaleDateString()})`);
+                deletedCount++;
+            }
+        }
+
+        if (deletedCount > 0) {
+            console.log(`   ✅ Удалено старых файлов: ${deletedCount}`);
+        }
+
+    } catch (error) {
+        console.log(`   ⚠️ Ошибка при очистке: ${error}`);
+    }
+}
+
 export async function GET(request: NextRequest) {
     try {
         const searchParams = request.nextUrl.searchParams;
-        const mode = searchParams.get('mode') || 'local'; // local, vercel, online
+        const mode = searchParams.get('mode') || 'local';
 
         let pagesDir: string;
 
@@ -52,19 +76,23 @@ export async function GET(request: NextRequest) {
         // Создаем папку
         await fs.mkdir(pagesDir, { recursive: true });
 
+        // Очищаем старые файлы перед скачиванием
+        console.log('🧹 Очистка старых файлов (старше 3 дней)...');
+        await cleanOldPages(pagesDir);
+
         console.log('📥 Начинаем скачивание страниц...\n');
 
         const downloadedPages = [];
 
-        for (let page = 1; page <= MAX_PAGES; page++) {
-            const url = `${BASE_URL}${VACANCY_PATH}?${BASE_PARAMS}&page=${page}`;
+        for (let page = 1; page <= config.MAX_PAGES; page++) {
+            const url = `${config.BASE_URL}${config.VACANCY_PATH}?${config.BASE_PARAMS}&page=${page}`;
             const filepath = path.join(pagesDir, `page_${page}_raw.html`);
 
             try {
                 console.log(`📄 Скачиваю страницу ${page}...`);
 
                 const response = await fetch(url, {
-                    headers: { 'User-Agent': USER_AGENT }
+                    headers: { 'User-Agent': config.USER_AGENT }
                 });
 
                 if (!response.ok) {
@@ -78,7 +106,7 @@ export async function GET(request: NextRequest) {
                 console.log(`   ✅ Страница ${page} сохранена (${sizeKB} KB)`);
                 downloadedPages.push(page);
 
-                if (page < MAX_PAGES) {
+                if (page < config.MAX_PAGES) {
                     await randomDelay();
                 }
 
@@ -97,7 +125,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({
             success: true,
             mode: mode,
-            message: `Успешно скачано ${MAX_PAGES} страниц`,
+            message: `Успешно скачано ${config.MAX_PAGES} страниц`,
             pagesDir: pagesDir,
             downloadedPages: downloadedPages
         });

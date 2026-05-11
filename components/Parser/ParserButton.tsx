@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import styles from './ParserButton.module.css';
+import VacancyEditor from "@/components/Parser/VacancyEditor";
 
 interface Vacancy {
     page: number;
@@ -15,6 +16,9 @@ interface Vacancy {
 type Mode = 'local' | 'vercel' | 'online';
 
 export default function ParserButton() {
+    // Добавьте в компонент
+    const [showEditor, setShowEditor] = useState(false);
+    const [rawVacancies, setRawVacancies] = useState<Vacancy[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [showDownloadModal, setShowDownloadModal] = useState(false);
     const [showParseModal, setShowParseModal] = useState(false);
@@ -59,38 +63,28 @@ export default function ParserButton() {
             setIsLoading(false);
         }
     };
-    // Парсинг вакансий
-    const parseVacancies = async (mode: Mode) => {
-        setShowParseModal(false);
+    // Функция парсинга с редактированием
+    const parseWithEdit = async (mode: Mode) => {
         setIsLoading(true);
-        setResultType('info');
-        setResultMessage(`🔄 Парсинг вакансий (режим: ${getModeName(mode)})...`);
-        setVacancies([]);
-        setShowResultModal(true);
+        setShowParseModal(false);
 
         try {
-            const response = await fetch(`/api/parse?mode=${mode}`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
-            });
-
+            const response = await fetch(`/api/parse?mode=${mode}&action=edit`);
             const data = await response.json();
 
-            if (data.success) {
-                setResultType('success');
-                setResultMessage(`✅ ${data.message}\n📊 Найдено вакансий: ${data.jobsCount}`);
-
-                // Загружаем вакансии только если парсинг успешен
-                if (data.jobsCount > 0) {
-                    await loadVacancies();
-                }
+            if (data.success && data.vacancies) {
+                setRawVacancies(data.vacancies);
+                setShowEditor(true);
             } else {
+                // Показать ошибку
                 setResultType('error');
-                setResultMessage(`❌ ${data.error || data.message || 'Ошибка парсинга'}`);
+                setResultMessage(data.error || 'Ошибка парсинга');
+                setShowResultModal(true);
             }
         } catch (err: any) {
             setResultType('error');
-            setResultMessage(`❌ Ошибка: ${err.message}`);
+            setResultMessage(`Ошибка: ${err.message}`);
+            setShowResultModal(true);
         } finally {
             setIsLoading(false);
         }
@@ -106,6 +100,37 @@ export default function ParserButton() {
             }
         } catch (err) {
             console.error('Ошибка загрузки вакансий:', err);
+        }
+    };
+    // Функция сохранения после редактирования
+    const saveEditedVacancies = async (editedVacancies: Vacancy[]) => {
+        setShowEditor(false);
+        setIsLoading(true);
+
+        try {
+            const response = await fetch('/api/parse/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ vacancies: editedVacancies })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setResultType('success');
+                setResultMessage(`✅ Сохранено ${editedVacancies.length} вакансий`);
+                await loadVacancies();
+            } else {
+                setResultType('error');
+                setResultMessage(data.error || 'Ошибка сохранения');
+            }
+            setShowResultModal(true);
+        } catch (err: any) {
+            setResultType('error');
+            setResultMessage(`Ошибка: ${err.message}`);
+            setShowResultModal(true);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -182,7 +207,7 @@ export default function ParserButton() {
                 <div className={styles.modalBody}>
                     <p className={styles.modalDescription}>Выберите источник для парсинга:</p>
                     <div className={styles.modeButtons}>
-                        <button className={styles.modeButton} onClick={() => parseVacancies('local')}>
+                        <button className={styles.modeButton} onClick={() => parseWithEdit('local')}>
                             <span className={styles.modeIcon}>💻</span>
                             <div>
                                 <strong>Локальный режим</strong>
@@ -190,7 +215,7 @@ export default function ParserButton() {
                             </div>
                         </button>
 
-                        <button className={styles.modeButton} onClick={() => parseVacancies('vercel')}>
+                        <button className={styles.modeButton} onClick={() => parseWithEdit('vercel')}>
                             <span className={styles.modeIcon}>☁️</span>
                             <div>
                                 <strong>Vercel режим</strong>
@@ -198,7 +223,7 @@ export default function ParserButton() {
                             </div>
                         </button>
 
-                        <button className={styles.modeButton} onClick={() => parseVacancies('online')}>
+                        <button className={styles.modeButton} onClick={() => parseWithEdit('online')}>
                             <span className={styles.modeIcon}>🌐</span>
                             <div>
                                 <strong>Онлайн режим</strong>
@@ -220,19 +245,10 @@ export default function ParserButton() {
     return (
         <>
             <div className={styles.buttonContainer}>
-                <button
-                    className={`${styles.button} ${styles.downloadButton}`}
-                    onClick={() => setShowDownloadModal(true)}
-                    //disabled={isLoading}
-                >
+                <button className={`${styles.button} ${styles.downloadButton}`} onClick={() => setShowDownloadModal(true)}>
                     📥 Скачать страницы
                 </button>
-
-                <button
-                    className={`${styles.button} ${styles.parseButton}`}
-                    onClick={() => setShowParseModal(true)}
-                    //disabled={isLoading}
-                >
+                <button className={`${styles.button} ${styles.parseButton}`} onClick={() => setShowParseModal(true)}>
                     🔍 Парсить вакансии
                 </button>
             </div>
@@ -241,7 +257,16 @@ export default function ParserButton() {
             {showDownloadModal && <DownloadModeModal />}
             {showParseModal && <ParseModeModal />}
 
-            {/* Модальное окно результатов */}
+            {/* ✅ Редактор — ОТДЕЛЬНОЕ модальное окно (не внутри resultModal) */}
+            {showEditor && (
+                <VacancyEditor
+                    vacancies={rawVacancies}
+                    onSave={saveEditedVacancies}
+                    onCancel={() => setShowEditor(false)}
+                />
+            )}
+
+            {/* Модальное окно результатов — ТОЛЬКО для сообщений */}
             {showResultModal && (
                 <div className={styles.modalOverlay} onClick={closeResultModal}>
                     <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -253,64 +278,13 @@ export default function ParserButton() {
                             </h3>
                             <button className={styles.closeButton} onClick={closeResultModal}>×</button>
                         </div>
-
                         <div className={styles.modalBody}>
                             <div className={styles[resultType]}>
                                 {resultMessage.split('\n').map((line, i) => (
                                     <div key={i}>{line}</div>
                                 ))}
                             </div>
-
-                            {/* Список вакансий (только при успешном парсинге) */}
-                            {vacancies.length > 0 && (
-                                <div className={styles.vacanciesSection}>
-                                    <h4>📋 Спарсенные вакансии ({vacancies.length})</h4>
-                                    <div className={styles.vacanciesList}>
-                                        {vacancies.map((vacancy, idx) => (
-                                            <div key={idx} className={styles.vacancyCard}>
-                                                <div className={styles.vacancyHeader}>
-                                                    <span className={styles.vacancyNumber}>#{idx + 1}</span>
-                                                    <span className={styles.vacancyProfession}>{vacancy.profession}</span>
-                                                </div>
-                                                <div className={styles.vacancyDetails}>
-                                                    {vacancy.salary && (
-                                                        <div className={styles.detailItem}>
-                                                            <span className={styles.detailIcon}>💰</span>
-                                                            <span>{vacancy.salary}</span>
-                                                        </div>
-                                                    )}
-                                                    {vacancy.district && (
-                                                        <div className={styles.detailItem}>
-                                                            <span className={styles.detailIcon}>📍</span>
-                                                            <span>{vacancy.district}</span>
-                                                        </div>
-                                                    )}
-                                                    {vacancy.organization && (
-                                                        <div className={styles.detailItem}>
-                                                            <span className={styles.detailIcon}>🏢</span>
-                                                            <span>{vacancy.organization}</span>
-                                                        </div>
-                                                    )}
-                                                    {vacancy.date && (
-                                                        <div className={styles.detailItem}>
-                                                            <span className={styles.detailIcon}>📅</span>
-                                                            <span>{vacancy.date}</span>
-                                                        </div>
-                                                    )}
-                                                    {vacancy.schedule && (
-                                                        <div className={styles.detailItem}>
-                                                            <span className={styles.detailIcon}>⏰</span>
-                                                            <span>{vacancy.schedule}</span>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
                         </div>
-
                         <div className={styles.modalFooter}>
                             <button className={styles.closeModalButton} onClick={closeResultModal}>
                                 Закрыть

@@ -1,102 +1,68 @@
-import { VacancyApiItem } from './fetcher';
-
-export interface Vacancy {
-    page: number;
-    profession: string;
-    salary: string;
-    district: string;
-    organization: string;
-    date: string;
-    schedule: string;
-    busyType: string;
-}
+import * as cheerio from 'cheerio';
+import { Vacancy } from '@/types/vacancy';
 
 export class TableParser {
-    private pageNum: number;
+    private readonly $: cheerio.CheerioAPI;
+    private readonly pageNum: number;
 
-    constructor(pageNum: number) {
+    constructor($: cheerio.CheerioAPI, pageNum: number) {
+        this.$ = $;
         this.pageNum = pageNum;
     }
 
-    parseVacancies(apiItems: VacancyApiItem[]): Vacancy[] {
-        if (!apiItems || apiItems.length === 0) {
-            return [];
-        }
+    private findTable(): cheerio.Cheerio<any> | null {
+        const $ = this.$;
+        console.log(`   🔍 Поиск таблицы на странице ${this.pageNum}...`);
 
-        const vacancies: Vacancy[] = [];
+        const table = $('table[border="7"][bordercolor="#96B1C4"][cellpadding="5"][cellspacing="2"][bgcolor="#FFFFFF"].text');
+        if (table.length) return table.first();
 
-        for (const item of apiItems) {
-            // Формируем строку зарплаты
-            let salaryText = this.formatSalaryText(item.salaryMin, item.salaryMax);
+        const altTable = $('table[border="7"][bordercolor="#96B1C4"].text');
+        if (altTable.length) return altTable.first();
 
-            // Форматируем дату
-            const dateStr = this.formatDate(item.publishDate);
+        return null;
+    }
 
-            // Определяем график работы
-            const schedule = this.formatSchedule(item.scheduleType);
+    parseVacancies(): Vacancy[] {
+        const $ = this.$;
+        const table = this.findTable();
+        if (!table) return [];
 
-            // Определяем тип занятости
-            const busyType = this.formatBusyType(item.busyType);
+        const jobs: Vacancy[] = [];
+        let headerRowIndex = -1;
 
-            if (item.profession && item.profession.length > 2) {
-                vacancies.push({
+        table.find('tr').each((i, row) => {
+            if ($(row).find('th').length) {
+                headerRowIndex = i;
+                return false;
+            }
+        });
+
+        if (headerRowIndex === -1) return [];
+
+        table.find('tr').each((i, row) => {
+            if (i === headerRowIndex) return;
+
+            const cols = $(row).find('td');
+            if (cols.length < 6) return;
+
+            const professionLink = $(cols[0]).find('a');
+            const profession = professionLink.length
+                ? professionLink.text().trim()
+                : $(cols[0]).text().trim();
+
+            if (profession && profession.length > 2) {
+                jobs.push({
                     page: this.pageNum,
-                    profession: item.profession,
-                    salary: salaryText,
-                    district: item.regionName,
-                    organization: item.organization,
-                    date: dateStr,
-                    schedule: schedule,
-                    busyType: busyType
+                    profession: profession,
+                    salary: $(cols[1]).text().trim(),
+                    district: $(cols[2]).text().trim(),
+                    organization: $(cols[3]).text().trim(),
+                    date: $(cols[4]).text().trim(),
+                    schedule: $(cols[5]).text().trim()
                 });
             }
-        }
-
-        console.log(`   📊 На странице ${this.pageNum} найдено ${vacancies.length} вакансий`);
-        return vacancies;
-    }
-
-    private formatSalaryText(min: number, max: number): string {
-        if (min && max && min === max) {
-            return `${min.toLocaleString('ru-RU')} руб.`;
-        } else if (min && max) {
-            return `${min.toLocaleString('ru-RU')} - ${max.toLocaleString('ru-RU')} руб.`;
-        } else if (min && !max) {
-            return `от ${min.toLocaleString('ru-RU')} руб.`;
-        } else if (max && !min) {
-            return `до ${max.toLocaleString('ru-RU')} руб.`;
-        } else {
-            return 'не указана';
-        }
-    }
-
-    private formatDate(timestamp: number): string {
-        if (!timestamp) return 'не указана';
-        const date = new Date(timestamp);
-        return date.toLocaleDateString('ru-RU');
-    }
-
-    private formatSchedule(scheduleType: string): string {
-        const scheduleMap: Record<string, string> = {
-            'FULL': 'Полный день',
-            'PART_TIME': 'Неполный день',
-            'TURN': 'Сменный график',
-            'WATCH': 'Вахтовый метод',
-            'FLOAT': 'Гибкий график',
-            'IRREGULAR': 'Ненормированный день'
-        };
-        return scheduleMap[scheduleType] || scheduleType || 'не указан';
-    }
-
-    private formatBusyType(busyType: string): string {
-        const busyMap: Record<string, string> = {
-            'FULL': 'Полная занятость',
-            'PART_TIME': 'Частичная занятость',
-            'PROJECT': 'Проектная работа',
-            'SEASONAL': 'Сезонная работа',
-            'REMOTE': 'Удаленная работа',
-            'PROBATION': 'Стажировка'
-        };
-        return busyMap[busyType] || busyType || 'не указан';
+        });
+        return jobs;
     }
 }

@@ -1,56 +1,105 @@
-import { TrudvsemParser } from './sources/trudvsem';
-import { IrCenterParser } from './sources/ir-center';
+import * as cheerio from 'cheerio';
+import { Fetcher } from './fetcher';
+import { TableParser } from './table-parser';
 import { Storage } from './storage';
+import { config } from '@/lib/config';
 import { Vacancy } from '@/types/vacancy';
 
 export class JobParser {
-    private storage: Storage;
+    private readonly mode: string;
+    private readonly fetcher: Fetcher;
+    private readonly storage: Storage;
     public allJobs: Vacancy[] = [];
+    private currentPage: number = 1;
 
-    constructor() {
-        this.storage = new Storage();
+    constructor(mode: string = 'online') {
+        this.mode = mode;
+        this.fetcher = new Fetcher(mode);
+        this.storage = new Storage(mode);
+    }
+
+    private sleep(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    private async randomDelay(): Promise<void> {
+        const min = config.MIN_DELAY_MS;
+        const max = config.MAX_DELAY_MS;
+        const delay = Math.floor(Math.random() * (max - min + 1) + min);
+        console.log(`   ⏳ Пауза ${Math.round(delay / 1000)} сек...`);
+        await this.sleep(delay);
     }
 
     async parseJobs(): Promise<{ success: boolean; jobsCount: number; message?: string }> {
-        console.log(`🚀 Запуск парсинга с двух источников\n`);
-        console.log(`═`.repeat(50));
+        console.log(`🚀 Запуск парсера (${this.mode === 'local' ? 'локально' : 'онлайн'})\n`);
 
-        // 1. Парсим trudvsem.ru
-        console.log(`\n📌 ИСТОЧНИК 1: trudvsem.ru`);
-        console.log(`─`.repeat(40));
+        while (this.currentPage <= config.MAX_PAGES) {
+            console.log(`\n📄 Страница ${this.currentPage}`);
 
-        const trudvsemParser = new TrudvsemParser();
-        const trudvsemJobs = await trudvsemParser.parseJobs();
-        this.allJobs.push(...trudvsemJobs);
+            const html = await this.fetcher.fetchPage(this.currentPage);
+            if (!html) {
+                console.log(`🏁 Страница ${this.currentPage} не найдена`);
+                break;
+            }
 
-        console.log(`\n📊 trudvsem.ru: ${trudvsemJobs.length} вакансий`);
+            const $ = cheerio.load(html);
+            const tableParser = new TableParser($, this.currentPage);
+            const jobs = tableParser.parseVacancies();
 
-        // 2. Парсим ir-center.ru
-        console.log(`\n📌 ИСТОЧНИК 2: ir-center.ru`);
-        console.log(`─`.repeat(40));
+            if (jobs.length === 0 && this.currentPage === 1) {
+                console.log('❌ На первой странице нет вакансий');
+                break;
+            }
 
-        const irCenterParser = new IrCenterParser();
-        const irCenterJobs = await irCenterParser.parseJobs();
-        this.allJobs.push(...irCenterJobs);
+            if (jobs.length > 0) {
+                this.allJobs.push(...jobs);
+                console.log(`   ✅ Добавлено ${jobs.length} вакансий (всего: ${this.allJobs.length})`);
+            } else {
+                console.log(`   📭 Нет вакансий, завершаем`);
+                break;
+            }
 
-        console.log(`\n📊 ir-center.ru: ${irCenterJobs.length} вакансий`);
+            this.currentPage++;
+            if (this.mode === 'online' && this.currentPage <= config.MAX_PAGES) {
+                await this.randomDelay();
+            }
+        }
 
-        // 3. Итоги
-        console.log(`\n${`═`.repeat(50)}`);
-        console.log(`\n📊 ОБЩИЙ РЕЗУЛЬТАТ:`);
-        console.log(`   trudvsem.ru: ${trudvsemJobs.length} вакансий`);
-        console.log(`   ir-center.ru: ${irCenterJobs.length} вакансий`);
-        console.log(`   ВСЕГО: ${this.allJobs.length} вакансий`);
-
-        if (this.allJobs.length > 0) {
+        if (this.allJobs.length) {
             await this.storage.saveResults(this.allJobs);
-            return {
-                success: true,
-                jobsCount: this.allJobs.length,
-                message: `Собрано ${this.allJobs.length} вакансий с двух сайтов`
-            };
+            this.showStats();
+            return { success: true, jobsCount: this.allJobs.length };
         }
 
         return { success: false, jobsCount: 0, message: 'Вакансии не найдены' };
+    }
+
+    async parseJobsRaw(): Promise<Vacancy[]> {
+        this.allJobs = [];
+        this.currentPage = 1;
+
+        while (this.currentPage <= config.MAX_PAGES) {
+            const html = await this.fetcher.fetchPage(this.currentPage);
+            if (!html) break;
+
+            const $ = cheerio.load(html);
+            const tableParser = new TableParser($, this.currentPage);
+            const jobs = tableParser.parseVacancies();
+            this.allJobs.push(...jobs);
+            this.currentPage++;
+        }
+
+        return this.allJobs;
+    }
+
+    async saveVacancies(vacancies: Vacancy[]): Promise<void> {
+        await this.storage.saveResults(vacancies);
+        this.allJobs = vacancies;
+        this.showStats();
+    }
+
+    private showStats(): void {
+        const unique = new Set(this.allJobs.map(j => j.profession));
+        console.log(`\n📊 ИТОГО: страниц ${this.currentPage - 1}, вакансий ${this.allJobs.length}, уникальных профессий ${unique.size}`);
     }
 }

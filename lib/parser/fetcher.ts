@@ -1,164 +1,51 @@
+import fs from 'fs/promises';
+import path from 'path';
+import iconv from 'iconv-lite';
 import { config } from '@/lib/config';
 
-export interface VacancyApiItem {
-    id: string;
-    profession: string;
-    companyCode: string;
-    organization: string;
-    salaryMin: number;
-    salaryMax: number;
-    regionName: string;
-    publishDate: number;
-    scheduleType: string;
-    busyType: string;
-}
-
-export interface VacancyDetails {
-    id: string;
-    profession: string;
-    organization: string;
-    companyCode: string;
-    salaryMin: number;
-    salaryMax: number;
-    description: string;
-    requirements: string;
-    address: string;
-    phone: string;
-    email: string;
-    website: string;
-    experience: number;
-    education: string;
-    scheduleType: string;
-    busyType: string;
-    publishDate: number;
-    regionName: string;
-    companyName: string;
-    companyInn: string;
-    companyOgrn: string;
-    contactPerson: string;
-    workPlaces: number;
-    qualification: string;
-}
-
 export class Fetcher {
-    // Получение списка вакансий (краткая информация)
-    async fetchVacanciesList(pageNum: number): Promise<VacancyApiItem[]> {
-        const filter = {
-            title: [config.TITLE],
-            regionCode: [config.REGION_CODE]
-        };
+    private readonly mode: string;
 
-        const url = `${config.BASE_URL}${config.API_PATH}?filter=${encodeURIComponent(JSON.stringify(filter))}&orderColumn=RELEVANCE_DESC&page=${pageNum}&pageSize=${config.PAGE_SIZE}`;
-
-        console.log(`   🌐 Получение списка вакансий (страница ${pageNum})...`);
-
-        try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: config.HEADERS
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            if (!data?.result?.data) {
-                return [];
-            }
-
-            return this.parseApiResponse(data);
-
-        } catch (error: any) {
-            console.log(`   ❌ Ошибка: ${error.message}`);
-            return [];
-        }
+    constructor(mode: string = 'local') {
+        this.mode = mode;
     }
 
-    // Получение детальной информации о вакансии (ПРАВИЛЬНЫЙ URL!)
-    async fetchVacancyDetails(vacancyId: string, companyCode: string): Promise<VacancyDetails | null> {
-        const url = `${config.BASE_URL}/iblocks/job_card?companyId=${companyCode}&vacancyId=${vacancyId}`;
+    async fetchPage(pageNum: number): Promise<string | null> {
+        return this.mode === 'local'
+            ? this.fetchLocal(pageNum)
+            : this.fetchOnline(pageNum);
+    }
 
-        console.log(`   🔍 Получение деталей: ${vacancyId.substring(0, 8)}...`);
-
+    private async fetchLocal(pageNum: number): Promise<string | null> {
+        const filepath = path.join(config.PAGES_DIR, `page_${pageNum}_raw.html`);
+        // console.log(`   📂 Ищу файл: ${filepath}`);
         try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: config.HEADERS
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            // Проверяем структуру ответа
-            if (!data?.data?.vacancy) {
-                console.log(`   ⚠️ Нет данных в ответе`);
-                return null;
-            }
-
-            const vacancy = data.data.vacancy;
-
-            return {
-                id: vacancyId,
-                profession: vacancy.vacancyName || '',
-                organization: vacancy.fullCompanyName || '',
-                companyCode: companyCode,
-                salaryMin: vacancy.salaryMin || 0,
-                salaryMax: vacancy.salaryMax || 0,
-                description: vacancy.positionResponsibilities || '',
-                requirements: vacancy.positionRequirements || '',
-                address: vacancy.fullAddress || '',
-                phone: vacancy.contacts?.['Телефон'] || vacancy.contactPersonPhone || '',
-                email: vacancy.contacts?.['Email'] || '',
-                website: vacancy.companyDTO?.site || '',
-                experience: vacancy.requiredExperience || 0,
-                education: vacancy.educationType || 'не указано',
-                scheduleType: vacancy.scheduleType || '',
-                busyType: vacancy.busyType || '',
-                publishDate: vacancy.publishedDate || Date.now(),
-                regionName: vacancy.stateRegion || '',
-                companyName: vacancy.fullCompanyName || '',
-                companyInn: vacancy.companyDTO?.inn || '',
-                companyOgrn: vacancy.companyDTO?.ogrn || '',
-                contactPerson: vacancy.contactPerson || '',
-                workPlaces: vacancy.workPlaces || 0,
-                qualification: vacancy.qualification || ''
-            };
-
-        } catch (error: any) {
-            console.log(`   ❌ Ошибка получения деталей: ${error.message}`);
+            const buffer = await fs.readFile(filepath);
+            // console.log(`   📄 Файл найден, размер: ${buffer.length} байт`);
+            const decoded = iconv.decode(buffer, 'win1251');
+            console.log(`   ✅ RAW файл декодирован (win1251 → UTF-8)`);
+            return decoded;
+        } catch (e: unknown) {
+            console.log(`   ❌ Ошибка чтения файла: ${e instanceof Error ? e.message : String(e)}`);
             return null;
         }
     }
 
-    private parseApiResponse(data: any): VacancyApiItem[] {
-        if (!data?.result?.data || !Array.isArray(data.result.data)) {
-            return [];
+    private async fetchOnline(pageNum: number): Promise<string | null> {
+        const url = `${config.BASE_URL}${config.VACANCY_PATH}?${config.BASE_PARAMS}&page=${pageNum}`;
+
+        try {
+            const response = await fetch(url, {
+                headers: { 'User-Agent': config.USER_AGENT }
+            });
+
+            const buffer = await response.arrayBuffer();
+            const decoded = iconv.decode(Buffer.from(buffer), 'win1251');
+            console.log(`   ✅ RAW файл декодирован (win1251 → UTF-8)`);
+            return decoded;
+        } catch (e: unknown) {
+            console.log(`   ❌ Ошибка запроса: ${e instanceof Error ? e.message : String(e)}`);
+            return null;
         }
-
-        return data.result.data.map((item: any[]) => ({
-            id: item[0] || '',
-            profession: item[1] || '',
-            companyCode: item[2] || '',
-            organization: item[3] || '',
-            salaryMin: item[24] || 0,
-            salaryMax: item[25] || 0,
-            publishDate: item[26] || Date.now(),
-            regionName: item[27] || '',
-            scheduleType: item[22] || '',
-            busyType: item[21] || ''
-        }));
-    }
-
-    async delay(): Promise<void> {
-        const min = config.MIN_DELAY_MS;
-        const max = config.MAX_DELAY_MS;
-        const delay = Math.floor(Math.random() * (max - min + 1) + min);
-        console.log(`   ⏳ Пауза ${Math.round(delay / 1000)} сек...`);
-        await new Promise(resolve => setTimeout(resolve, delay));
     }
 }

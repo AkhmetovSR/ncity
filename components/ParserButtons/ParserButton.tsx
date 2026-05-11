@@ -12,24 +12,28 @@ interface Vacancy {
     schedule: string;
 }
 
+type Mode = 'local' | 'vercel' | 'online';
+
 export default function ParserButton() {
-    const [isDownloading, setIsDownloading] = useState(false);
-    const [isParsing, setIsParsing] = useState(false);
-    const [showModal, setShowModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [showDownloadModal, setShowDownloadModal] = useState(false);
+    const [showParseModal, setShowParseModal] = useState(false);
+    const [showResultModal, setShowResultModal] = useState(false);
     const [vacancies, setVacancies] = useState<Vacancy[]>([]);
-    const [modalTitle, setModalTitle] = useState('');
-    const [modalMessage, setModalMessage] = useState('');
-    const [modalType, setModalType] = useState<'success' | 'error' | 'info'>('info');
+    const [resultMessage, setResultMessage] = useState('');
+    const [resultType, setResultType] = useState<'success' | 'error' | 'info'>('info');
+    const [currentAction, setCurrentAction] = useState<'download' | 'parse'>('download');
 
     // Скачивание страниц
-    const downloadPages = async () => {
-        setIsDownloading(true);
-        setModalType('info');
-        setModalMessage('🔄 Скачивание страниц...');
-        setShowModal(true);
+    const downloadPages = async (mode: Mode) => {
+        setShowDownloadModal(false);
+        setIsLoading(true);
+        setResultType('info');
+        setResultMessage(`🔄 Скачивание страниц (режим: ${getModeName(mode)})...`);
+        setShowResultModal(true);
 
         try {
-            const response = await fetch('/api/download', {
+            const response = await fetch(`/api/download?mode=${mode}`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -37,31 +41,35 @@ export default function ParserButton() {
             const data = await response.json();
 
             if (data.success) {
-                setModalType('success');
-                setModalMessage(`✅ ${data.message}\n📁 Папка: ${data.pagesDir}`);
+                setResultType('success');
+                setResultMessage(
+                    `✅ ${data.message}\n` +
+                    `📁 Режим: ${getModeName(mode)}\n` +
+                    `📍 Папка: ${data.pagesDir || 'не используется'}\n` +
+                    `📄 Скачано страниц: ${data.downloadedPages?.length || 10}`
+                );
             } else {
-                setModalType('error');
-                setModalMessage(`❌ Ошибка: ${data.error || 'Неизвестная ошибка'}`);
+                setResultType('error');
+                setResultMessage(`❌ Ошибка: ${data.error || 'Неизвестная ошибка'}`);
             }
         } catch (err: any) {
-            setModalType('error');
-            setModalMessage(`❌ Ошибка соединения: ${err.message}`);
+            setResultType('error');
+            setResultMessage(`❌ Ошибка соединения: ${err.message}`);
         } finally {
-            setIsDownloading(false);
+            setIsLoading(false);
         }
     };
-
-    // Локальный парсинг
-    const parseLocal = async () => {
-        setIsParsing(true);
-        setModalType('info');
-        setModalMessage('🔄 Парсинг скачанных страниц...');
+    // Парсинг вакансий
+    const parseVacancies = async (mode: Mode) => {
+        setShowParseModal(false);
+        setIsLoading(true);
+        setResultType('info');
+        setResultMessage(`🔄 Парсинг вакансий (режим: ${getModeName(mode)})...`);
         setVacancies([]);
-        setShowModal(true);
+        setShowResultModal(true);
 
         try {
-            // Запускаем парсер
-            const response = await fetch('/api/parse-local', {
+            const response = await fetch(`/api/parse?mode=${mode}`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -69,24 +77,26 @@ export default function ParserButton() {
             const data = await response.json();
 
             if (data.success) {
-                setModalType('success');
-                setModalMessage(`✅ ${data.message}\n📊 Найдено вакансий: ${data.jobsCount}`);
+                setResultType('success');
+                setResultMessage(`✅ ${data.message}\n📊 Найдено вакансий: ${data.jobsCount}`);
 
-                // Загружаем спарсенные вакансии
-                await loadVacancies();
+                // Загружаем вакансии только если парсинг успешен
+                if (data.jobsCount > 0) {
+                    await loadVacancies();
+                }
             } else {
-                setModalType('error');
-                setModalMessage(`❌ ${data.message || data.error}`);
+                setResultType('error');
+                setResultMessage(`❌ ${data.error || data.message || 'Ошибка парсинга'}`);
             }
         } catch (err: any) {
-            setModalType('error');
-            setModalMessage(`❌ Ошибка: ${err.message}`);
+            setResultType('error');
+            setResultMessage(`❌ Ошибка: ${err.message}`);
         } finally {
-            setIsParsing(false);
+            setIsLoading(false);
         }
     };
 
-    // Загрузка вакансий из результатов парсинга
+    // Загрузка вакансий
     const loadVacancies = async () => {
         try {
             const response = await fetch('/api/vacancies');
@@ -99,67 +109,159 @@ export default function ParserButton() {
         }
     };
 
-    const closeModal = () => {
-        setShowModal(false);
+    const getModeName = (mode: Mode): string => {
+        switch (mode) {
+            case 'local': return 'Локальный (pages/)';
+            case 'vercel': return 'Vercel (/tmp)';
+            case 'online': return 'Онлайн (прямой запрос)';
+            default: return mode;
+        }
+    };
+    const closeResultModal = () => {
+        setShowResultModal(false);
         setTimeout(() => {
             setVacancies([]);
-            setModalMessage('');
+            setResultMessage('');
         }, 300);
     };
+    // Модальное окно выбора режима для скачивания
+    const DownloadModeModal = () => (
+        <div className={styles.modalOverlay} onClick={() => setShowDownloadModal(false)}>
+            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                <div className={styles.modalHeader}>
+                    <h3>📥 Скачать страницы</h3>
+                    <button className={styles.closeButton} onClick={() => setShowDownloadModal(false)}>×</button>
+                </div>
+
+                <div className={styles.modalBody}>
+                    <p className={styles.modalDescription}>Выберите куда сохранить страницы:</p>
+                    <div className={styles.modeButtons}>
+                        <button className={styles.modeButton} onClick={() => downloadPages('local')}>
+                            <span className={styles.modeIcon}>💻</span>
+                            <div>
+                                <strong>Локальный режим</strong>
+                                <small>Скачать в папку pages/ (для разработки)</small>
+                            </div>
+                        </button>
+
+                        <button className={styles.modeButton} onClick={() => downloadPages('vercel')}>
+                            <span className={styles.modeIcon}>☁️</span>
+                            <div>
+                                <strong>Vercel режим</strong>
+                                <small>Скачать в /tmp (для продакшена)</small>
+                            </div>
+                        </button>
+
+                        <button className={styles.modeButton} onClick={() => downloadPages('online')}>
+                            <span className={styles.modeIcon}>🌐</span>
+                            <div>
+                                <strong>Онлайн режим</strong>
+                                <small>Без сохранения файлов (только для просмотра)</small>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div className={styles.modalFooter}>
+                    <button className={styles.closeModalButton} onClick={() => setShowDownloadModal(false)}>
+                        Отмена
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+    // Модальное окно выбора режима для парсинга
+    const ParseModeModal = () => (
+        <div className={styles.modalOverlay} onClick={() => setShowParseModal(false)}>
+            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                <div className={styles.modalHeader}>
+                    <h3>🔍 Парсить вакансии</h3>
+                    <button className={styles.closeButton} onClick={() => setShowParseModal(false)}>×</button>
+                </div>
+
+                <div className={styles.modalBody}>
+                    <p className={styles.modalDescription}>Выберите источник для парсинга:</p>
+                    <div className={styles.modeButtons}>
+                        <button className={styles.modeButton} onClick={() => parseVacancies('local')}>
+                            <span className={styles.modeIcon}>💻</span>
+                            <div>
+                                <strong>Локальный режим</strong>
+                                <small>Парсить из папки pages/</small>
+                            </div>
+                        </button>
+
+                        <button className={styles.modeButton} onClick={() => parseVacancies('vercel')}>
+                            <span className={styles.modeIcon}>☁️</span>
+                            <div>
+                                <strong>Vercel режим</strong>
+                                <small>Парсить из /tmp на Vercel</small>
+                            </div>
+                        </button>
+
+                        <button className={styles.modeButton} onClick={() => parseVacancies('online')}>
+                            <span className={styles.modeIcon}>🌐</span>
+                            <div>
+                                <strong>Онлайн режим</strong>
+                                <small>Прямой парсинг с сайта</small>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div className={styles.modalFooter}>
+                    <button className={styles.closeModalButton} onClick={() => setShowParseModal(false)}>
+                        Отмена
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
 
     return (
         <>
             <div className={styles.buttonContainer}>
                 <button
                     className={`${styles.button} ${styles.downloadButton}`}
-                    onClick={downloadPages}
-                    disabled={isDownloading || isParsing}
+                    onClick={() => setShowDownloadModal(true)}
+                    //disabled={isLoading}
                 >
-                    {isDownloading ? (
-                        <>
-                            <span className={styles.spinner}></span>
-                            Скачивание...
-                        </>
-                    ) : (
-                        '📥 Скачать страницы'
-                    )}
+                    📥 Скачать страницы
                 </button>
 
                 <button
                     className={`${styles.button} ${styles.parseButton}`}
-                    onClick={parseLocal}
-                    disabled={isDownloading || isParsing}
+                    onClick={() => setShowParseModal(true)}
+                    //disabled={isLoading}
                 >
-                    {isParsing ? (
-                        <>
-                            <span className={styles.spinner}></span>
-                            Парсинг...
-                        </>
-                    ) : (
-                        '🔍 Парсить локально'
-                    )}
+                    🔍 Парсить вакансии
                 </button>
             </div>
 
-            {/* Модальное окно */}
-            {showModal && (
-                <div className={styles.modalOverlay} onClick={closeModal}>
+            {/* Модальные окна выбора режима */}
+            {showDownloadModal && <DownloadModeModal />}
+            {showParseModal && <ParseModeModal />}
+
+            {/* Модальное окно результатов */}
+            {showResultModal && (
+                <div className={styles.modalOverlay} onClick={closeResultModal}>
                     <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                         <div className={styles.modalHeader}>
                             <h3>
-                                {modalType === 'success' && '✅ Успех'}
-                                {modalType === 'error' && '❌ Ошибка'}
-                                {modalType === 'info' && '🔄 Выполнение'}
+                                {resultType === 'success' && '✅ Результат'}
+                                {resultType === 'error' && '❌ Ошибка'}
+                                {resultType === 'info' && '🔄 Выполнение'}
                             </h3>
-                            <button className={styles.closeButton} onClick={closeModal}>×</button>
+                            <button className={styles.closeButton} onClick={closeResultModal}>×</button>
                         </div>
 
                         <div className={styles.modalBody}>
-                            <div className={styles[modalType]}>
-                                {modalMessage}
+                            <div className={styles[resultType]}>
+                                {resultMessage.split('\n').map((line, i) => (
+                                    <div key={i}>{line}</div>
+                                ))}
                             </div>
 
-                            {/* Список вакансий */}
+                            {/* Список вакансий (только при успешном парсинге) */}
                             {vacancies.length > 0 && (
                                 <div className={styles.vacanciesSection}>
                                     <h4>📋 Спарсенные вакансии ({vacancies.length})</h4>
@@ -210,7 +312,7 @@ export default function ParserButton() {
                         </div>
 
                         <div className={styles.modalFooter}>
-                            <button className={styles.closeModalButton} onClick={closeModal}>
+                            <button className={styles.closeModalButton} onClick={closeResultModal}>
                                 Закрыть
                             </button>
                         </div>

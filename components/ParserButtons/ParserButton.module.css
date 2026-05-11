@@ -260,3 +260,90 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* Кнопки выбора режима */
+.modeButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.modeButton {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.modeButton:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+    transform: translateX(5px);
+}
+
+.modeIcon {
+    font-size: 32px;
+}
+
+.modeButton strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.modeButton small {
+    font-size: 12px;
+    color: #666;
+}
+.modalDescription {
+    margin-bottom: 20px;
+    color: #666;
+    font-size: 14px;
+}
+
+.modeButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.modeButton {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    width: 100%;
+}
+
+.modeButton:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+    transform: translateX(5px);
+}
+
+.modeIcon {
+    font-size: 32px;
+}
+
+.modeButton strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.modeButton small {
+    font-size: 12px;
+    color: #666;
+}

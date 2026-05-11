@@ -1,20 +1,6 @@
 import { config } from '@/lib/config';
 import { Vacancy } from '@/types/vacancy';
 
-// Тип для вакансии из API
-interface VacancyApiItem {
-    id: string;
-    profession: string;
-    companyCode: string;
-    organization: string;
-    salaryMin: number;
-    salaryMax: number;
-    regionName: string;
-    publishDate: number;
-    scheduleType: string;
-    busyType: string;
-}
-
 export class TrudvsemParser {
     private cfg = config.trudvsem;
 
@@ -22,7 +8,7 @@ export class TrudvsemParser {
 
     async fetchVacanciesList(pageNum: number): Promise<any[]> {
         const filter = {
-            title: [this.cfg.TITLE],      // ← используем this.cfg
+            title: [this.cfg.TITLE],      // ← используем this.cfg.TITLE
             regionCode: [this.cfg.REGION_CODE]
         };
 
@@ -117,6 +103,7 @@ export class TrudvsemParser {
                 allVacancies.push({
                     source: this.cfg.source,
                     id: item.id,
+                    page: i + 1,
                     profession: details.vacancyName || item.profession,
                     salary: this.formatSalary(details.salaryMin, details.salaryMax),
                     district: details.stateRegion || '',
@@ -133,8 +120,7 @@ export class TrudvsemParser {
                     experience: details.requiredExperience ? `от ${details.requiredExperience} лет` : 'не требуется',
                     education: details.educationType || 'не указано',
                     contactPerson: details.contactPerson || '',
-                    workPlaces: details.workPlaces || 0,
-                    page: i + 1
+                    workPlaces: details.workPlaces || 0
                 });
             }
 

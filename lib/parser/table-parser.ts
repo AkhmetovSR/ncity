@@ -22,9 +22,13 @@ export class TableParser {
     private findTable(): cheerio.Cheerio<any> | null {
         const $ = this.$;
 
+        console.log(`   🔍 Поиск таблицы на странице ${this.pageNum}...`);
+
+        // Поиск по точным атрибутам
         const table = $('table[border="7"][bordercolor="#96B1C4"][cellpadding="5"][cellspacing="2"][bgcolor="#FFFFFF"].text');
         if (table.length) return table.first();
 
+        // Альтернативный поиск
         const altTable = $('table[border="7"][bordercolor="#96B1C4"].text');
         if (altTable.length) return altTable.first();
 
@@ -38,6 +42,8 @@ export class TableParser {
         if (!table) return [];
 
         const jobs: Vacancy[] = [];
+
+        // Используем cheerio.Element из типа
         let headerRow: cheerio.Element | null = null;
 
         table.find('tr').each((i, row) => {
@@ -45,6 +51,7 @@ export class TableParser {
                 headerRow = row;
                 return false;
             }
+            return true;
         });
 
         if (!headerRow) return [];
@@ -73,6 +80,7 @@ export class TableParser {
             }
         });
 
+        console.log(`   📊 На странице ${this.pageNum} найдено ${jobs.length} вакансий`);
         return jobs;
     }
 }

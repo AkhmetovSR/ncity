@@ -1,6 +1,20 @@
 import { config } from '@/lib/config';
 import { Vacancy } from '@/types/vacancy';
 
+// Тип для вакансии из API
+interface VacancyApiItem {
+    id: string;
+    profession: string;
+    companyCode: string;
+    organization: string;
+    salaryMin: number;
+    salaryMax: number;
+    regionName: string;
+    publishDate: number;
+    scheduleType: string;
+    busyType: string;
+}
+
 export class TrudvsemParser {
     private cfg = config.trudvsem;
 
@@ -8,7 +22,7 @@ export class TrudvsemParser {
 
     async fetchVacanciesList(pageNum: number): Promise<any[]> {
         const filter = {
-            title: [this.cfg.TITLE],
+            title: [this.cfg.TITLE],      // ← используем this.cfg
             regionCode: [this.cfg.REGION_CODE]
         };
 

@@ -1,14 +1,10 @@
 import path from 'path';
 
-// Общие настройки
 export const config = {
-    // Путь для сохранения результатов
+    // Общие настройки
     DATA_DIR: process.env.VERCEL ? '/tmp/parser-data' : path.join(process.cwd(), 'data'),
-
-    // Задержки между запросами (общие)
     MIN_DELAY_MS: 1500,
     MAX_DELAY_MS: 3000,
-
     USER_AGENT: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
 
     // Источник 1: trudvsem.ru
@@ -38,7 +34,6 @@ export const config = {
         VACANCY_PATH: '/sznregion/dsktop/czninfo.asp',
         BASE_PARAMS: 'rn=%E3%20%CD%FF%E3%E0%ED%FC&rg=86&Profession=&sort=',
         MAX_PAGES: 10,
-        TITLE: 'Нягань',
         MIN_DELAY_MS: 1500,
         MAX_DELAY_MS: 3500,
         USER_AGENT: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'

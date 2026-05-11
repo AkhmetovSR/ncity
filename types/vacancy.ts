@@ -1,4 +1,6 @@
 export interface Vacancy {
+    source: string;          // trudvsem.ru или ir-center.ru
+    id?: string;
     page: number;
     profession: string;
     salary: string;
@@ -6,7 +8,17 @@ export interface Vacancy {
     organization: string;
     date: string;
     schedule: string;
-    _id?: number;
+    busyType: string;
+    description: string;
+    requirements: string;
+    address: string;
+    phone: string;
+    email: string;
+    website: string;
+    experience: string;
+    education: string;
+    contactPerson?: string;
+    workPlaces?: number;
 }
 
 export type Mode = 'local' | 'vercel' | 'online';

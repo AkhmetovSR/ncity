@@ -50,7 +50,7 @@ export class IrCenterParser {
                     date: $(cols[4]).text().trim(),
                     schedule: $(cols[5]).text().trim(),
                     busyType: 'не указан',
-                    description: 'Описание отсутствует',
+                    description: $(cols[0]).html() || 'Описание отсутствует',
                     requirements: 'Не указаны',
                     address: 'Не указан',
                     phone: 'Не указан',

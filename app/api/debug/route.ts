@@ -18,7 +18,6 @@ export async function GET() {
     try {
         const trudvsemParser = new TrudvsemParser();
 
-        // Получаем список вакансий (первая страница)
         const vacanciesList = await trudvsemParser.fetchVacanciesList(0);
 
         if (vacanciesList && vacanciesList.length > 0) {
@@ -29,24 +28,30 @@ export async function GET() {
 
             console.log(`📍 Найдена вакансия: ${vacancyName}`);
 
-            // Получаем детали
             const details = await trudvsemParser.fetchVacancyDetails(vacancyId, companyCode);
 
             if (details) {
                 results.trudvsem = {
+                    source: 'trudvsem.ru',
                     id: vacancyId,
+                    page: 1,
                     profession: details.vacancyName || vacancyName,
-                    organization: details.fullCompanyName,
                     salary: trudvsemParser.formatSalary(details.salaryMin, details.salaryMax),
-                    district: details.stateRegion,
-                    address: details.fullAddress,
+                    district: details.stateRegion || '',
+                    organization: details.fullCompanyName || '',
                     date: new Date(details.publishedDate).toLocaleDateString('ru-RU'),
                     schedule: trudvsemParser.formatSchedule(details.scheduleType),
-                    busyType: details.busyType,
+                    busyType: details.busyType || 'не указан',
                     description: details.positionResponsibilities?.substring(0, 300) + '...',
-                    phone: details.contacts?.['Телефон'],
-                    email: details.contacts?.['Email'],
-                    website: details.companyDTO?.site
+                    requirements: details.positionRequirements || 'Не указаны',
+                    address: details.fullAddress || 'Не указан',
+                    phone: details.contacts?.['Телефон'] || 'Не указан',
+                    email: details.contacts?.['Email'] || 'Не указан',
+                    website: details.companyDTO?.site || 'Не указан',
+                    experience: details.requiredExperience ? `от ${details.requiredExperience} лет` : 'не требуется',
+                    education: details.educationType || 'не указано',
+                    contactPerson: details.contactPerson || 'Не указан',
+                    workPlaces: details.workPlaces || 0
                 };
                 console.log('✅ Успешно получена детальная информация');
             } else {
@@ -68,7 +73,6 @@ export async function GET() {
     try {
         const irCenterParser = new IrCenterParser();
 
-        // Парсим первую страницу
         const url = `${irCenterParser.cfg.BASE_URL}${irCenterParser.cfg.VACANCY_PATH}?${irCenterParser.cfg.BASE_PARAMS}&page=1`;
 
         const response = await fetch(url, {
@@ -83,21 +87,7 @@ export async function GET() {
 
         if (jobs && jobs.length > 0) {
             const firstJob = jobs[0];
-            results.irCenter = {
-                id: null,
-                profession: firstJob.profession,
-                organization: firstJob.organization,
-                salary: firstJob.salary,
-                district: firstJob.district,
-                address: 'Не указан',
-                date: firstJob.date,
-                schedule: firstJob.schedule,
-                busyType: firstJob.busyType,
-                description: firstJob.description,
-                phone: firstJob.phone,
-                email: firstJob.email,
-                website: firstJob.website
-            };
+            results.irCenter = firstJob;
             console.log(`✅ Найдена вакансия: ${firstJob.profession}`);
         } else {
             results.errors.push('ir-center.ru: вакансии не найдены');

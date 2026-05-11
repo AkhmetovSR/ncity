@@ -2,36 +2,21 @@
 import { useState } from 'react';
 import styles from './ParserButton.module.css';
 import VacancyEditor from "@/components/Parser/VacancyEditor";
-
-interface Vacancy {
-    page: number;
-    profession: string;
-    salary: string;
-    district: string;
-    organization: string;
-    date: string;
-    schedule: string;
-}
-
-type Mode = 'local' | 'vercel' | 'online';
+import { Vacancy, Mode } from '@/types/vacancy';  // 👈 импортируем
 
 export default function ParserButton() {
-    // Добавьте в компонент
-    const [showEditor, setShowEditor] = useState(false);
+    const [showEditor, setShowEditor] = useState(false);                // ✅ Редактор — ОТДЕЛЬНОЕ модальное окно (не внутри resultModal)
     const [rawVacancies, setRawVacancies] = useState<Vacancy[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    const [showDownloadModal, setShowDownloadModal] = useState(false);
-    const [showParseModal, setShowParseModal] = useState(false);
-    const [showResultModal, setShowResultModal] = useState(false);
+    const [showDownloadModal, setShowDownloadModal] = useState(false);  // Модальное окно выбора режима для скачивания
+    const [showParseModal, setShowParseModal] = useState(false);        // Модальное окно выбора режима для парсинга
+    const [showResultModal, setShowResultModal] = useState(false);      // Модальное окно результатов — ТОЛЬКО для сообщений
     const [vacancies, setVacancies] = useState<Vacancy[]>([]);
     const [resultMessage, setResultMessage] = useState('');
     const [resultType, setResultType] = useState<'success' | 'error' | 'info'>('info');
-    const [currentAction, setCurrentAction] = useState<'download' | 'parse'>('download');
 
     // Скачивание страниц
     const downloadPages = async (mode: Mode) => {
         setShowDownloadModal(false);
-        setIsLoading(true);
         setResultType('info');
         setResultMessage(`🔄 Скачивание страниц (режим: ${getModeName(mode)})...`);
         setShowResultModal(true);
@@ -60,12 +45,11 @@ export default function ParserButton() {
             setResultType('error');
             setResultMessage(`❌ Ошибка соединения: ${err.message}`);
         } finally {
-            setIsLoading(false);
+
         }
     };
     // Функция парсинга с редактированием
     const parseWithEdit = async (mode: Mode) => {
-        setIsLoading(true);
         setShowParseModal(false);
 
         try {
@@ -86,7 +70,7 @@ export default function ParserButton() {
             setResultMessage(`Ошибка: ${err.message}`);
             setShowResultModal(true);
         } finally {
-            setIsLoading(false);
+
         }
     };
 
@@ -105,7 +89,6 @@ export default function ParserButton() {
     // Функция сохранения после редактирования
     const saveEditedVacancies = async (editedVacancies: Vacancy[]) => {
         setShowEditor(false);
-        setIsLoading(true);
 
         try {
             const response = await fetch('/api/parse/save', {
@@ -130,7 +113,7 @@ export default function ParserButton() {
             setResultMessage(`Ошибка: ${err.message}`);
             setShowResultModal(true);
         } finally {
-            setIsLoading(false);
+
         }
     };
 
@@ -244,6 +227,7 @@ export default function ParserButton() {
 
     return (
         <>
+            {/* Кнопки  📥 Скачать страницы и 🔍 Парсить вакансии */}
             <div className={styles.buttonContainer}>
                 <button className={`${styles.button} ${styles.downloadButton}`} onClick={() => setShowDownloadModal(true)}>
                     📥 Скачать страницы
@@ -258,17 +242,9 @@ export default function ParserButton() {
             {showParseModal && <ParseModeModal />}
 
             {/* ✅ Редактор — ОТДЕЛЬНОЕ модальное окно (не внутри resultModal) */}
-            {showEditor && (
-                <VacancyEditor
-                    vacancies={rawVacancies}
-                    onSave={saveEditedVacancies}
-                    onCancel={() => setShowEditor(false)}
-                />
-            )}
-
+            {showEditor && (<VacancyEditor vacancies={rawVacancies} onSave={saveEditedVacancies} onCancel={() => setShowEditor(false)}/>)}
             {/* Модальное окно результатов — ТОЛЬКО для сообщений */}
-            {showResultModal && (
-                <div className={styles.modalOverlay} onClick={closeResultModal}>
+            {showResultModal && (<div className={styles.modalOverlay} onClick={closeResultModal}>
                     <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                         <div className={styles.modalHeader}>
                             <h3>
@@ -291,8 +267,7 @@ export default function ParserButton() {
                             </button>
                         </div>
                     </div>
-                </div>
-            )}
+                </div>)}
         </>
     );
 }

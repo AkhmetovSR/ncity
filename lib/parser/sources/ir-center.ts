@@ -3,51 +3,16 @@ import { config } from '@/lib/config';
 import { Vacancy } from '@/types/vacancy';
 
 export class IrCenterParser {
-    private cfg = config.irCenter;
+    public cfg = config.irCenter;
 
-    async parseJobs(): Promise<Vacancy[]> {
-        const allJobs: Vacancy[] = [];
+    // ============ ПУБЛИЧНЫЕ МЕТОДЫ ДЛЯ ТЕСТИРОВАНИЯ ============
 
-        for (let page = 1; page <= this.cfg.MAX_PAGES; page++) {
-            console.log(`   📄 Страница ${page}...`);
-
-            const url = `${this.cfg.BASE_URL}${this.cfg.VACANCY_PATH}?${this.cfg.BASE_PARAMS}&page=${page}`;
-
-            try {
-                const response = await fetch(url, {
-                    headers: { 'User-Agent': this.cfg.USER_AGENT }
-                });
-
-                const buffer = await response.arrayBuffer();
-                const decoded = this.decodeBuffer(buffer);
-                const $ = cheerio.load(decoded);
-
-                const jobs = this.parseTable($, page);
-
-                if (jobs.length === 0) {
-                    console.log(`      📭 Нет вакансий, завершаем`);
-                    break;
-                }
-
-                allJobs.push(...jobs);
-                console.log(`      ✅ Добавлено ${jobs.length} вакансий (всего: ${allJobs.length})`);
-
-                await this.delay();
-
-            } catch (error: any) {
-                console.log(`      ❌ Ошибка: ${error.message}`);
-            }
-        }
-
-        return allJobs;
-    }
-
-    private decodeBuffer(buffer: ArrayBuffer): string {
+    decodeBuffer(buffer: ArrayBuffer): string {
         const decoder = new TextDecoder('windows-1251');
         return decoder.decode(buffer);
     }
 
-    private parseTable($: cheerio.CheerioAPI, pageNum: number): Vacancy[] {
+    parseTable($: cheerio.CheerioAPI, pageNum: number): Vacancy[] {
         const jobs: Vacancy[] = [];
 
         const table = $('table[border="7"][bordercolor="#96B1C4"]');
@@ -99,6 +64,45 @@ export class IrCenterParser {
         });
 
         return jobs;
+    }
+
+    // ============ ОСНОВНОЙ МЕТОД ПАРСИНГА ============
+
+    async parseJobs(): Promise<Vacancy[]> {
+        const allJobs: Vacancy[] = [];
+
+        for (let page = 1; page <= this.cfg.MAX_PAGES; page++) {
+            console.log(`   📄 Страница ${page}...`);
+
+            const url = `${this.cfg.BASE_URL}${this.cfg.VACANCY_PATH}?${this.cfg.BASE_PARAMS}&page=${page}`;
+
+            try {
+                const response = await fetch(url, {
+                    headers: { 'User-Agent': this.cfg.USER_AGENT }
+                });
+
+                const buffer = await response.arrayBuffer();
+                const decoded = this.decodeBuffer(buffer);
+                const $ = cheerio.load(decoded);
+
+                const jobs = this.parseTable($, page);
+
+                if (jobs.length === 0) {
+                    console.log(`      📭 Нет вакансий, завершаем`);
+                    break;
+                }
+
+                allJobs.push(...jobs);
+                console.log(`      ✅ Добавлено ${jobs.length} вакансий (всего: ${allJobs.length})`);
+
+                await this.delay();
+
+            } catch (error: any) {
+                console.log(`      ❌ Ошибка: ${error.message}`);
+            }
+        }
+
+        return allJobs;
     }
 
     private async delay(): Promise<void> {

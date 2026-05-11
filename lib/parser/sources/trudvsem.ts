@@ -4,6 +4,8 @@ import { Vacancy } from '@/types/vacancy';
 export class TrudvsemParser {
     private cfg = config.trudvsem;
 
+    // ============ ПУБЛИЧНЫЕ МЕТОДЫ ДЛЯ ТЕСТИРОВАНИЯ ============
+
     async fetchVacanciesList(pageNum: number): Promise<any[]> {
         const filter = {
             title: [this.cfg.TITLE],
@@ -44,6 +46,28 @@ export class TrudvsemParser {
             return null;
         }
     }
+
+    formatSalary(min: number, max: number): string {
+        if (min && max && min === max) return `${min.toLocaleString('ru-RU')} руб.`;
+        if (min && max) return `${min.toLocaleString('ru-RU')} - ${max.toLocaleString('ru-RU')} руб.`;
+        if (min && !max) return `от ${min.toLocaleString('ru-RU')} руб.`;
+        if (max && !min) return `до ${max.toLocaleString('ru-RU')} руб.`;
+        return 'не указана';
+    }
+
+    formatSchedule(scheduleType: string): string {
+        const map: Record<string, string> = {
+            'FULL': 'Полный день',
+            'PART_TIME': 'Неполный день',
+            'TURN': 'Сменный график',
+            'WATCH': 'Вахтовый метод',
+            'FLOAT': 'Гибкий график',
+            'IRREGULAR': 'Ненормированный день'
+        };
+        return map[scheduleType] || scheduleType || 'не указан';
+    }
+
+    // ============ ОСНОВНОЙ МЕТОД ПАРСИНГА ============
 
     async parseJobs(): Promise<Vacancy[]> {
         const allVacancies: Vacancy[] = [];
@@ -104,26 +128,6 @@ export class TrudvsemParser {
         }
 
         return allVacancies;
-    }
-
-    private formatSalary(min: number, max: number): string {
-        if (min && max && min === max) return `${min.toLocaleString('ru-RU')} руб.`;
-        if (min && max) return `${min.toLocaleString('ru-RU')} - ${max.toLocaleString('ru-RU')} руб.`;
-        if (min && !max) return `от ${min.toLocaleString('ru-RU')} руб.`;
-        if (max && !min) return `до ${max.toLocaleString('ru-RU')} руб.`;
-        return 'не указана';
-    }
-
-    private formatSchedule(scheduleType: string): string {
-        const map: Record<string, string> = {
-            'FULL': 'Полный день',
-            'PART_TIME': 'Неполный день',
-            'TURN': 'Сменный график',
-            'WATCH': 'Вахтовый метод',
-            'FLOAT': 'Гибкий график',
-            'IRREGULAR': 'Ненормированный день'
-        };
-        return map[scheduleType] || scheduleType || 'не указан';
     }
 
     private async delay(): Promise<void> {

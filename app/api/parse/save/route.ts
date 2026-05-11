@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Storage } from '@/lib/parser/storage';
-import { config } from '@/lib/config';
+import { Vacancy } from '@/types/vacancy';
 
 export async function POST(request: NextRequest) {
     try {
@@ -14,8 +14,8 @@ export async function POST(request: NextRequest) {
             }, { status: 400 });
         }
 
-        const storage = new Storage('edited');
-        await storage.saveResults(vacancies);
+        const storage = new Storage(); // 👈 БЕЗ АРГУМЕНТОВ
+        await storage.saveResults(vacancies as Vacancy[]);
 
         return NextResponse.json({
             success: true,

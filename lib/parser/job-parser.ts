@@ -1,136 +1,80 @@
-import * as cheerio from 'cheerio';
-import { Fetcher } from './fetcher';
-import { TableParser } from './table-parser';
+import { Fetcher, VacancyApiItem } from './fetcher';
+import { TableParser, Vacancy } from './table-parser';
 import { Storage } from './storage';
 import { config } from '@/lib/config';
 
-interface Vacancy {
-    page: number;
-    profession: string;
-    salary: string;
-    district: string;
-    organization: string;
-    date: string;
-    schedule: string;
-}
-
 export class JobParser {
-    private mode: string;
     private fetcher: Fetcher;
     private storage: Storage;
-    public allJobs: Vacancy[];
-    private currentPage: number;
+    public allJobs: Vacancy[] = [];
+    private currentPage: number = 1;
 
-    constructor(mode: string = 'online') {
-        this.mode = mode;
-        this.fetcher = new Fetcher(mode);
-        this.storage = new Storage(mode);
-        this.allJobs = [];
-        this.currentPage = 1;
+    constructor() {
+        this.fetcher = new Fetcher();
+        this.storage = new Storage();
     }
 
-    private sleep(ms: number): Promise<void> {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+    async parseJobs(): Promise<{ success: boolean; jobsCount: number; message?: string; total?: number }> {
+        console.log(`🚀 Запуск парсера (API trudvsem.ru)`);
+        console.log(`🔍 Поиск: "${config.TITLE}" в регионе ${config.REGION_CODE}\n`);
 
-    private async randomDelay(): Promise<void> {
-        const min = config.MIN_DELAY_MS;
-        const max = config.MAX_DELAY_MS;
-        const delay = Math.floor(Math.random() * (max - min + 1) + min);
-        console.log(`   ⏳ Пауза ${Math.round(delay / 1000)} сек...`);
-        await this.sleep(delay);
-    }
+        let totalVacancies = 0;
+        let hasMorePages = true;
 
-    async parseJobs(): Promise<{ success: boolean; jobsCount: number; message?: string }> {
-        console.log(`🚀 Запуск парсера (${this.mode === 'local' ? 'локально' : 'онлайн'})\n`);
-
-        while (this.currentPage <= config.MAX_PAGES) {
+        while (hasMorePages && this.currentPage <= config.MAX_PAGES) {
             console.log(`\n📄 Страница ${this.currentPage}`);
 
-            const html = await this.fetcher.fetchPage(this.currentPage);
+            const apiItems = await this.fetcher.fetchPage(this.currentPage);
 
-            if (!html) {
-                console.log(`🏁 Страница ${this.currentPage} не найдена`);
+            if (!apiItems || apiItems.length === 0) {
+                console.log(`🏁 Страница ${this.currentPage} пуста, завершаем`);
                 break;
             }
 
-            const $ = cheerio.load(html);
-            const tableParser = new TableParser($, this.currentPage);
-            const jobs = tableParser.parseVacancies();
-
-            if (jobs.length === 0 && this.currentPage === 1) {
-                console.log('❌ На первой странице нет вакансий');
-                break;
-            }
+            const tableParser = new TableParser(this.currentPage);
+            const jobs = tableParser.parseVacancies(apiItems);
 
             if (jobs.length > 0) {
                 this.allJobs.push(...jobs);
+                totalVacancies += jobs.length;
                 console.log(`   ✅ Добавлено ${jobs.length} вакансий (всего: ${this.allJobs.length})`);
-            } else {
-                console.log(`   📭 Нет вакансий, завершаем`);
-                break;
             }
 
+            // Проверяем, есть ли еще страницы
+            // Это нужно будет получить из API, но пока просто проверяем
             this.currentPage++;
 
-            if (this.mode === 'online' && this.currentPage <= config.MAX_PAGES) {
-                await this.randomDelay();
+            if (this.currentPage <= config.MAX_PAGES) {
+                await this.fetcher.delay();
             }
         }
 
-        if (this.allJobs.length) {
+        if (this.allJobs.length > 0) {
             await this.storage.saveResults(this.allJobs);
             this.showStats();
-            return { success: true, jobsCount: this.allJobs.length };
+            return {
+                success: true,
+                jobsCount: this.allJobs.length,
+                total: totalVacancies,
+                message: `Успешно собрано ${this.allJobs.length} вакансий`
+            };
         }
 
         return { success: false, jobsCount: 0, message: 'Вакансии не найдены' };
     }
 
-    private showStats(): void {
-        const unique = new Set(this.allJobs.map(j => j.profession));
-        console.log(`\n📊 ИТОГО: страниц ${this.currentPage - 1}, вакансий ${this.allJobs.length}, уникальных профессий ${unique.size}`);
-    }
-
     async parseJobsRaw(): Promise<Vacancy[]> {
-        // ✅ Сброс состояния перед новым парсингом
         this.allJobs = [];
         this.currentPage = 1;
 
-        console.log(`🚀 Запуск парсера (${this.mode === 'local' ? 'локально' : 'онлайн'})\n`);
-
         while (this.currentPage <= config.MAX_PAGES) {
-            console.log(`\n📄 Страница ${this.currentPage}`);
+            const apiItems = await this.fetcher.fetchPage(this.currentPage);
+            if (!apiItems || apiItems.length === 0) break;
 
-            const html = await this.fetcher.fetchPage(this.currentPage);
-
-            if (!html) {
-                console.log(`🏁 Страница ${this.currentPage} не найдена`);
-                break;
-            }
-
-            const $ = cheerio.load(html);
-            const tableParser = new TableParser($, this.currentPage);
-            const jobs = tableParser.parseVacancies();
-
-            if (jobs.length === 0 && this.currentPage === 1) {
-                console.log('❌ На первой странице нет вакансий');
-                break;
-            }
-
-            if (jobs.length > 0) {
-                this.allJobs.push(...jobs);
-                console.log(`   ✅ Добавлено ${jobs.length} вакансий (всего: ${this.allJobs.length})`);
-            } else {
-                console.log(`   📭 Нет вакансий, завершаем`);
-                break;
-            }
-
+            const tableParser = new TableParser(this.currentPage);
+            const jobs = tableParser.parseVacancies(apiItems);
+            this.allJobs.push(...jobs);
             this.currentPage++;
-
-            if (this.mode === 'online' && this.currentPage <= config.MAX_PAGES) {
-                await this.randomDelay();
-            }
         }
 
         return this.allJobs;
@@ -140,5 +84,10 @@ export class JobParser {
         await this.storage.saveResults(vacancies);
         this.allJobs = vacancies;
         this.showStats();
+    }
+
+    private showStats(): void {
+        const unique = new Set(this.allJobs.map(j => j.profession));
+        console.log(`\n📊 ИТОГО: страниц ${this.currentPage - 1}, вакансий ${this.allJobs.length}, уникальных профессий ${unique.size}`);
     }
 }

@@ -1,33 +1,31 @@
 import path from 'path';
 
 export const config = {
-    // Параметры сайта
-    BASE_URL: 'https://ir-center.ru',
-    VACANCY_PATH: '/sznregion/dsktop/czninfo.asp',
-    BASE_PARAMS: 'rn=%E3%20%CD%FF%E3%E0%ED%FC&rg=86&Profession=&sort=',
-    MAX_PAGES: 10,
+    // API сайта
+    BASE_URL: 'https://trudvsem.ru',
+    API_PATH: '/iblocks/_catalog/flat_filter_prr_search_vacancies/data',
 
-    // Пути для хранения файлов
+    // Параметры поиска
+    TITLE: 'нягань',
+    REGION_CODE: '8600000000000', // ХМАО-Югра
+
+    // Пагинация (из API: total=53, pages=6)
+    MAX_PAGES: 6,
+    PAGE_SIZE: 10,
+
+    // Путь для сохранения результатов
     DATA_DIR: process.env.VERCEL ? '/tmp/parser-data' : path.join(process.cwd(), 'data'),
-    PAGES_DIR: process.env.VERCEL ? '/tmp/parser-pages' : path.join(process.cwd(), 'pages'),
 
-    // Задержки между запросами
-    MIN_DELAY_MS: 1500,
-    MAX_DELAY_MS: 3500,
+    // Задержки между запросами (в миллисекундах)
+    MIN_DELAY_MS: 500,
+    MAX_DELAY_MS: 1500,
 
-    // User-Agent для запросов
-    USER_AGENT: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-
-    // Хранение страниц: удалять файлы старше N дней
-    PAGES_MAX_AGE_DAYS: 3,  // 👈 Добавьте эту строку
-
-    // Ожидаемые заголовки таблицы
-    EXPECTED_HEADERS: [
-        'Профессия',
-        'Зарплата',
-        'Район',
-        'Организация/ источник вакансии',
-        'Дата подтверждения',
-        'График'
-    ]
-} as const;
+    // Заголовки для API (скопированы из браузера)
+    HEADERS: {
+        'accept': 'application/json, text/plain, */*',
+        'accept-language': 'ru-RU,ru;q=0.9,en;q=0.8',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36',
+        'referer': 'https://trudvsem.ru/vacancy/search?_title=%D0%BD%D1%8F%D0%B3%D0%B0%D0%BD%D1%8C&_regionIds=8600000000000',
+        'x-requested-with': 'XMLHttpRequest'
+    }
+};

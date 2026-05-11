@@ -2,16 +2,14 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    display: flex;
-    gap: 12px;
     z-index: 1000;
 }
 
 .button {
-    padding: 10px 18px;
+    padding: 12px 24px;
     border: none;
     border-radius: 50px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -31,19 +29,14 @@
     cursor: not-allowed;
 }
 
-.downloadButton {
-    background: linear-gradient(135deg, #28a745, #20c997);
-    color: white;
-}
-
 .parseButton {
     background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
 }
 
 .spinner {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     border: 2px solid rgba(255,255,255,0.3);
     border-top-color: white;
     border-radius: 50%;
@@ -54,7 +47,6 @@
     to { transform: rotate(360deg); }
 }
 
-/* Модальное окно */
 .modalOverlay {
     position: fixed;
     top: 0;
@@ -74,8 +66,8 @@
     background: white;
     border-radius: 20px;
     width: 90%;
-    max-width: 700px;
-    max-height: 80vh;
+    max-width: 800px;
+    max-height: 85vh;
     display: flex;
     flex-direction: column;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
@@ -102,6 +94,7 @@
     cursor: pointer;
     color: #999;
     transition: color 0.2s;
+    line-height: 1;
 }
 
 .closeButton:hover {
@@ -129,6 +122,11 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
+    transition: background 0.2s;
+}
+
+.closeModalButton:hover {
+    background: #5a67d8;
 }
 
 .success {
@@ -151,13 +149,20 @@
     white-space: pre-line;
 }
 
-.info {
+.info, .loading {
     background: #d1ecf1;
     border: 1px solid #bee5eb;
     color: #0c5460;
     padding: 15px;
     border-radius: 10px;
-    text-align: center;
+    margin-bottom: 20px;
+    white-space: pre-line;
+}
+
+.loading {
+    background: #fff3cd;
+    border-color: #ffeeba;
+    color: #856404;
 }
 
 .vacanciesSection {
@@ -167,10 +172,11 @@
 .vacanciesSection h4 {
     margin: 0 0 12px 0;
     color: #333;
+    font-size: 16px;
 }
 
 .vacanciesList {
-    max-height: 400px;
+    max-height: 500px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -182,6 +188,12 @@
     border-radius: 12px;
     padding: 12px;
     border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+
+.vacancyCard:hover {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .vacancyHeader {
@@ -225,6 +237,7 @@
 
 .detailIcon {
     font-size: 14px;
+    min-width: 20px;
 }
 
 @keyframes fadeIn {
@@ -244,106 +257,17 @@
 }
 
 @media (max-width: 768px) {
-    .buttonContainer {
-        bottom: 16px;
-        right: 16px;
-        flex-direction: column;
-        gap: 8px;
+    .button {
+        padding: 10px 18px;
+        font-size: 14px;
     }
 
-    .button {
-        padding: 8px 14px;
-        font-size: 12px;
+    .modal {
+        width: 95%;
+        max-height: 90vh;
     }
 
     .vacancyDetails {
         grid-template-columns: 1fr;
     }
-}
-
-/* Кнопки выбора режима */
-.modeButtons {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.modeButton {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: left;
-}
-
-.modeButton:hover {
-    border-color: #667eea;
-    background: #f8f9ff;
-    transform: translateX(5px);
-}
-
-.modeIcon {
-    font-size: 32px;
-}
-
-.modeButton strong {
-    display: block;
-    font-size: 16px;
-    margin-bottom: 4px;
-}
-
-.modeButton small {
-    font-size: 12px;
-    color: #666;
-}
-.modalDescription {
-    margin-bottom: 20px;
-    color: #666;
-    font-size: 14px;
-}
-
-.modeButtons {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.modeButton {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: left;
-    width: 100%;
-}
-
-.modeButton:hover {
-    border-color: #667eea;
-    background: #f8f9ff;
-    transform: translateX(5px);
-}
-
-.modeIcon {
-    font-size: 32px;
-}
-
-.modeButton strong {
-    display: block;
-    font-size: 16px;
-    margin-bottom: 4px;
-}
-
-.modeButton small {
-    font-size: 12px;
-    color: #666;
 }

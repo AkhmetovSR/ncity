@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { config } from '@/lib/config';
-import { Vacancy } from './table-parser';
+import { Vacancy } from './job-parser';
 
 export class Storage {
     private MAX_FILES_TO_KEEP: number = 5;
@@ -11,7 +11,7 @@ export class Storage {
 
         const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         const timestamp = Date.now();
-        const baseName = `trudvsem_jobs_${dateStr}_${timestamp}`;
+        const baseName = `trudvsem_full_${dateStr}_${timestamp}`;
 
         // Сохраняем JSON
         const jsonPath = path.join(config.DATA_DIR, `${baseName}.json`);
@@ -25,7 +25,6 @@ export class Storage {
         console.log(`   ✅ Сохранено: ${baseName}.json и .csv`);
         console.log(`   📁 Путь: ${config.DATA_DIR}`);
 
-        // Очищаем старые файлы
         await this.cleanOldFiles();
 
         return { jsonPath, csvPath };
@@ -35,7 +34,7 @@ export class Storage {
         try {
             const files = await fs.readdir(config.DATA_DIR);
             const jsonFiles = files
-                .filter(f => f.startsWith('trudvsem_jobs_') && f.endsWith('.json'))
+                .filter(f => f.startsWith('trudvsem_') && f.endsWith('.json'))
                 .sort()
                 .reverse();
 
@@ -56,17 +55,15 @@ export class Storage {
                     }
                 }
             }
-
-            console.log(`   📁 Хранится последних ${this.MAX_FILES_TO_KEEP} файлов`);
         } catch (error) {
             console.log(`   ⚠️ Ошибка очистки: ${error}`);
         }
     }
 
     private toCSV(jobs: Vacancy[]): string {
-        const header = 'Страница;Профессия;Зарплата;Район;Организация;Дата публикации;График;Тип занятости\n';
+        const header = 'ID;Профессия;Зарплата;Регион;Организация;Дата;График;Тип занятости;Описание;Требования;Адрес;Телефон;Email;Сайт;Опыт;Образование;ИНН;ОГРН\n';
         const rows = jobs.map(j => {
-            return `"${j.page}";"${this.escapeCSV(j.profession)}";"${this.escapeCSV(j.salary)}";"${this.escapeCSV(j.district)}";"${this.escapeCSV(j.organization)}";"${this.escapeCSV(j.date)}";"${this.escapeCSV(j.schedule)}";"${this.escapeCSV(j.busyType)}"`;
+            return `"${j.id}";"${this.escapeCSV(j.profession)}";"${this.escapeCSV(j.salary)}";"${this.escapeCSV(j.district)}";"${this.escapeCSV(j.organization)}";"${this.escapeCSV(j.date)}";"${this.escapeCSV(j.schedule)}";"${this.escapeCSV(j.busyType)}";"${this.escapeCSV(j.description)}";"${this.escapeCSV(j.requirements)}";"${this.escapeCSV(j.address)}";"${this.escapeCSV(j.phone)}";"${this.escapeCSV(j.email)}";"${this.escapeCSV(j.website)}";"${this.escapeCSV(j.experience)}";"${this.escapeCSV(j.education)}";"${this.escapeCSV(j.companyInn)}";"${this.escapeCSV(j.companyOgrn)}"`;
         }).join('\n');
         return header + rows;
     }

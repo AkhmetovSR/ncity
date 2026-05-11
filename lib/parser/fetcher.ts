@@ -13,8 +13,36 @@ export interface VacancyApiItem {
     busyType: string;
 }
 
+export interface VacancyDetails {
+    id: string;
+    profession: string;
+    organization: string;
+    companyCode: string;
+    salaryMin: number;
+    salaryMax: number;
+    description: string;
+    requirements: string;
+    address: string;
+    phone: string;
+    email: string;
+    website: string;
+    experience: number;
+    education: string;
+    scheduleType: string;
+    busyType: string;
+    publishDate: number;
+    regionName: string;
+    companyName: string;
+    companyInn: string;
+    companyOgrn: string;
+    contactPerson: string;
+    workPlaces: number;
+    qualification: string;
+}
+
 export class Fetcher {
-    async fetchPage(pageNum: number): Promise<VacancyApiItem[]> {
+    // Получение списка вакансий (краткая информация)
+    async fetchVacanciesList(pageNum: number): Promise<VacancyApiItem[]> {
         const filter = {
             title: [config.TITLE],
             regionCode: [config.REGION_CODE]
@@ -22,8 +50,7 @@ export class Fetcher {
 
         const url = `${config.BASE_URL}${config.API_PATH}?filter=${encodeURIComponent(JSON.stringify(filter))}&orderColumn=RELEVANCE_DESC&page=${pageNum}&pageSize=${config.PAGE_SIZE}`;
 
-        console.log(`   🌐 Запрос страницы ${pageNum}...`);
-        console.log(`   📡 URL: ${url.substring(0, 150)}...`);
+        console.log(`   🌐 Получение списка вакансий (страница ${pageNum})...`);
 
         try {
             const response = await fetch(url, {
@@ -38,11 +65,8 @@ export class Fetcher {
             const data = await response.json();
 
             if (!data?.result?.data) {
-                console.log(`   ⚠️ Нет данных в ответе`);
                 return [];
             }
-
-            console.log(`   📦 Получено ${data.result.data.length} вакансий, всего ${data.result.paging?.total || '?'}`);
 
             return this.parseApiResponse(data);
 
@@ -52,15 +76,70 @@ export class Fetcher {
         }
     }
 
+    // Получение детальной информации о вакансии (ПРАВИЛЬНЫЙ URL!)
+    async fetchVacancyDetails(vacancyId: string, companyCode: string): Promise<VacancyDetails | null> {
+        const url = `${config.BASE_URL}/iblocks/job_card?companyId=${companyCode}&vacancyId=${vacancyId}`;
+
+        console.log(`   🔍 Получение деталей: ${vacancyId.substring(0, 8)}...`);
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: config.HEADERS
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // Проверяем структуру ответа
+            if (!data?.data?.vacancy) {
+                console.log(`   ⚠️ Нет данных в ответе`);
+                return null;
+            }
+
+            const vacancy = data.data.vacancy;
+
+            return {
+                id: vacancyId,
+                profession: vacancy.vacancyName || '',
+                organization: vacancy.fullCompanyName || '',
+                companyCode: companyCode,
+                salaryMin: vacancy.salaryMin || 0,
+                salaryMax: vacancy.salaryMax || 0,
+                description: vacancy.positionResponsibilities || '',
+                requirements: vacancy.positionRequirements || '',
+                address: vacancy.fullAddress || '',
+                phone: vacancy.contacts?.['Телефон'] || vacancy.contactPersonPhone || '',
+                email: vacancy.contacts?.['Email'] || '',
+                website: vacancy.companyDTO?.site || '',
+                experience: vacancy.requiredExperience || 0,
+                education: vacancy.educationType || 'не указано',
+                scheduleType: vacancy.scheduleType || '',
+                busyType: vacancy.busyType || '',
+                publishDate: vacancy.publishedDate || Date.now(),
+                regionName: vacancy.stateRegion || '',
+                companyName: vacancy.fullCompanyName || '',
+                companyInn: vacancy.companyDTO?.inn || '',
+                companyOgrn: vacancy.companyDTO?.ogrn || '',
+                contactPerson: vacancy.contactPerson || '',
+                workPlaces: vacancy.workPlaces || 0,
+                qualification: vacancy.qualification || ''
+            };
+
+        } catch (error: any) {
+            console.log(`   ❌ Ошибка получения деталей: ${error.message}`);
+            return null;
+        }
+    }
+
     private parseApiResponse(data: any): VacancyApiItem[] {
         if (!data?.result?.data || !Array.isArray(data.result.data)) {
             return [];
         }
 
-        // Структура массива:
-        // [0] id, [1] profession, [2] companyCode, [3] organization,
-        // [21] busyType, [22] scheduleType,
-        // [24] salaryMin, [25] salaryMax, [26] publishDate, [27] regionName
         return data.result.data.map((item: any[]) => ({
             id: item[0] || '',
             profession: item[1] || '',

@@ -1,4 +1,5 @@
 import * as cheerio from 'cheerio';
+import { config } from '@/lib/config';
 
 interface Vacancy {
     page: number;
@@ -43,21 +44,21 @@ export class TableParser {
 
         const jobs: Vacancy[] = [];
 
-        // Используем cheerio.Element из типа
-        let headerRow: cheerio.Element | null = null;
+        // Находим строку с заголовками (используем index вместо типа Element)
+        let headerRowIndex = -1;
 
         table.find('tr').each((i, row) => {
             if ($(row).find('th').length) {
-                headerRow = row;
-                return false;
+                headerRowIndex = i;
+                return false; // останавливаем цикл
             }
-            return true;
         });
 
-        if (!headerRow) return [];
+        if (headerRowIndex === -1) return [];
 
+        // Парсим строки с данными
         table.find('tr').each((i, row) => {
-            if (row === headerRow) return;
+            if (i === headerRowIndex) return; // пропускаем строку с заголовками
 
             const cols = $(row).find('td');
             if (cols.length < 6) return;

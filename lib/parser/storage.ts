@@ -1,27 +1,24 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { config } from '@/lib/config/config';
+import { config } from '@/lib/config';
 import { Vacancy } from '@/types/vacancy';
 
 export class Storage {
-    private readonly mode: string;
     private readonly MAX_FILES_TO_KEEP: number = 5;
-
-    constructor(mode: string) {
-        this.mode = mode;
-    }
 
     async saveResults(jobs: Vacancy[]): Promise<{ jsonPath: string }> {
         await fs.mkdir(config.DATA_DIR, { recursive: true });
 
         const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
         const timestamp = Date.now();
-        const baseName = `jobs_${this.mode}_${dateStr}_${timestamp}`;
+        const baseName = `trudvsem_${dateStr}_${timestamp}`;
 
         const jsonPath = path.join(config.DATA_DIR, `${baseName}.json`);
         await fs.writeFile(jsonPath, JSON.stringify(jobs, null, 2), 'utf8');
-        await this.cleanOldFiles();
 
+        console.log(`   ✅ Сохранено: ${baseName}.json`);
+
+        await this.cleanOldFiles();
         return { jsonPath };
     }
 
@@ -29,7 +26,7 @@ export class Storage {
         try {
             const files = await fs.readdir(config.DATA_DIR);
             const jsonFiles = files
-                .filter(f => f.startsWith('jobs_') && f.endsWith('.json'))
+                .filter(f => f.startsWith('trudvsem_') && f.endsWith('.json'))
                 .sort()
                 .reverse();
 
@@ -41,7 +38,6 @@ export class Storage {
                     console.log(`   🗑️ Удален старый файл: ${file}`);
                 }
             }
-            console.log(`   📁 Хранится последних ${this.MAX_FILES_TO_KEEP} файлов`);
         } catch (error) {
             console.log(`   ⚠️ Ошибка очистки: ${error}`);
         }

@@ -1,105 +1,85 @@
-import * as cheerio from 'cheerio';
-import { Fetcher } from './fetcher';
-import { TableParser } from './table-parser';
+import { Fetcher, VacancyApiItem } from './fetcher';
+import { VacancyDetailsFetcher } from './vacancy-details-fetcher';
 import { Storage } from './storage';
-import { config } from '@/lib/config/config';
+import { config } from '@/lib/config';
 import { Vacancy } from '@/types/vacancy';
 
 export class JobParser {
-    private readonly mode: string;
     private readonly fetcher: Fetcher;
+    private readonly detailsFetcher: VacancyDetailsFetcher;
     private readonly storage: Storage;
     public allJobs: Vacancy[] = [];
-    private currentPage: number = 1;
 
-    constructor(mode: string = 'online') {
-        this.mode = mode;
-        this.fetcher = new Fetcher(mode);
-        this.storage = new Storage(mode);
-    }
-
-    private sleep(ms: number): Promise<void> {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    private async randomDelay(): Promise<void> {
-        const min = config.MIN_DELAY_MS;
-        const max = config.MAX_DELAY_MS;
-        const delay = Math.floor(Math.random() * (max - min + 1) + min);
-        console.log(`   ⏳ Пауза ${Math.round(delay / 1000)} сек...`);
-        await this.sleep(delay);
+    constructor() {
+        this.fetcher = new Fetcher();
+        this.detailsFetcher = new VacancyDetailsFetcher();
+        this.storage = new Storage();
     }
 
     async parseJobs(): Promise<{ success: boolean; jobsCount: number; message?: string }> {
-        console.log(`🚀 Запуск парсера (${this.mode === 'local' ? 'локально' : 'онлайн'})\n`);
+        console.log(`🚀 Запуск парсера trudvsem.ru (API список → детали)`);
+        console.log(`📌 Максимум вакансий: ${config.MAX_VACANCIES_TO_PARSE}\n`);
 
-        while (this.currentPage <= config.MAX_PAGES) {
-            console.log(`\n📄 Страница ${this.currentPage}`);
+        // ШАГ 1: Получаем список ID вакансий
+        const allVacanciesList: VacancyApiItem[] = [];
 
-            const html = await this.fetcher.fetchPage(this.currentPage);
-            if (!html) {
-                console.log(`🏁 Страница ${this.currentPage} не найдена`);
-                break;
-            }
+        for (let page = config.START_PAGE; page < config.MAX_PAGES; page++) {
+            console.log(`📄 Страница ${page}...`);
 
-            const $ = cheerio.load(html);
-            const tableParser = new TableParser($, this.currentPage);
-            const jobs = tableParser.parseVacancies();
+            const items = await this.fetcher.fetchVacanciesList(page);
 
-            if (jobs.length === 0 && this.currentPage === 1) {
-                console.log('❌ На первой странице нет вакансий');
-                break;
-            }
+            if (!items || items.length === 0) break;
 
-            if (jobs.length > 0) {
-                this.allJobs.push(...jobs);
-                console.log(`   ✅ Добавлено ${jobs.length} вакансий (всего: ${this.allJobs.length})`);
+            // Добавляем только до лимита
+            const remaining = config.MAX_VACANCIES_TO_PARSE - allVacanciesList.length;
+            const toAdd = items.slice(0, remaining);
+            allVacanciesList.push(...toAdd);
+
+            console.log(`   ✅ Добавлено ${toAdd.length} вакансий (всего: ${allVacanciesList.length}/${config.MAX_VACANCIES_TO_PARSE})`);
+
+            if (allVacanciesList.length >= config.MAX_VACANCIES_TO_PARSE) break;
+
+            await this.fetcher.delay();
+        }
+
+        console.log(`\n📊 Собрано ID: ${allVacanciesList.length} из ${config.MAX_VACANCIES_TO_PARSE}`);
+
+        if (allVacanciesList.length === 0) {
+            return { success: false, jobsCount: 0, message: 'Ссылки на вакансии не найдены' };
+        }
+
+        // ШАГ 2: Для каждой вакансии получаем детальную информацию
+        console.log(`\n🔍 Получение детальной информации для ${allVacanciesList.length} вакансий...\n`);
+
+        for (let i = 0; i < allVacanciesList.length; i++) {
+            const item = allVacanciesList[i];
+            console.log(`   [${i + 1}/${allVacanciesList.length}] ${item.profession.substring(0, 40)}...`);
+
+            const details = await this.detailsFetcher.fetch(item.id, item.companyCode);
+
+            if (details) {
+                this.allJobs.push(details);
+                console.log(`      ✅ Добавлена вакансия: ${details.profession.substring(0, 50)}...`);
             } else {
-                console.log(`   📭 Нет вакансий, завершаем`);
-                break;
+                console.log(`      ⚠️ Не удалось получить детали`);
             }
 
-            this.currentPage++;
-            if (this.mode === 'online' && this.currentPage <= config.MAX_PAGES) {
-                await this.randomDelay();
+            if (i < allVacanciesList.length - 1) {
+                await this.detailsFetcher.delay();
             }
         }
 
-        if (this.allJobs.length) {
+        console.log(`\n📊 Всего получено деталей: ${this.allJobs.length} из ${allVacanciesList.length}`);
+
+        if (this.allJobs.length > 0) {
             await this.storage.saveResults(this.allJobs);
-            this.showStats();
-            return { success: true, jobsCount: this.allJobs.length };
+            return {
+                success: true,
+                jobsCount: this.allJobs.length,
+                message: `Собрано ${this.allJobs.length} вакансий`
+            };
         }
 
         return { success: false, jobsCount: 0, message: 'Вакансии не найдены' };
-    }
-
-    async parseJobsRaw(): Promise<Vacancy[]> {
-        this.allJobs = [];
-        this.currentPage = 1;
-
-        while (this.currentPage <= config.MAX_PAGES) {
-            const html = await this.fetcher.fetchPage(this.currentPage);
-            if (!html) break;
-
-            const $ = cheerio.load(html);
-            const tableParser = new TableParser($, this.currentPage);
-            const jobs = tableParser.parseVacancies();
-            this.allJobs.push(...jobs);
-            this.currentPage++;
-        }
-
-        return this.allJobs;
-    }
-
-    async saveVacancies(vacancies: Vacancy[]): Promise<void> {
-        await this.storage.saveResults(vacancies);
-        this.allJobs = vacancies;
-        this.showStats();
-    }
-
-    private showStats(): void {
-        const unique = new Set(this.allJobs.map(j => j.profession));
-        console.log(`\n📊 ИТОГО: страниц ${this.currentPage - 1}, вакансий ${this.allJobs.length}, уникальных профессий ${unique.size}`);
     }
 }

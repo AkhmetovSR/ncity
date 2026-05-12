@@ -1,61 +1,77 @@
-import fs from 'fs/promises';
-import path from 'path';
-import iconv from 'iconv-lite';
-import { config } from '@/lib/config/config';
+import { config } from '@/lib/config';
+
+export interface VacancyApiItem {
+    id: string;
+    profession: string;
+    companyCode: string;
+    organization: string;
+    salaryMin: number;
+    salaryMax: number;
+    regionName: string;
+    publishDate: number;
+    scheduleType: string;
+    busyType: string;
+}
 
 export class Fetcher {
-    private readonly mode: string;
+    async fetchVacanciesList(pageNum: number): Promise<VacancyApiItem[]> {
+        const filter = {
+            title: [config.TITLE],
+            regionCode: [config.REGION_CODE]
+        };
 
-    constructor(mode: string = 'local') {
-        this.mode = mode;
-    }
+        const url = `${config.BASE_URL}${config.API_PATH}?filter=${encodeURIComponent(JSON.stringify(filter))}&orderColumn=RELEVANCE_DESC&page=${pageNum}&pageSize=${config.PAGE_SIZE}`;
 
-    async fetchPage(pageNum: number): Promise<string | null> {
-        return this.mode === 'local'
-            ? this.fetchLocal(pageNum)
-            : this.fetchOnline(pageNum);
-    }
-
-    private async fetchLocal(pageNum: number): Promise<string | null> {
-        const filepath = path.join(config.PAGES_DIR, `page_${pageNum}_raw.html`);
-        try {
-            const buffer = await fs.readFile(filepath);
-            const decoded = iconv.decode(buffer, 'win1251');
-            console.log(`   ✅ RAW файл декодирован (win1251 → UTF-8)`);
-            return decoded;
-        } catch (e: unknown) {
-            console.log(`   ❌ Ошибка чтения файла: ${e instanceof Error ? e.message : String(e)}`);
-            return null;
-        }
-    }
-
-    private async fetchOnline(pageNum: number): Promise<string | null> {
-        // Формируем URL с учетом пагинации
-        let url: string;
-        if (pageNum === 1) {
-            url = `${config.BASE_URL}${config.VACANCY_PATH}?${config.BASE_PARAMS}`;
-        } else {
-            url = `${config.BASE_URL}${config.VACANCY_PATH}?${config.BASE_PARAMS}&page=${pageNum}`;
-        }
-
-        console.log(`   🌐 Загрузка: ${url.substring(0, 100)}...`);
+        console.log(`   🌐 Получение списка вакансий (страница ${pageNum})...`);
 
         try {
             const response = await fetch(url, {
-                headers: { 'User-Agent': config.USER_AGENT }
+                method: 'GET',
+                headers: config.HEADERS
             });
 
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}`);
             }
 
-            const buffer = await response.arrayBuffer();
-            const decoded = iconv.decode(Buffer.from(buffer), 'win1251');
-            console.log(`   ✅ RAW файл декодирован (win1251 → UTF-8)`);
-            return decoded;
-        } catch (e: unknown) {
-            console.log(`   ❌ Ошибка запроса: ${e instanceof Error ? e.message : String(e)}`);
-            return null;
+            const data = await response.json();
+
+            if (!data?.result?.data) {
+                return [];
+            }
+
+            return this.parseApiResponse(data);
+
+        } catch (error: any) {
+            console.log(`   ❌ Ошибка: ${error.message}`);
+            return [];
         }
+    }
+
+    private parseApiResponse(data: any): VacancyApiItem[] {
+        if (!data?.result?.data || !Array.isArray(data.result.data)) {
+            return [];
+        }
+
+        return data.result.data.map((item: any[]) => ({
+            id: item[0] || '',
+            profession: item[1] || '',
+            companyCode: item[2] || '',
+            organization: item[3] || '',
+            salaryMin: item[24] || 0,
+            salaryMax: item[25] || 0,
+            publishDate: item[26] || Date.now(),
+            regionName: item[27] || '',
+            scheduleType: item[22] || '',
+            busyType: item[21] || ''
+        }));
+    }
+
+    async delay(): Promise<void> {
+        const min = config.MIN_DELAY_MS;
+        const max = config.MAX_DELAY_MS;
+        const delay = Math.floor(Math.random() * (max - min + 1) + min);
+        console.log(`   ⏳ Пауза ${Math.round(delay / 1000)} сек...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
     }
 }

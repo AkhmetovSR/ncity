@@ -1,17 +1,5 @@
 import { config } from '@/lib/config';
-
-export interface VacancyApiItem {
-    id: string;
-    profession: string;
-    companyCode: string;
-    organization: string;
-    salaryMin: number;
-    salaryMax: number;
-    regionName: string;
-    publishDate: number;
-    scheduleType: string;
-    busyType: string;
-}
+import {VacancyApiItem} from "@/types/vacancy";
 
 export class Fetcher {
     async fetchVacanciesList(pageNum: number): Promise<VacancyApiItem[]> {

@@ -143,12 +143,12 @@ export default function ParserButton() {
                                                             <span>{vacancy.schedule}</span>
                                                         </div>
                                                     )}
-                                                    {/*{vacancy.busyType && (*/}
-                                                    {/*    <div className={styles.detailItem}>*/}
-                                                    {/*        <span className={styles.detailIcon}>💼</span>*/}
-                                                    {/*        <span>{vacancy.busyType}</span>*/}
-                                                    {/*    </div>*/}
-                                                    {/*)}*/}
+                                                    {vacancy.busyType && (
+                                                        <div className={styles.detailItem}>
+                                                            <span className={styles.detailIcon}>💼</span>
+                                                            <span>{vacancy.busyType}</span>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
                                         ))}

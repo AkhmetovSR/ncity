@@ -1,27 +1,17 @@
 'use client';
 import { useState } from 'react';
 import styles from './ParserButton.module.css';
-
-interface Vacancy {
-    page: number;
-    profession: string;
-    salary: string;
-    district: string;
-    organization: string;
-    date: string;
-    schedule: string;
-    busyType: string;
-}
+import { Vacancy } from '@/types/vacancy';
 
 export default function ParserButton() {
-    const [isLoading, setIsLoading] = useState(false);
+   // const [isLoading, setIsLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [vacancies, setVacancies] = useState<Vacancy[]>([]);
     const [modalMessage, setModalMessage] = useState('');
     const [modalType, setModalType] = useState<'success' | 'error' | 'info' | 'loading'>('info');
 
     const parseVacancies = async () => {
-        setIsLoading(true);
+       // setIsLoading(true);
         setModalType('loading');
         setModalMessage('🔄 Парсинг вакансий с trudvsem.ru...\n\nЭто может занять до 30 секунд.');
         setShowModal(true);
@@ -47,7 +37,7 @@ export default function ParserButton() {
             setModalType('error');
             setModalMessage(`❌ Ошибка соединения: ${err.message}`);
         } finally {
-            setIsLoading(false);
+            //setIsLoading(false);
         }
     };
 
@@ -77,16 +67,18 @@ export default function ParserButton() {
                 <button
                     className={`${styles.button} ${styles.parseButton}`}
                     onClick={parseVacancies}
-                    disabled={isLoading}
+                   // disabled={isLoading}
                 >
-                    {isLoading ? (
-                        <>
-                            <span className={styles.spinner}></span>
-                            Парсинг...
-                        </>
-                    ) : (
-                        '🔍 Парсить вакансии'
-                    )}
+                    {/*{isLoading ? (*/}
+                    {/*    <>*/}
+                    {/*        <span className={styles.spinner}></span>*/}
+                    {/*        Парсинг...*/}
+                    {/*    </>*/}
+                    {/*) : (*/}
+                    {/*    '*/}
+                    🔍 Парсить вакансии
+                    {/*'*/}
+                    {/*)}*/}
                 </button>
             </div>
 
@@ -151,12 +143,12 @@ export default function ParserButton() {
                                                             <span>{vacancy.schedule}</span>
                                                         </div>
                                                     )}
-                                                    {vacancy.busyType && (
-                                                        <div className={styles.detailItem}>
-                                                            <span className={styles.detailIcon}>💼</span>
-                                                            <span>{vacancy.busyType}</span>
-                                                        </div>
-                                                    )}
+                                                    {/*{vacancy.busyType && (*/}
+                                                    {/*    <div className={styles.detailItem}>*/}
+                                                    {/*        <span className={styles.detailIcon}>💼</span>*/}
+                                                    {/*        <span>{vacancy.busyType}</span>*/}
+                                                    {/*    </div>*/}
+                                                    {/*)}*/}
                                                 </div>
                                             </div>
                                         ))}

@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import iconv from 'iconv-lite';
-import { config } from '@/lib/config';
+import { config } from '@/lib/config/config';
 
 export class Fetcher {
     private readonly mode: string;
@@ -18,10 +18,8 @@ export class Fetcher {
 
     private async fetchLocal(pageNum: number): Promise<string | null> {
         const filepath = path.join(config.PAGES_DIR, `page_${pageNum}_raw.html`);
-        // console.log(`   📂 Ищу файл: ${filepath}`);
         try {
             const buffer = await fs.readFile(filepath);
-            // console.log(`   📄 Файл найден, размер: ${buffer.length} байт`);
             const decoded = iconv.decode(buffer, 'win1251');
             console.log(`   ✅ RAW файл декодирован (win1251 → UTF-8)`);
             return decoded;
@@ -32,12 +30,24 @@ export class Fetcher {
     }
 
     private async fetchOnline(pageNum: number): Promise<string | null> {
-        const url = `${config.BASE_URL}${config.VACANCY_PATH}?${config.BASE_PARAMS}&page=${pageNum}`;
+        // Формируем URL с учетом пагинации
+        let url: string;
+        if (pageNum === 1) {
+            url = `${config.BASE_URL}${config.VACANCY_PATH}?${config.BASE_PARAMS}`;
+        } else {
+            url = `${config.BASE_URL}${config.VACANCY_PATH}?${config.BASE_PARAMS}&page=${pageNum}`;
+        }
+
+        console.log(`   🌐 Загрузка: ${url.substring(0, 100)}...`);
 
         try {
             const response = await fetch(url, {
                 headers: { 'User-Agent': config.USER_AGENT }
             });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
 
             const buffer = await response.arrayBuffer();
             const decoded = iconv.decode(Buffer.from(buffer), 'win1251');

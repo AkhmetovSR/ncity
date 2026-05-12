@@ -2,7 +2,7 @@ import * as cheerio from 'cheerio';
 import { Fetcher } from './fetcher';
 import { TableParser } from './table-parser';
 import { Storage } from './storage';
-import { config } from '@/lib/config';
+import { config } from '@/lib/config/config';
 import { Vacancy } from '@/types/vacancy';
 
 export class JobParser {

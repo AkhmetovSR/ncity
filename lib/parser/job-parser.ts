@@ -1,8 +1,8 @@
-import { Fetcher, VacancyApiItem } from './fetcher';
+import { Fetcher } from './fetcher';
 import { VacancyDetailsFetcher } from './vacancy-details-fetcher';
 import { Storage } from './storage';
 import { config } from '@/lib/config';
-import { Vacancy } from '@/types/vacancy';
+import { Vacancy, VacancyApiItem } from '@/types/vacancy';
 
 export class JobParser {
     private readonly fetcher: Fetcher;

@@ -1,3 +1,4 @@
+// lib/config.ts
 import path from 'path';
 
 export const config = {
@@ -11,18 +12,19 @@ export const config = {
     REGION_CODE: '8600000000000',
 
     // Пагинация
-    MAX_PAGES: 1,        // пока 1 страница для теста
-    PAGE_SIZE: 10,
+    MAX_PAGES: 1,      // Максимум страниц для парсинга
+    PAGE_SIZE: 10,     // Вакансий на странице (максимум)
     START_PAGE: 0,
 
-    // 🔥 Для теста: парсим только 1 вакансию
-    MAX_VACANCIES_TO_PARSE: 1,
+    // Лимиты
+    MAX_VACANCIES_TO_PARSE: 500,  // Максимум вакансий для парсинга (поставьте нужное число)
+    MAX_FILES_TO_KEEP: 3,         // Сколько файлов хранить в архиве
 
     // Путь для сохранения результатов
     DATA_DIR: process.env.VERCEL ? '/tmp/parser-data' : path.join(process.cwd(), 'data'),
 
-    // Задержки между запросами
-    MIN_DELAY_MS: 1500,
+    // Задержки между запросами (чтобы не забанили)
+    MIN_DELAY_MS: 2000,
     MAX_DELAY_MS: 3000,
 
     // Заголовки для API (рабочие)

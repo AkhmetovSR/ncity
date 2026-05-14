@@ -1,41 +1,31 @@
 import { config } from '@/lib/config';
-import {VacancyApiItem} from "@/types/vacancy";
+import { VacancyApiItem } from '@/types/vacancy';
 
 export class Fetcher {
+    // Получение списка вакансий с API по номеру страницы
     async fetchVacanciesList(pageNum: number): Promise<VacancyApiItem[]> {
+        // Формируем фильтр: нужные профессии и регион
         const filter = {
             title: [config.TITLE],
             regionCode: [config.REGION_CODE]
         };
-
+        // Формируем URL с параметрами
         const url = `${config.BASE_URL}${config.API_PATH}?filter=${encodeURIComponent(JSON.stringify(filter))}&orderColumn=RELEVANCE_DESC&page=${pageNum}&pageSize=${config.PAGE_SIZE}`;
-
-        console.log(`   🌐 Получение списка вакансий (страница ${pageNum})...`);
-
         try {
             const response = await fetch(url, {
                 method: 'GET',
                 headers: config.HEADERS
             });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-
+            if (!response.ok) return [];
             const data = await response.json();
-
-            if (!data?.result?.data) {
-                return [];
-            }
-
+            if (!data?.result?.data) return [];
             return this.parseApiResponse(data);
-
         } catch (error: any) {
-            console.log(`   ❌ Ошибка: ${error.message}`);
             return [];
         }
     }
 
+    // Преобразование ответа API в нужный формат
     private parseApiResponse(data: any): VacancyApiItem[] {
         if (!data?.result?.data || !Array.isArray(data.result.data)) {
             return [];
@@ -54,12 +44,11 @@ export class Fetcher {
             busyType: item[21] || ''
         }));
     }
-
+    // Пауза между запросами (чтобы не нагружать сервер)
     async delay(): Promise<void> {
         const min = config.MIN_DELAY_MS;
         const max = config.MAX_DELAY_MS;
         const delay = Math.floor(Math.random() * (max - min + 1) + min);
-        console.log(`   ⏳ Пауза ${Math.round(delay / 1000)} сек...`);
         await new Promise(resolve => setTimeout(resolve, delay));
     }
 }

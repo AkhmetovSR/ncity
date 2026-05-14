@@ -11,14 +11,14 @@ export default function ParserButton() {
     const [modalType, setModalType] = useState<'success' | 'error' | 'info' | 'loading'>('info');
 
     const parseVacancies = async () => {
-       // setIsLoading(true);
+        // setIsLoading(true);
         setModalType('loading');
-        setModalMessage('🔄 Парсинг вакансий с trudvsem.ru...\n\nЭто может занять до 30 секунд.');
+        setModalMessage('🔄 Парсинг вакансий...\n\nЭто может занять некоторое время.');
         setShowModal(true);
         setVacancies([]);
 
         try {
-            const response = await fetch('/api/parse', {
+            const response = await fetch('/api/parse-cron', {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -27,17 +27,17 @@ export default function ParserButton() {
 
             if (data.success) {
                 setModalType('success');
-                setModalMessage(`✅ ${data.message}\n📊 Найдено вакансий: ${data.jobsCount}\n⏱️ Время: ${data.duration || '~'}`);
+                setModalMessage(`✅ Парсинг завершен!\n📊 Найдено вакансий: ${data.count || data.jobsCount}`);
                 await loadVacancies();
             } else {
                 setModalType('error');
-                setModalMessage(`❌ Ошибка: ${data.error || 'Неизвестная ошибка'}`);
+                setModalMessage(`❌ Ошибка: ${data.error || data.message || 'Неизвестная ошибка'}`);
             }
         } catch (err: any) {
             setModalType('error');
             setModalMessage(`❌ Ошибка соединения: ${err.message}`);
         } finally {
-            //setIsLoading(false);
+            // setIsLoading(false);
         }
     };
 

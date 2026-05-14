@@ -1,0 +1,72 @@
+.Title{
+    width: 100%;
+    height: 6rem;
+    grid-column: 1 / -1;
+    /*padding: 3% 0;*/
+    /*border: 1px solid red;*/
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    -webkit-user-drag: none;
+}
+.TitleContent{
+    /*border: 1px solid red;*/
+    width: 85%;
+    height: 80%;
+    display: grid;
+    /*align-items: center;*/
+    grid-template-columns: 45% 55%;
+}
+.Label{
+    width: 100%;
+    /*border: 1px solid red;*/
+    display: grid;
+    align-items: end;
+    overflow: hidden;
+}
+.MountainImg{
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    /*border: 1px solid red;*/
+    display: grid;
+    align-items: end;
+}
+.Mountain{
+    width: 40%;
+    opacity: 40%;
+}
+
+.TitleCity {
+    /*border: 1px solid blue;*/
+    height: 100%;
+    display: grid;
+    align-items: start;
+    font-family: Klab;
+    font-size: 1.9rem;
+    font-weight: bold;
+    color: #b8b8b8;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    /*margin-bottom: 10px;*/
+}
+.Dobro{
+    /*border: 1px solid red;*/
+    font-family: BadScript;
+    font-size: 1rem;
+    transform: rotate(-10deg);
+    color: #FFFB7C;
+    display: grid;
+    align-content: center;
+    text-align: center;
+}
+
+/*.SearchAll {*/
+/*    font-size: 24px;*/
+/*    color: white;*/
+/*    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);*/
+/*}*/

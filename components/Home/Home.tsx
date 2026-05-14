@@ -1,12 +1,16 @@
 'use client';
-import s from '@/components/Home/Home.module.css';
-// import Carousel from "@/components/CarouselSwipe/Carousel";
 import React from "react";
+import s from "./Home.module.css"
+import Title from "@/components/Home/Title/Title";
+import Job from "@/components/Home/Job/Job";
+import {motion} from "framer-motion";
 
-export default function Home() {
+export  default function Home() {
+
     return (
         <div className={s.Home}>
-            {/*<Carousel/>*/}
+            <Title />
+            <Job />
         </div>
     );
 }

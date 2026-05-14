@@ -9,11 +9,13 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "cheerio": "^1.0.0",
+    "framer-motion": "^12.38.0",
+    "lottie-react": "^2.4.1",
+    "iconv-lite": "^0.6.3",
     "next": "16.2.6",
     "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "cheerio": "^1.0.0",
-    "iconv-lite": "^0.6.3"
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

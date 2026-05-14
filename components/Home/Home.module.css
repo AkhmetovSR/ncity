@@ -1,3 +1,10 @@
 .Home{
-
+    /*border: 2px solid red;*/
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: absolute;
+    border-radius: 2rem;
+    /*background-color: #20c997;*/
+    z-index: 100;
 }

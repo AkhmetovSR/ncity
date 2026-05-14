@@ -25,7 +25,7 @@ const geistMono = Geist_Mono({
 export default function RootLayout({children}) {
     return (
         <html lang="ru">
-        <head title="Job">
+        <head title="VacancyList">
             <title>Нягань портал</title>
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
         </head>
@@ -38,7 +38,7 @@ export default function RootLayout({children}) {
                 <div className={s.Menu}>
                     <Menu/>
                 </div>
-                <div className={s.Blocked}>Для просмотра, пожалуйста <br/>переверните устройство.</div>
+                {/*<div className={s.Blocked}>Для просмотра, пожалуйста <br/>переверните устройство.</div>*/}
             </div>
         {/* 👇 Кнопка парсера */}
         <ParserButton />

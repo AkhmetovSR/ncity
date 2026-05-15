@@ -1,11 +1,18 @@
-.Carousel{
-    height: 20%;
-    width: 100%;
+.Vacancy{
+    height: 15%;
+    width: 90%;
     overflow: hidden;
     position: absolute;
-    border-radius: 2rem;
-    border: 1px solid red;
-    background-color: #20c997;
+    top: 6rem;
+    border-radius: 1.5rem;
+    /*border: 1px solid red;*/
+    /*background-color: #20c997;*/
+    padding: 1rem;
+    background: linear-gradient(to bottom, #69FFD5, #B1FFE9);
+    /*border-radius: 1.5rem;*/
+    /*overflow: hidden;*/
+    cursor: pointer;
+    /*transition: transform 0.2s ease;*/
 }
 /*.GreenBoard {*/
 /*    display: grid;*/
@@ -24,44 +31,50 @@
 /*    transform: scale(1.02);*/
 /*}*/
 
-/*.Content {*/
-/*    width: 90%;*/
-/*    height: 80%;*/
-/*    display: grid;*/
-/*    grid-template-columns: 65% 35%;*/
-/*}*/
+.Content {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 65% 35%;
+    /*border: 1px solid red;*/
+    overflow: hidden;
+}
 
-/*.Left {*/
-/*    display: grid;*/
-/*    width: 100%;*/
-/*    justify-items: start;*/
-/*}*/
+.Left {
+    display: grid;
+    width: 100%;
+    justify-items: start;
+    /*border: 1px solid red;*/
+}
 
-/*.Title {*/
-/*    width: 78%;*/
-/*    font-size: 1rem;*/
-/*    font-family: Mon;*/
-/*    font-weight: bold;*/
-/*    color: #45A966;*/
-/*    padding-left: 2%;*/
-/*}*/
+.Title {
+    width: 78%;
+    font-size: 1rem;
+    font-family: Mon;
+    font-weight: bold;
+    color: #45A966;
+    padding-left: 2%;
+}
 
-/*.SearchJob {*/
-/*    display: grid;*/
-/*    background: #50FFB9;*/
-/*    border-radius: 10px;*/
-/*    color: #00A74B;*/
-/*    font-family: Mon;*/
-/*    align-items: center;*/
-/*    padding: 0 5%;*/
-/*    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
-/*}*/
+.SearchJob {
+    display: grid;
+    background: #50FFB9;
+    border-radius: 10px;
+    color: #00A74B;
+    font-family: Mon;
+    align-items: center;
+    padding: 0 5%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-/*.Right {*/
-/*    display: grid;*/
-/*    align-items: center;*/
-/*    justify-items: end;*/
-/*}*/
+.Right {
+    width: 100%;
+    display: grid;
+    /*border: 1px solid red;*/
+    /*align-items: center;*/
+    /*justify-items: end;*/
+    /*border: 1px solid red;*/
+}
 
 /*.WorkImg {*/
 /*    overflow: hidden;*/

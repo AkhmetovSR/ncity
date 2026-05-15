@@ -6,5 +6,7 @@
     position: absolute;
     border-radius: 2rem;
     /*background-color: #20c997;*/
+    display: grid;
+    justify-items: center;
     z-index: 100;
 }

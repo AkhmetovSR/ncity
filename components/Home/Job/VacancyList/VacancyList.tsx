@@ -62,8 +62,7 @@ export default function VacancyList() {
                                 </div>
 
                                 <div className={styles.details}>
-                                    <span className={styles.organization}>🏢 {vacancy.organization}</span>
-                                    <span className={styles.district}>📍 {vacancy.district}</span>
+
                                     <span className={styles.date}>📅 {vacancy.date}</span>
                                 </div>
                             </div>
@@ -74,3 +73,8 @@ export default function VacancyList() {
         </motion.div>
     );
 }
+
+
+
+{/*<span className={styles.organization}>🏢 {vacancy.organization}</span>*/}
+{/*<span className={styles.district}>📍 {vacancy.district}</span>*/}

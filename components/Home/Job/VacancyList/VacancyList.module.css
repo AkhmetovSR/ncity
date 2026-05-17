@@ -1,209 +1,53 @@
-/* VacancyList.module.css */
+/* VacancyInfo.module.css */
 
 .fullscreenOverlay {
     position: absolute;
-    height: 95%;
-    border-radius: 25px;
-    width: 90%;
-    left: 5%;
-    bottom: 1rem;
-    display: flex;
-    background-color: #252525;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    padding: 1.3rem;
-    color: #bf3737;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    /*background-color: #ffffff;*/
+    overflow: hidden;
 }
 
 .fullscreenContent {
-    width: 100%;
-    height: 100%;
+    display: grid;
+    justify-items: center;
+    align-items: start;
+    width: 90%;
+    height: 95%;
+    border-radius: 25px;
+    background-color: #1F1F1F;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    position: relative;
+    padding: 5% 0;
 }
-
-.fullscreenContent .WM {
-    --base-font-size: 22rem;
+.contentWrapper{
+    width: 95%;
+    height: 95%;
 }
-
-.contentWrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    gap: 1rem;
+.closeButton{
+    position: absolute;
+    right: 3%;
+    background-color: red;
 }
-
-/* Стилизация скролла */
-.fullscreenOverlay::-webkit-scrollbar {
-    width: 4px;
-}
-
-.fullscreenOverlay::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 10px;
-}
-
-.fullscreenOverlay::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-}
-
-/* Хедер */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-    margin-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.header h2 {
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    margin: 0;
-    color: #6b6b6b;
-    font-family: -apple-system, 'Inter', 'SF Pro Text', system-ui, sans-serif;
-}
-
-.closeButton {
-    font-size: 1.2rem;
-    line-height: 1;
-    color: #999;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: transparent;
-}
-
-.closeButton:hover {
-    color: #333;
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-/* Сетка вакансий */
-.vacancyList {
-    display: flex;
-    flex-direction: column;
+.vacancyList{
+    display: grid;
     gap: 0.5rem;
 }
 
-/* Карточка */
 .vacancyCard {
-    background: rgba(55, 55, 55, 0.7);
-    backdrop-filter: blur(10px);
-    border-radius: 14px;
-    padding: 1rem 1.25rem;
-    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-    border: 0.5px solid rgba(255, 255, 255, 0.5);
+    background-color: #101010;
+    /*backdrop-filter: blur(40px);*/
+    /*-webkit-backdrop-filter: blur(40px);*/
+    border-radius: 20px;
+    padding: 1.2rem;
+    /*transition: all 0.4s cubic-bezier(0.25, 0.1, 0.2, 1);*/
     cursor: pointer;
-}
-
-.vacancyCard:hover {
-    background: rgba(255, 255, 255, 0.95);
-    transform: scale(0.98);
-}
-
-.cardHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.profession {
-    font-size: 1rem;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    color: #dadada;
-    margin: 0;
-    font-family: -apple-system, 'Inter', 'SF Pro Text', system-ui, sans-serif;
-}
-
-.salary {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: #06c87f;
-    background: rgba(84, 234, 175, 0.1);
-    padding: 0.2rem 0.6rem;
-    border-radius: 20px;
-    letter-spacing: -0.01em;
-    font-family: 'SF Mono', 'Menlo', monospace;
-}
-
-.details {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.date {
-    font-size: 0.7rem;
-    color: #d1d1d1;
-    background: rgba(0, 0, 0, 0.03);
-    padding: 0.2rem 0.6rem;
-    border-radius: 20px;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-family: -apple-system, 'Inter', system-ui, sans-serif;
-}
-
-/* Loading */
-.loading,
-.emptyContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 300px;
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-}
-
-.loading {
-    font-size: 0.85rem;
-    color: #666;
-    font-weight: 400;
-    background: rgba(255, 255, 255, 0.8);
-    padding: 0.6rem 1.2rem;
-    border-radius: 40px;
-}
-
-/* Empty state */
-.empty {
-    text-align: center;
-}
-
-.empty p {
-    font-size: 0.85rem;
-    color: #555;
-    margin: 0.3rem 0;
-}
-
-.hint {
-    font-size: 0.7rem;
-    color: #999;
-}
-
-/* Responsive */
-@media (max-width: 640px) {
-    .vacancyCard {
-        padding: 0.85rem 1rem;
-    }
-
-    .profession {
-        font-size: 0.9rem;
-    }
-
-    .salary {
-        font-size: 0.7rem;
-    }
+    /*position: relative;*/
+    overflow: hidden;
 }

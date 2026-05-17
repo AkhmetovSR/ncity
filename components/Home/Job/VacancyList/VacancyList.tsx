@@ -1,42 +1,64 @@
 'use client';
-import styles from './VacancyList.module.css';
+import s from './VacancyList.module.css';
 import { motion, AnimatePresence } from "framer-motion";
 import Link from 'next/link';
 import { useEffect, useState } from "react";
+import VacancyInfo from "@/components/Home/Job/VacancyInfo/VacancyInfo";
+interface Vacancy {
+    page: number;
+    profession: string;
+    salary: string;
+    district: string;
+    organization: string;
+    date: string;
+    schedule: string;
+    _id?: number;
+}
+
 
 export default function VacancyList() {
-    const [vacancies, setVacancies] = useState([]);
+    const [vacancies, setVacancies] = useState<Vacancy[]>([]); // Явно указываем тип
     const [loading, setLoading] = useState(true);
+    const [vacancyOpen, setVacancyOpen] = useState(false);
+    const [selectedVacancy, setSelectedVacancy] = useState<Vacancy | null>(null);
 
+    // Функция для парсинга даты в формате DD.MM.YYYY
+    function parseDate(dateStr: string): Date {
+        const [day, month, year] = dateStr.split('.');
+        return new Date(Number(year), Number(month) - 1, Number(day));
+    }
+    // Загрузка сортированных вакансий
     useEffect(() => {
-        // Загружаем актуальные вакансии через API
         fetch('/api/vacancies')
             .then(res => res.json())
-            .then(data => {
-                setVacancies(data);
+            .then((data: Vacancy[]) => {
+                const sortedData = [...data].sort((a, b) => {
+                    const dateA = parseDate(a.date);
+                    const dateB = parseDate(b.date);
+                    return dateB.getTime() - dateA.getTime(); // От новых к старым
+                });
+                setVacancies(sortedData);
                 setLoading(false);
             })
             .catch(() => setLoading(false));
     }, []);
-
     if (loading) {
         return (
-            <motion.div className={styles.fullscreenOverlay} layoutId="vacancy">
-                <div className={styles.fullscreenContent}>
-                    <div className={styles.loading}>Загрузка...</div>
+            <motion.div className={s.fullscreenOverlay} layoutId="vacancy">
+                <div className={s.fullscreenContent}>
+                    <div className={s.loading}>Загрузка...</div>
                 </div>
             </motion.div>
         );
     }
-
     if (vacancies.length === 0) {
         return (
-            <motion.div className={styles.fullscreenOverlay} layoutId="vacancy">
-                <div className={styles.fullscreenContent}>
-                    <div className={styles.emptyContainer}>
-                        <div className={styles.empty}>
+            <motion.div className={s.fullscreenOverlay} layoutId="vacancy">
+                <div className={s.fullscreenContent}>
+                    <div className={s.emptyContainer}>
+                        <div className={s.empty}>
                             <p>Нет вакансий.</p>
-                            <p className={styles.hint}>Парсинг выполняется автоматически каждый день в 23:00</p>
+                            <p className={s.hint}>Парсинг выполняется автоматически каждый день в 23:00</p>
                         </div>
                     </div>
                 </div>
@@ -44,36 +66,35 @@ export default function VacancyList() {
         );
     }
 
+
+
     return (
-        <motion.div className={styles.fullscreenOverlay} layoutId="vacancy" transition={{ duration: 0.3, ease: "easeOut", type: "tween" }}>
-            <motion.div className={styles.fullscreenContent} onClick={(e) => e.stopPropagation()}>
-                <div className={styles.contentWrapper}>
-                    <div className={styles.header}>
-                        <h2>Список вакансий</h2>
-                        <Link href="/" className={styles.closeButton}>✕</Link>
-                    </div>
-
-                    <div className={styles.vacancyList}>
+        <motion.div className={s.fullscreenOverlay} layoutId="vacancy" transition={{ duration: 0.3, ease: "easeOut", type: "tween" }}>
+            <motion.div className={s.fullscreenContent} onClick={(e) => e.stopPropagation()}>
+                <div className={s.contentWrapper}>
+                    <Link href="/" className={s.closeButton}>✕</Link>
+                    <div className={s.vacancyList}>
                         {vacancies.map((vacancy: any, index: number) => (
-                            <div key={index} className={styles.vacancyCard}>
-                                <div className={styles.cardHeader}>
-                                    <h3 className={styles.profession}>{vacancy.profession}</h3>
-                                    <div className={styles.salary}>{vacancy.salary}</div>
+                            <div key={index} className={s.vacancyCard}>
+                                <div className={s.cardHeader}>
+                                    <h3 className={s.profession}>{vacancy.profession}</h3>
+                                    <h5 className={s.salary}>{vacancy.salary}</h5>
                                 </div>
-
-                                <div className={styles.details}>
-
-                                    <span className={styles.date}>📅 {vacancy.date}</span>
+                                <div className={s.details}>
+                                    <button className={s.WatchVacancy} onClick={() => {setSelectedVacancy(vacancy); setVacancyOpen(true)}}>Посмотреть</button>
+                                </div>
+                                <div className={s.details}>
+                                    <span className={s.date}>📅 {vacancy.date}</span>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </div>
             </motion.div>
+            {vacancyOpen && <VacancyInfo vacancy={selectedVacancy}/>}
         </motion.div>
     );
 }
-
 
 
 {/*<span className={styles.organization}>🏢 {vacancy.organization}</span>*/}

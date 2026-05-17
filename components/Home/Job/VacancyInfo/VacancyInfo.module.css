@@ -1,0 +1,8 @@
+.VacancyInfo{
+    position: absolute;
+    bottom: 0;
+    background-color: #dfdfdf;
+    border-radius: 25px 25px 0 0;
+    height: 70%;
+    width: 95%;
+}

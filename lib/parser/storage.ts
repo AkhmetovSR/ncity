@@ -1,4 +1,3 @@
-// lib/storage.ts
 import fs from 'fs/promises';
 import path from 'path';
 import { config } from '@/lib/config';
@@ -7,46 +6,34 @@ import { Vacancy } from '@/types/vacancy';
 export class Storage {
     // Сохранение результатов парсинга в файл
     async saveResults(jobs: Vacancy[]): Promise<{ jsonPath: string }> {
+        // ✅ Защита от перезаписи пустым массивом
+        if (!jobs || jobs.length === 0) throw new Error('Пустой список вакансий - отмена сохранения файла');
         // Создаем папку если её нет
         await fs.mkdir(config.DATA_DIR, { recursive: true });
+        // Используем фиксированное имя файла: vacancyList.json
+        const fileName = 'vacancyList.json';
+        const jsonPath = path.join(config.DATA_DIR, fileName);
+        // ✅ Атомарная запись через временный файл
+        // Это гарантирует, что при ошибке оригинальный файл не повредится
+        const tempFileName = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}.json`;
+        const tempPath = path.join(config.DATA_DIR, tempFileName);
 
-        // Формируем имя файла: vacancies_20260512_1234567890.json
-        const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-        const timestamp = Date.now();
-        const baseName = `vacancies_${dateStr}_${timestamp}`;
-
-        // Сохраняем файл
-        const jsonPath = path.join(config.DATA_DIR, `${baseName}.json`);
-        await fs.writeFile(jsonPath, JSON.stringify(jobs, null, 2), 'utf8');
-
-        // Удаляем старые файлы
-        await this.cleanOldFiles();
-
-        return { jsonPath };
-    }
-
-    // Удаление старых файлов, чтобы папка не разрасталась
-    private async cleanOldFiles(): Promise<void> {
         try {
-            // Получаем все файлы в папке
-            const files = await fs.readdir(config.DATA_DIR);
-
-            // Отбираем только JSON файлы с вакансиями (исправлено: ищем vacancies_)
-            const jsonFiles = files
-                .filter(f => f.startsWith('vacancies_') && f.endsWith('.json'))
-                .sort()
-                .reverse();
-
-            // Если файлов больше чем нужно - удаляем лишние
-            if (jsonFiles.length > config.MAX_FILES_TO_KEEP) {
-                const toDelete = jsonFiles.slice(config.MAX_FILES_TO_KEEP);
-                for (const file of toDelete) {
-                    const filePath = path.join(config.DATA_DIR, file);
-                    await fs.unlink(filePath);
-                }
-            }
+            // Сначала сохраняем во временный файл
+            const jsonData = JSON.stringify(jobs, null, 2);
+            await fs.writeFile(tempPath, jsonData, 'utf8');
+            // Атомарно заменяем основной файл (переименовываем)
+            // В случае ошибки на этом этапе, старый файл останется нетронутым
+            await fs.rename(tempPath, jsonPath);
         } catch (error) {
-            // Если ошибка - просто игнорируем, это не критично
+            // Если произошла ошибка - удаляем временный файл
+            try {
+                await fs.unlink(tempPath);
+            } catch (unlinkError) {
+                // Игнорируем ошибку удаления временного файла
+            }
+            throw new Error(`Не удалось сохранить вакансии: ${error}`);
         }
+        return { jsonPath };
     }
 }

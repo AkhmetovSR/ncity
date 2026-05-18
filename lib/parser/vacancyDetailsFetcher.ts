@@ -69,7 +69,6 @@ export class VacancyDetailsFetcher {
             };
 
         } catch (error: any) {
-            console.log(`      ❌ Ошибка: ${error.message}`);
             return null;
         }
     }
@@ -78,7 +77,6 @@ export class VacancyDetailsFetcher {
         const min = config.MIN_DELAY_MS;
         const max = config.MAX_DELAY_MS;
         const delay = Math.floor(Math.random() * (max - min + 1) + min);
-        console.log(`      ⏳ Пауза ${Math.round(delay / 1000)} сек...`);
         await new Promise(resolve => setTimeout(resolve, delay));
     }
 }

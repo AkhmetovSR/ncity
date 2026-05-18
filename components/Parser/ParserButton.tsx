@@ -1,21 +1,16 @@
 'use client';
 import { useState } from 'react';
 import styles from './ParserButton.module.css';
-import { Vacancy } from '@/types/vacancy';
 
 export default function ParserButton() {
-   // const [isLoading, setIsLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [vacancies, setVacancies] = useState<Vacancy[]>([]);
     const [modalMessage, setModalMessage] = useState('');
     const [modalType, setModalType] = useState<'success' | 'error' | 'info' | 'loading'>('info');
 
     const parseVacancies = async () => {
-        // setIsLoading(true);
         setModalType('loading');
         setModalMessage('🔄 Парсинг вакансий...\n\nЭто может занять некоторое время.');
         setShowModal(true);
-        setVacancies([]);
 
         try {
             const response = await fetch('/api/parse-cron', {
@@ -28,7 +23,6 @@ export default function ParserButton() {
             if (data.success) {
                 setModalType('success');
                 setModalMessage(`✅ Парсинг завершен!\n📊 Найдено вакансий: ${data.count || data.jobsCount}`);
-                await loadVacancies();
             } else {
                 setModalType('error');
                 setModalMessage(`❌ Ошибка: ${data.error || data.message || 'Неизвестная ошибка'}`);
@@ -36,27 +30,12 @@ export default function ParserButton() {
         } catch (err: any) {
             setModalType('error');
             setModalMessage(`❌ Ошибка соединения: ${err.message}`);
-        } finally {
-            // setIsLoading(false);
-        }
-    };
-
-    const loadVacancies = async () => {
-        try {
-            const response = await fetch('/api/vacancies');
-            const data = await response.json();
-            if (Array.isArray(data) && data.length > 0) {
-                setVacancies(data);
-            }
-        } catch (err) {
-            console.error('Ошибка загрузки вакансий:', err);
         }
     };
 
     const closeModal = () => {
         setShowModal(false);
         setTimeout(() => {
-            setVacancies([]);
             setModalMessage('');
         }, 300);
     };
@@ -67,18 +46,8 @@ export default function ParserButton() {
                 <button
                     className={`${styles.button} ${styles.parseButton}`}
                     onClick={parseVacancies}
-                   // disabled={isLoading}
                 >
-                    {/*{isLoading ? (*/}
-                    {/*    <>*/}
-                    {/*        <span className={styles.spinner}></span>*/}
-                    {/*        Парсинг...*/}
-                    {/*    </>*/}
-                    {/*) : (*/}
-                    {/*    '*/}
                     🔍 Парсить вакансии
-                    {/*'*/}
-                    {/*)}*/}
                 </button>
             </div>
 
@@ -101,60 +70,6 @@ export default function ParserButton() {
                                     <div key={i}>{line}</div>
                                 ))}
                             </div>
-
-                            {vacancies.length > 0 && (
-                                <div className={styles.vacanciesSection}>
-                                    <h4>📋 Вакансии ({vacancies.length})</h4>
-                                    <div className={styles.vacanciesList}>
-                                        {vacancies.map((vacancy, idx) => (
-                                            <div key={idx} className={styles.vacancyCard}>
-                                                <div className={styles.vacancyHeader}>
-                                                    <span className={styles.vacancyNumber}>#{idx + 1}</span>
-                                                    <span className={styles.vacancyProfession}>{vacancy.profession}</span>
-                                                </div>
-                                                <div className={styles.vacancyDetails}>
-                                                    {vacancy.salary && (
-                                                        <div className={styles.detailItem}>
-                                                            <span className={styles.detailIcon}>💰</span>
-                                                            <span>{vacancy.salary}</span>
-                                                        </div>
-                                                    )}
-                                                    {vacancy.district && (
-                                                        <div className={styles.detailItem}>
-                                                            <span className={styles.detailIcon}>📍</span>
-                                                            <span>{vacancy.district}</span>
-                                                        </div>
-                                                    )}
-                                                    {vacancy.organization && (
-                                                        <div className={styles.detailItem}>
-                                                            <span className={styles.detailIcon}>🏢</span>
-                                                            <span>{vacancy.organization}</span>
-                                                        </div>
-                                                    )}
-                                                    {vacancy.date && (
-                                                        <div className={styles.detailItem}>
-                                                            <span className={styles.detailIcon}>📅</span>
-                                                            <span>{vacancy.date}</span>
-                                                        </div>
-                                                    )}
-                                                    {vacancy.schedule && (
-                                                        <div className={styles.detailItem}>
-                                                            <span className={styles.detailIcon}>⏰</span>
-                                                            <span>{vacancy.schedule}</span>
-                                                        </div>
-                                                    )}
-                                                    {vacancy.busyType && (
-                                                        <div className={styles.detailItem}>
-                                                            <span className={styles.detailIcon}>💼</span>
-                                                            <span>{vacancy.busyType}</span>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
                         </div>
 
                         <div className={styles.modalFooter}>

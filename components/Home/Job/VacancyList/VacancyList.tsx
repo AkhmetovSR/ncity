@@ -66,19 +66,33 @@ export default function VacancyList() {
                     <Link href="/" className={s.closeButton}>✕</Link>
                     <div className={s.vacancyList}>
                         {vacancies.map((vacancy, index) => (
-                            <motion.div key={index} className={s.vacancyCard} initial={{y: -30, opacity: 0}} animate={{y: 0, opacity: 1}} transition={{delay: 0.2 + index / 10}}>
+                            <motion.div
+                                key={index}
+                                className={s.vacancyCard}
+                                initial={{y: -30, opacity: 0}}
+                                animate={{y: 0, opacity: 1}}
+                                transition={{delay: 0.2 + index / 10}}
+                            >
                                 <div className={s.cardHeader}>
-                                    <h3 className={s.profession}>📌 {vacancy.profession}</h3>
-                                    <h5 className={s.salary}>🪙 {vacancy.salary}</h5>
+                                    <div className={s.professionWrapper}>
+                                        <span className={s.icon}>💼</span>
+                                        <h3 className={s.profession}>{vacancy.profession}</h3>
+                                    </div>
+                                    <div className={s.salaryWrapper}>
+                                        <span className={s.icon}>💰</span>
+                                        <h5 className={s.salary}>{vacancy.salary}</h5>
+                                    </div>
                                 </div>
+
                                 <div className={s.details}>
-                                    <button className={s.WatchVacancy} onClick={() => {setSelectedVacancy(vacancy);setVacancyOpen(true);}}>
+                                    <button className={s.WatchVacancy} onClick={() => {setSelectedVacancy(vacancy); setVacancyOpen(true);}}>
+                                        <span className={s.btnIcon}>👁️</span>
                                         Посмотреть
                                     </button>
-                                    <span className={s.date}>{vacancy.date}</span>
-                                </div>
-                                <div className={s.details}>
-
+                                    <div className={s.dateWrapper}>
+                                        <span className={s.smallIcon}>📅</span>
+                                        <span className={s.date}>{vacancy.date}</span>
+                                    </div>
                                 </div>
                             </motion.div>
                         ))}

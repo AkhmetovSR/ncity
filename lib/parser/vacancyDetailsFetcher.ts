@@ -1,3 +1,4 @@
+// lib/parser/vacancyDetailsFetcher.ts
 import { config } from '@/lib/config';
 import { Vacancy } from '@/types/vacancy';
 
@@ -60,15 +61,15 @@ export class VacancyDetailsFetcher {
                 requirements: v.positionRequirements || '',
                 address: v.fullAddress || '',
                 phone: v.contacts?.['Телефон'] || '',
-                email: v.contacts?.['Email'] || '',
+                // ✅ ИСПРАВЛЕНО: сначала из contacts, потом из companyDTO
+                email: v.contacts?.['Email'] || v.companyDTO?.email || '',
                 website: v.companyDTO?.site || '',
                 experience: v.requiredExperience ? `от ${v.requiredExperience} лет` : 'не требуется',
-                education: v.educationType || 'не указано',
-                companyInn: v.companyDTO?.inn || '',
-                companyOgrn: v.companyDTO?.ogrn || ''
+                education: v.educationType || 'не указано'
             };
 
-        } catch (error: any) {
+        } catch (error: unknown) {
+            console.log(error)
             return null;
         }
     }

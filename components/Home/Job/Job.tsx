@@ -9,8 +9,9 @@ import Link from 'next/link';
 export default function Job() {
     return (
             <motion.div className={s.Vacancy} layoutId="vacancy" transition={{ duration: 0.3, ease: "easeOut", type: "tween" }}>
-                <Link href="/vacancy" style={{ textDecoration: 'none' }}>
-                <div className={s.Content}>
+
+                <motion.div className={s.Content} initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}}>
+                    <Link href="/vacancy" style={{ textDecoration: 'none' }} className={s.Link}>
                     <div className={s.Left}>
                         <div className={s.Title}>Вакансии <br/>нашего города</div>
                         <div className={s.SearchJob}>смотреть вакансии</div>
@@ -20,8 +21,9 @@ export default function Job() {
                             <Lottie animationData={tapAnimation} loop={true} autoplay={true}/>
                         </div>
                     </div>
-                </div>
-                </Link>
+                    </Link>
+                </motion.div>
+
             </motion.div>
     );
 }

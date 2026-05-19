@@ -7,11 +7,14 @@
     border-radius: 1.5rem;
     /*border: 1px solid red;*/
     /*background-color: #20c997;*/
-    padding: 1rem;
+    /*padding: rem;*/
     background: linear-gradient(to bottom, #69FFD5, #B1FFE9);
     /*border-radius: 1.5rem;*/
     /*overflow: hidden;*/
     cursor: pointer;
+    display: grid;
+    align-items: center;
+    justify-items: center;
     /*transition: transform 0.2s ease;*/
 }
 /*.GreenBoard {*/
@@ -32,54 +35,66 @@
 /*}*/
 
 .Content {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: 65% 35%;
+    /*position: relative;*/
+    width: 90%;
+    height: 85%;
+
     /*border: 1px solid red;*/
     overflow: hidden;
 }
-
+.Link{
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 65% 35%;
+}
 .Left {
     display: grid;
+    grid-template-rows: 60% 40%;
+    height: 90%;
     width: 100%;
     justify-items: start;
     /*border: 1px solid red;*/
 }
-
 .Title {
     width: 78%;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-family: Mon;
     font-weight: bold;
-    color: #45A966;
-    padding-left: 2%;
-}
-
-.SearchJob {
+    color: #348770;
+    padding-left: 3%;
+    /*border: 1px solid red;*/
+    overflow: hidden;
     display: grid;
-    background: #50FFB9;
-    border-radius: 10px;
-    color: #00A74B;
-    font-family: Mon;
     align-items: center;
-    padding: 0 5%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
+.SearchJob {
+    width: 78%;
+    display: grid;
+    background: #6efbd4;
+    border-radius: 0.7rem;
+    color: #378f72;
+    /*font-family: Mon;*/
+    align-items: center;
+    justify-items: center;
+    /*padding: 0 5%;*/
+    /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
+    /*overflow: hidden;*/
+    /*border: 1px solid red;*/
+    font-size: 1rem;
+}
 .Right {
     width: 100%;
     display: grid;
     /*border: 1px solid red;*/
-    /*align-items: center;*/
-    /*justify-items: end;*/
+    align-items: center;
+    justify-items: end;
+}
+.WorkImg {
+    overflow: hidden;
+    /*height: 5rem;*/
+    /*width: 5rem;*/
+    display: grid;
+    justify-items: center;
     /*border: 1px solid red;*/
 }
-
-/*.WorkImg {*/
-/*    overflow: hidden;*/
-/*    height: 5rem;*/
-/*    width: 5rem;*/
-/*    display: grid;*/
-/*    justify-items: center;*/
-/*}*/

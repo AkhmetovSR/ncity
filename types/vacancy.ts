@@ -1,3 +1,5 @@
+// types/vacancy.ts
+// ✅ Добавляем VacancyApiItem обратно
 export interface VacancyApiItem {
     id: string;
     profession: string;
@@ -5,31 +7,29 @@ export interface VacancyApiItem {
     organization: string;
     salaryMin: number;
     salaryMax: number;
-    regionName: string;
     publishDate: number;
+    regionName: string;
     scheduleType: string;
     busyType: string;
 }
 
 export interface Vacancy {
-    id: string;
+    id?: string;
+    page?: number;
     profession: string;
     salary: string;
     district: string;
     organization: string;
     date: string;
     schedule: string;
-    busyType: string;
-    description: string;
-    requirements: string;
-    address: string;
-    phone: string;
-    email: string;
-    website: string;
-    experience: string;
-    education: string;
-    companyInn: string;
-    companyOgrn: string;
+    busyType?: string;
+    description?: string;
+    requirements?: string;
+    address?: string;
+    phone?: string;
+    email?: string;
+    website?: string;
+    experience?: string;
+    education?: string;
+    _id?: number;
 }
-
-export type Mode = 'local' | 'vercel' | 'online';

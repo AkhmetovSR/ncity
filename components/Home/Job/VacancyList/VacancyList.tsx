@@ -4,20 +4,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from 'next/link';
 import { useEffect, useState } from "react";
 import VacancyInfo from "@/components/Home/Job/VacancyInfo/VacancyInfo";
-interface Vacancy {
-    page: number;
-    profession: string;
-    salary: string;
-    district: string;
-    organization: string;
-    date: string;
-    schedule: string;
-    _id?: number;
-}
-
+import { Vacancy } from '@/types/vacancy'; // Импортируем общий тип
 
 export default function VacancyList() {
-    const [vacancies, setVacancies] = useState<Vacancy[]>([]); // Явно указываем тип
+    const [vacancies, setVacancies] = useState<Vacancy[]>([]);
     const [loading, setLoading] = useState(true);
     const [vacancyOpen, setVacancyOpen] = useState(false);
     const [selectedVacancy, setSelectedVacancy] = useState<Vacancy | null>(null);
@@ -27,6 +17,7 @@ export default function VacancyList() {
         const [day, month, year] = dateStr.split('.');
         return new Date(Number(year), Number(month) - 1, Number(day));
     }
+
     // Загрузка сортированных вакансий
     useEffect(() => {
         fetch('/api/vacancies')
@@ -35,13 +26,14 @@ export default function VacancyList() {
                 const sortedData = [...data].sort((a, b) => {
                     const dateA = parseDate(a.date);
                     const dateB = parseDate(b.date);
-                    return dateB.getTime() - dateA.getTime(); // От новых к старым
+                    return dateB.getTime() - dateA.getTime();
                 });
                 setVacancies(sortedData);
                 setLoading(false);
             })
             .catch(() => setLoading(false));
     }, []);
+
     if (loading) {
         return (
             <motion.div className={s.fullscreenOverlay} layoutId="vacancy">
@@ -51,6 +43,7 @@ export default function VacancyList() {
             </motion.div>
         );
     }
+
     if (vacancies.length === 0) {
         return (
             <motion.div className={s.fullscreenOverlay} layoutId="vacancy">
@@ -66,36 +59,35 @@ export default function VacancyList() {
         );
     }
 
-
-
     return (
         <motion.div className={s.fullscreenOverlay} layoutId="vacancy" transition={{ duration: 0.3, ease: "easeOut", type: "tween" }}>
             <motion.div className={s.fullscreenContent} onClick={(e) => e.stopPropagation()}>
                 <div className={s.contentWrapper}>
                     <Link href="/" className={s.closeButton}>✕</Link>
                     <div className={s.vacancyList}>
-                        {vacancies.map((vacancy: any, index: number) => (
-                            <div key={index} className={s.vacancyCard}>
+                        {vacancies.map((vacancy, index) => (
+                            <motion.div key={index} className={s.vacancyCard} initial={{y: -30, opacity: 0}} animate={{y: 0, opacity: 1}} transition={{delay: 0.2 + index / 10}}>
                                 <div className={s.cardHeader}>
-                                    <h3 className={s.profession}>{vacancy.profession}</h3>
-                                    <h5 className={s.salary}>{vacancy.salary}</h5>
+                                    <h3 className={s.profession}>📌 {vacancy.profession}</h3>
+                                    <h5 className={s.salary}>🪙 {vacancy.salary}</h5>
                                 </div>
                                 <div className={s.details}>
-                                    <button className={s.WatchVacancy} onClick={() => {setSelectedVacancy(vacancy); setVacancyOpen(true)}}>Посмотреть</button>
+                                    <button className={s.WatchVacancy} onClick={() => {setSelectedVacancy(vacancy);setVacancyOpen(true);}}>
+                                        Посмотреть
+                                    </button>
+                                    <span className={s.date}>{vacancy.date}</span>
                                 </div>
                                 <div className={s.details}>
-                                    <span className={s.date}>📅 {vacancy.date}</span>
+
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 </div>
             </motion.div>
-            {vacancyOpen && <VacancyInfo vacancy={selectedVacancy}/>}
+            <AnimatePresence>
+                {vacancyOpen && selectedVacancy && (<VacancyInfo vacancy={selectedVacancy} onClose={() => setVacancyOpen(false)}/>)}
+            </AnimatePresence>
         </motion.div>
     );
 }
-
-
-{/*<span className={styles.organization}>🏢 {vacancy.organization}</span>*/}
-{/*<span className={styles.district}>📍 {vacancy.district}</span>*/}

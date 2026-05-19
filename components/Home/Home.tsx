@@ -9,8 +9,8 @@ export  default function Home() {
 
     return (
         <div className={s.Home}>
-            <Title />
-            <Job />
+            <Title/>
+            <Job/>
         </div>
     );
 }

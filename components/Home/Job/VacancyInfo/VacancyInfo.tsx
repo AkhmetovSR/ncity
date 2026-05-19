@@ -2,28 +2,11 @@
 import s from './VacancyInfo.module.css';
 import { motion } from "framer-motion";
 import {JSX} from "react";
+import {Vacancy} from "@/types/vacancy";
+import Link from "next/link";
 
 interface VacancyInfoProps {
-    vacancy?: {
-        id?: string;
-        page?: number;
-        profession: string;
-        salary: string;
-        district: string;
-        organization: string;
-        date: string;
-        schedule: string;
-        busyType?: string;
-        description?: string;
-        requirements?: string;
-        address?: string;
-        phone?: string;
-        email?: string;
-        website?: string;
-        experience?: string;
-        education?: string;
-        _id?: number;
-    };
+    vacancy?: Vacancy; // Используем общий тип
     onClose?: () => void;
 }
 
@@ -262,8 +245,7 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                                     <a href={vacancy.website} target="_blank" rel="noopener noreferrer" className={s.contactCard}>
                                         <span className={s.contactIcon}>🌐</span>
                                         <div>
-                                            <div className={s.contactLabel}>Сайт</div>
-                                            <div className={s.contactValue}>{vacancy.website}</div>
+                                            <Link href={vacancy.website} className={s.contactLabel}>Посетить сайт компании</Link>
                                         </div>
                                     </a>
                                 )}

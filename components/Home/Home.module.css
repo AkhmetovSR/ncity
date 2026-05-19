@@ -4,9 +4,54 @@
     width: 100%;
     overflow: hidden;
     position: absolute;
-    border-radius: 2rem;
+    /*border-radius: 2rem;*/
     /*background-color: #20c997;*/
     display: grid;
     justify-items: center;
     z-index: 100;
+}
+
+.tree {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Общий стиль для треугольников */
+.triangle {
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-bottom: 100px solid green;
+}
+
+/* Размеры и отступы для каждого яруса */
+.top {
+    border-bottom: 60px solid #2e7d32;
+    border-left-width: 40px;
+    border-right-width: 40px;
+}
+
+.middle {
+    border-bottom: 80px solid #388e3c;
+    border-left-width: 60px;
+    border-right-width: 60px;
+    margin-top: -10px; /* наложение треугольников для реалистичности */
+}
+
+.bottom {
+    border-bottom: 100px solid #4caf50;
+    border-left-width: 80px;
+    border-right-width: 80px;
+    margin-top: -10px;
+}
+
+/* Ствол */
+.trunk {
+    width: 30px;
+    height: 40px;
+    background-color: #8d6e63;
+    margin-top: -5px;
 }

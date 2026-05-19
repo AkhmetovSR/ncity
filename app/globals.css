@@ -17,7 +17,14 @@
   font-family: 'Lora';
   src: url('/fonts/Lora-Regular.ttf') format('truetype');
 }
-
+@font-face {
+  font-family: "BadScript";
+  src: url('/fonts/BadScript-Regular.ttf');
+}
+@font-face {
+  font-family: "Klab";
+  src: url('/fonts/Klab.ttf');
+}
 
 
 :root {
@@ -27,7 +34,9 @@
   --font-montserrat: 'Montserrat', serif;
   --font-mPlus: 'MPLUSRounded1c', serif;
   --font-cursive: cursive;
-  --font-lora: 'Lora', serif;  /* ← исправлено */
+  --font-lora: 'Lora', serif;
+  --badScript: 'BadScript', cursive;
+  --klab: 'Klab', cursive;
 }
 
 html {

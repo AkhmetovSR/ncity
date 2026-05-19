@@ -22,7 +22,8 @@ export async function GET() {
         const vacancies = JSON.parse(fileContent);
         return NextResponse.json(vacancies);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
+        console.error('Ошибка:', error);
         return NextResponse.json([], { status: 200 });
     }
 }

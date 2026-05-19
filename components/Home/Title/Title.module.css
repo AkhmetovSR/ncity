@@ -31,15 +31,15 @@
 }
 .MountainImg{
     overflow: hidden;
-    width: 100%;
+    width: 70%;
     height: 100%;
     /*border: 1px solid red;*/
     display: grid;
     align-items: end;
 }
-.Mountain{
-    width: 40%;
-    opacity: 40%;
+.iconImage{
+    width: 100%;
+    /*opacity: 40%;*/
 }
 
 .TitleCity {
@@ -47,7 +47,7 @@
     height: 100%;
     display: grid;
     align-items: start;
-    font-family: Klab;
+    font-family: var(--klab);
     font-size: 1.9rem;
     font-weight: bold;
     color: #b8b8b8;
@@ -56,7 +56,7 @@
 }
 .Dobro{
     /*border: 1px solid red;*/
-    font-family: BadScript;
+    font-family: var(--badScript);
     font-size: 1rem;
     transform: rotate(-10deg);
     color: #FFFB7C;
@@ -69,4 +69,48 @@
 /*    font-size: 24px;*/
 /*    color: white;*/
 /*    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);*/
+/*}*/
+.tree {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Верхний ярус */
+.top {
+    width: 0;
+    height: 0;
+    border-left: 1.2rem solid transparent;
+    border-right: 1.2rem solid transparent;
+    border-bottom: 1.5rem solid #4caf50;
+    margin-top: -10px;
+}
+
+/* Средний ярус */
+.middle {
+    width: 0;
+    height: 0;
+    border-left: 1.2rem solid transparent;
+    border-right: 1.2rem solid transparent;
+    border-bottom: 1.5rem solid #4caf50;
+    margin-top: -10px;
+}
+
+/* Нижний ярус */
+.bottom {
+    width: 0;
+    height: 0;
+    border-left: 1.2rem solid transparent;
+    border-right: 1.2rem solid transparent;
+    border-bottom: 1.5rem solid #4caf50;
+    margin-top: -10px;
+}
+
+/*!* Ствол *!*/
+/*.trunk {*/
+/*    width: 30px;*/
+/*    height: 40px;*/
+/*    background-color: #8d6e63;*/
+/*    margin-top: -5px;*/
 /*}*/

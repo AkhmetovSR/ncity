@@ -65,6 +65,7 @@ export default function VacancyList() {
                 <div className={s.contentWrapper}>
                     <Link href="/" className={s.closeButton}>✕</Link>
                     <div className={s.vacancyList}>
+                        <div className={s.search}>Поиск, сортировка</div>
                         {vacancies.map((vacancy, index) => (
                             <motion.div
                                 key={index}
@@ -73,25 +74,25 @@ export default function VacancyList() {
                                 animate={{y: 0, opacity: 1}}
                                 transition={{delay: 0.2 + index / 10}}
                             >
-                                <div className={s.cardHeader}>
-                                    <div className={s.professionWrapper}>
-                                        <span className={s.icon}>💼</span>
-                                        <h3 className={s.profession}>{vacancy.profession}</h3>
+                                <div className={s.vacancyContent}>
+                                    <div className={s.cardHeader}>
+                                        <div className={s.Wrapper}>
+                                            <div className={s.divIcon}>📌</div>
+                                            <div><h3 className={s.profession}>{vacancy.profession}</h3></div>
+                                        </div>
+                                        <div className={s.Wrapper}>
+                                            <div className={s.divIcon}>🪙</div>
+                                            <h5 className={s.salary}>{vacancy.salary}</h5>
+                                        </div>
                                     </div>
-                                    <div className={s.salaryWrapper}>
-                                        <span className={s.icon}>💰</span>
-                                        <h5 className={s.salary}>{vacancy.salary}</h5>
-                                    </div>
-                                </div>
 
-                                <div className={s.details}>
-                                    <button className={s.WatchVacancy} onClick={() => {setSelectedVacancy(vacancy); setVacancyOpen(true);}}>
-                                        <span className={s.btnIcon}>👁️</span>
-                                        Посмотреть
-                                    </button>
-                                    <div className={s.dateWrapper}>
-                                        <span className={s.smallIcon}>📅</span>
-                                        <span className={s.date}>{vacancy.date}</span>
+                                    <div className={s.details}>
+                                        <div className={s.dateWrapper}>{vacancy.date}</div>
+                                        <button className={s.WatchVacancy} onClick={() => {
+                                            setSelectedVacancy(vacancy);
+                                            setVacancyOpen(true);
+                                        }}>Посмотреть
+                                        </button>
                                     </div>
                                 </div>
                             </motion.div>
@@ -100,7 +101,8 @@ export default function VacancyList() {
                 </div>
             </motion.div>
             <AnimatePresence>
-                {vacancyOpen && selectedVacancy && (<VacancyInfo vacancy={selectedVacancy} onClose={() => setVacancyOpen(false)}/>)}
+                {vacancyOpen && selectedVacancy && (
+                    <VacancyInfo vacancy={selectedVacancy} onClose={() => setVacancyOpen(false)}/>)}
             </AnimatePresence>
         </motion.div>
     );

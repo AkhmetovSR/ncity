@@ -77,22 +77,22 @@ export default function VacancyList() {
                                 <div className={s.vacancyContent}>
                                     <div className={s.cardHeader}>
                                         <div className={s.Wrapper}>
-                                            <div className={s.divIcon}>📌</div>
+                                            <div className={s.divIcon1}>📍</div>
                                             <div><h3 className={s.profession}>{vacancy.profession}</h3></div>
                                         </div>
                                         <div className={s.Wrapper}>
-                                            <div className={s.divIcon}>🪙</div>
+                                            <div className={s.divIcon2}>🪙</div>
                                             <h5 className={s.salary}>{vacancy.salary}</h5>
                                         </div>
                                     </div>
 
                                     <div className={s.details}>
-                                        <div className={s.dateWrapper}>{vacancy.date}</div>
                                         <button className={s.WatchVacancy} onClick={() => {
                                             setSelectedVacancy(vacancy);
                                             setVacancyOpen(true);
                                         }}>Посмотреть
                                         </button>
+                                        {/*<div className={s.dateWrapper}>{vacancy.date}</div>*/}
                                     </div>
                                 </div>
                             </motion.div>

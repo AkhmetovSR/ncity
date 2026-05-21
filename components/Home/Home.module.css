@@ -1,25 +1,48 @@
-.Home{
-    /*border: 2px solid red;*/
+/* Home.module.css */
+
+:local(.Home) {
     height: 100%;
     width: 100%;
     overflow: hidden;
     position: absolute;
-    /*border-radius: 2rem;*/
-    /*background-color: #20c997;*/
     display: grid;
     justify-items: center;
     z-index: 100;
+    /* Фон будет браться из глобальных переменных темы */
+    background: var(--bg-content);
 }
 
-.tree {
+/* Обёртка для кнопки темы - позиционируем в правом верхнем углу */
+:local(.themeButtonWrapper) {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+/* Адаптив для мобильных */
+@media (max-width: 640px) {
+    :local(.themeButtonWrapper) {
+        top: 12px;
+        right: 12px;
+    }
+}
+
+/* ========== ДЕКОРАТИВНАЯ ЁЛОЧКА ========== */
+:local(.tree) {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    opacity: 0.3; /* Делаем ёлочку полупрозрачной, чтобы не отвлекала */
+    pointer-events: none; /* Чтобы ёлочка не мешала кликам */
 }
 
-/* Общий стиль для треугольников */
-.triangle {
+/* Общий стиль для треугольников (ярусов ёлки) */
+:local(.triangle) {
     width: 0;
     height: 0;
     border-left: 50px solid transparent;
@@ -28,30 +51,39 @@
 }
 
 /* Размеры и отступы для каждого яруса */
-.top {
+:local(.top) {
     border-bottom: 60px solid #2e7d32;
     border-left-width: 40px;
     border-right-width: 40px;
 }
 
-.middle {
+:local(.middle) {
     border-bottom: 80px solid #388e3c;
     border-left-width: 60px;
     border-right-width: 60px;
     margin-top: -10px; /* наложение треугольников для реалистичности */
 }
 
-.bottom {
+:local(.bottom) {
     border-bottom: 100px solid #4caf50;
     border-left-width: 80px;
     border-right-width: 80px;
     margin-top: -10px;
 }
 
-/* Ствол */
-.trunk {
+/* Ствол ёлки */
+:local(.trunk) {
     width: 30px;
     height: 40px;
     background-color: #8d6e63;
     margin-top: -5px;
+}
+
+/* Адаптив для ёлочки на мобильных */
+@media (max-width: 640px) {
+    :local(.tree) {
+        transform: scale(0.7);
+        bottom: 10px;
+        left: 10px;
+    }
 }

@@ -1,14 +1,8 @@
 'use client';
-// Импортируем CSS модуль - стили изолированы для этого компонента
 import s from './VacancyList.module.css';
-// Импортируем motion компоненты из Framer Motion для анимаций
 import { motion, AnimatePresence } from "framer-motion";
-// Импортируем Link из Next.js для навигации между страницами без перезагрузки
 import Link from 'next/link';
-// Хуки React: useEffect - для побочных эффектов, useState - для состояния,
-// useRef - для ссылок на DOM элементы, useCallback - для мемоизации функций
 import { useEffect, useState, useRef, useCallback } from "react";
-// Импортируем компонент детальной информации о вакансии
 import VacancyInfo from "@/components/Home/Job/VacancyInfo/VacancyInfo";
 // Импортируем тип Vacancy для TypeScript (описывает структуру данных вакансии)
 import { Vacancy } from '@/types/vacancy';
@@ -184,22 +178,6 @@ export default function VacancyList() {
     //     return () => observerRef.current?.disconnect();
     // }, [filteredVacancies]); // Пересоздаём Observer, когда меняется список вакансий
 
-    // === ФУНКЦИЯ ПЕРЕКЛЮЧЕНИЯ ТЕМЫ ===
-    /**
-     * Переключает тему между тёмной и светлой
-     * Сохраняет выбор в localStorage и применяет атрибут к HTML
-     */
-    const toggleTheme = () => {
-        // Вычисляем новую тему (противоположную текущей)
-        const newTheme = theme === 'dark' ? 'light' : 'dark';
-        // Обновляем состояние
-        setTheme(newTheme);
-        // Применяем атрибут к корневому элементу (глобальный CSS подхватит)
-        document.documentElement.setAttribute('data-theme', newTheme);
-        // Сохраняем выбор пользователя в localStorage
-        localStorage.setItem('theme', newTheme);
-    };
-
     // === UI: СКЕЛЕТОН-ЗАГРУЗКА ===
     // Показывается, пока данные загружаются
     // if (loading) {
@@ -237,13 +215,9 @@ export default function VacancyList() {
     // Показывается, если вакансий нет
     if (filteredVacancies.length === 0) {
         return (
-            <motion.div className={s.fullscreenOverlay} layoutId="vacancy" transition={{duration: 0.3, ease: "easeOut", type: "tween"}}>
+            <motion.div className={s.fullscreenOverlay} layoutId="vacancy" transition={{duration: 0.2, ease: "easeOut", type: "tween"}}>
                 <motion.div className={s.fullscreenContent} onClick={(e) => e.stopPropagation()}>
                     <div className={s.header}>
-                        <div className={s.stats}></div>
-                        <button onClick={toggleTheme} className={s.themeToggle}>
-                            <span className={s.themeIcon}>{theme === 'dark' ? '☀️' : '🌙'}</span>
-                        </button>
                         <Link href="/" className={s.closeButton}>✕</Link>
                     </div>
 
@@ -269,22 +243,12 @@ export default function VacancyList() {
 
     // === ОСНОВНОЙ UI: СПИСОК ВАКАНСИЙ ===
     return (
-        <motion.div className={s.fullscreenOverlay} layoutId="vacancy"  initial={{opacity: 0}} animate={{opacity: 1}} transition={{ duration: 3, ease: "easeOut", type: "tween" }} exit={{opacity: 0}}>
+        <motion.div className={s.fullscreenOverlay} layoutId="vacancy"  initial={{opacity: 0}} animate={{opacity: 1}} transition={{ duration: 0.2, ease: "easeOut", type: "tween" }} exit={{opacity: 0}}>
             <motion.div className={s.fullscreenContent} onClick={(e) => e.stopPropagation()}>
                 <motion.div className={s.contentWrapper} initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}}>
                     {/* ХЕДЕР */}
                     <div className={s.header}>
-                        <div className={s.stats}></div>
-                        <button onClick={toggleTheme} className={s.themeToggle}>
-                            <span className={s.themeIcon}>{theme === 'dark' ? '☀️' : '🌙'}</span>
-                        </button>
-                        {/* Анимированная кнопка закрытия */}
-                        <motion.div
-                            whileHover={{scale: 1.05}}   // При наведении увеличивается
-                            whileTap={{scale: 0.95}}     // При нажатии уменьшается
-                        >
                             <Link href="/" className={s.closeButton}>✕</Link>
-                        </motion.div>
                     </div>
 
                     {/* ПАНЕЛЬ ФИЛЬТРАЦИИ */}

@@ -1,0 +1,46 @@
+/* ThemeToggle.module.css */
+
+:local(.themeToggle) {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 40px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+:local(.themeToggle):hover {
+    background: var(--bg-card-hover);
+    transform: scale(1.02);
+    border-color: var(--accent);
+}
+
+:local(.themeIcon) {
+    font-size: 1.1rem;
+    transition: transform 0.2s ease;
+}
+
+:local(.themeToggle):hover .themeIcon {
+    transform: rotate(15deg);
+}
+
+:local(.themeText) {
+    font-size: 0.8rem;
+}
+
+/* Адаптив для мобильных устройств */
+@media (max-width: 640px) {
+    :local(.themeToggle) {
+        padding: 6px 12px;
+    }
+
+    :local(.themeText) {
+        display: none; /* На мобильных скрываем текст, оставляем только иконку */
+    }
+}

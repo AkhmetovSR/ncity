@@ -3,11 +3,14 @@
 :local(.Home) {
     height: 100%;
     width: 100%;
+    max-width: 500px;
     overflow: hidden;
     position: absolute;
     display: grid;
     justify-items: center;
     z-index: 100;
+    border-radius: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.53);
     /* Фон будет браться из глобальных переменных темы */
     background: var(--bg-content);
 }
@@ -81,6 +84,9 @@
 
 /* Адаптив для ёлочки на мобильных */
 @media (max-width: 640px) {
+    :local(.Home) {
+        border-radius: 0;
+    }
     :local(.tree) {
         transform: scale(0.7);
         bottom: 10px;

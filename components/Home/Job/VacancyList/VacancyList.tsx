@@ -248,12 +248,6 @@ export default function VacancyList() {
                 <motion.div className={s.contentWrapper} initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}}>
                     {/* ХЕДЕР */}
                     <div className={s.header}>
-                            <Link href="/" className={s.closeButton}>✕</Link>
-                    </div>
-
-                    {/* ПАНЕЛЬ ФИЛЬТРАЦИИ */}
-                    <div className={s.filters}>
-                        {/* Выпадающий список для выбора сортировки */}
                         <select
                             className={s.filterSelect}
                             value={sortBy}
@@ -263,10 +257,7 @@ export default function VacancyList() {
                             <option value="salary-asc">💰 По зарплате (возрастание)</option>
                             <option value="salary-desc">💰 По зарплате (убывание)</option>
                         </select>
-                        {/* Счётчик показанных вакансий */}
-                        <div className={s.stats}>
-                            📊 {filteredVacancies.length} из {vacancies.length} вакансий
-                        </div>
+                        <Link href="/" className={s.closeButton}>✕</Link>
                     </div>
 
                     {/* СПИСОК ВАКАНСИЙ */}

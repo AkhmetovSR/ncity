@@ -1,6 +1,8 @@
-/* VacancyInfo.module.css */
+/* VacancyList.module.css */
 
-.fullscreenOverlay {
+/* Все переменные берутся из globals.css, поэтому здесь только стили */
+
+:local(.fullscreenOverlay) {
     position: absolute;
     top: 0;
     left: 0;
@@ -9,145 +11,336 @@
     display: grid;
     justify-items: center;
     align-items: center;
-    /*background-color: #000000;*/
+    background: var(--bg-overlay);
+    backdrop-filter: blur(2px);
     overflow: hidden;
 }
 
-.fullscreenContent {
-    display: grid;
-    align-items: center;
-    justify-items: center;
-    /*align-items: start;*/
+:local(.fullscreenContent) {
     width: 90%;
-    height: 95%;
-    border-radius: 28px;
-    background: linear-gradient(to bottom, rgba(104, 251, 210), rgba(177, 255, 233));
-    /*background-color: #1D1F23;*/
-    overflow-x: hidden;
-    overflow-y: scroll;
-    position: relative;
-    /*padding: 2rem 0.5rem;*/
-    border: 1px solid rgba(255, 255, 255, 0.16);
-}
-.contentWrapper{
-    /*border: 1px solid red;*/
-    width: 95%;
-    height: 98%;
-}
-.closeButton{
-    position: absolute;
-    height: 2rem;
-    width: 2.5rem;
-    top: 0;
-    right: 0;
-    background-color: #ff4b4b;
-    border-radius: 0 20px 0 20px;
-    display: grid;
-    text-align: center;
-    align-items: center;
-    justify-self: right;
-}
-.vacancyList{
-    display: grid;
-    gap: 0.5rem;
-    /*border: 1px solid red;*/
-}
-.search{
-    /*border: 1px solid red;*/
-    height: 2rem;
-}
-.vacancyCard {
-    background-color: rgba(41, 43, 48, 0.9);
-    border-radius: 28px;
-    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    padding: 0.5rem 1.2rem;
-    /*transition: all 0.4s cubic-bezier(0.25, 0.1, 0.2, 1);*/
-    cursor: pointer;
-    /*position: relative;*/
+    max-width: 900px;
+    height: 90%;
+    max-height: 85vh;
+    border-radius: 32px;
+    background: var(--bg-content);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     overflow: hidden;
-    display: grid;
-    align-items: center;
-    justify-items: center;
-}
-.vacancyContent{
-    height: 100%;
-    width: 100%;
-    /*border: 1px solid red;*/
-}
-.Wrapper, .details{
     position: relative;
-    /*border: 1px solid red;*/
-    padding: 0.5rem 0;
-}
-.Wrapper{
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-}
-.details{
-    display: grid;
-    justify-items: center;
-    /*grid-template-columns: 1fr 1fr;*/
-    /*padding-left: 2.8rem;*/
-}
-.profession {
-    color: rgba(255, 255, 255, 0.9);
-    /*background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a1e0d7);*/
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    /*color: transparent;*/
-    font-size: 1rem;
-    animation: shine 3s linear infinite;
-    /*border: 1px solid red;*/
-    /*padding: 0.5rem 0;*/
-    padding-left: 1rem;
+    border: 1px solid var(--border-color);
 }
 
-.salary{
-    display: grid;
-    align-items: center;
-    /*padding: 0.5rem 0;*/
-    color: rgb(253, 241, 119);
-    font-size: 1rem;
-    padding-left: 1rem;
+:local(.contentWrapper) {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
-.divIcon1{
-    display: grid;
+
+:local(.header) {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-items: center;
-    height: 2rem;
-    width: 2rem;
-    font-size: 1.5rem;
-    /*border: 1px solid red;*/
+    padding: 16px 24px;
+    background: var(--bg-content);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
-.divIcon2{
-    display: grid;
+
+:local(.themeToggle) {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 40px;
+    padding: 6px 12px;
+    cursor: pointer;
+    display: flex;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+:local(.themeToggle):hover {
+    background: var(--bg-card-hover);
+}
+
+:local(.themeIcon) {
+    font-size: 1.2rem;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+:local(.closeButton) {
+    width: 32px;
+    height: 32px;
+    background: var(--bg-card);
+    border-radius: 50%;
+    display: flex;
     align-items: center;
-    justify-items: center;
-    height: 2rem;
-    width: 2rem;
-    font-size: 1.1rem;
-    /*border: 1px solid red;*/
+    justify-content: center;
+    color: var(--text-secondary);
+    font-size: 18px;
+    font-weight: 300;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    border: 1px solid var(--border-color);
 }
-.WatchVacancy {
-    /*background-color: rgba(122, 56, 38, 0.75);*/
-    background: none;
-    /*border: none;*/
+
+:local(.closeButton):hover {
+    background: rgba(255, 68, 68, 0.8);
+    transform: scale(1.05);
     color: white;
-    width: 70%;
-    /*font-weight: 500;*/
-    /*transition: all 0.3s;*/
-    padding: 0.4rem 0.6rem;
-    border-radius: 0.7rem;
-    border: 1px solid rgba(255, 255, 255, 0.24);
 }
-.dateWrapper{
-    position: absolute;
-    right: 0;
-    bottom: 0.1rem;
-    display: grid;
+
+:local(.filters) {
+    padding: 16px 24px;
+    background: var(--bg-content);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 60px;
+    z-index: 9;
+}
+
+:local(.filterSelect) {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 40px;
+    padding: 8px 16px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+:local(.filterSelect):hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent);
+}
+
+:local(.stats) {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    display: flex;
     align-items: center;
-    text-align: start;
+}
+
+:local(.vacancyList) {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+:local(.vacancyList)::-webkit-scrollbar {
+    width: 6px;
+}
+
+:local(.vacancyList)::-webkit-scrollbar-track {
+    background: var(--border-color);
+    border-radius: 10px;
+}
+
+:local(.vacancyList)::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 10px;
+}
+
+:local(.skeletonContainer) {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+:local(.skeletonCard) {
+    background: var(--skeleton-base);
+    border-radius: 24px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeletonPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+:local(.skeletonRow) {
+    height: 24px;
+    background: var(--skeleton-highlight);
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+
+:local(.skeletonRowSmall) {
+    height: 16px;
+    width: 60%;
+    background: var(--skeleton-highlight);
+    border-radius: 8px;
+}
+
+:local(.skeletonButton) {
+    height: 36px;
+    width: 120px;
+    background: var(--skeleton-highlight);
+    border-radius: 40px;
+}
+
+:local(.vacancyCard) {
+    background: var(--bg-card);
+    border-radius: 24px;
+    padding: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+:local(.vacancyCardVisible) {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+:local(.vacancyCard):hover {
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+:local(.vacancyContent) {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+:local(.cardHeader) {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+:local(.Wrapper) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+:local(.divIcon1),
+:local(.divIcon2) {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    background: rgba(104, 251, 210, 0.1);
+    border-radius: 12px;
+}
+
+:local(.profession) {
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+}
+
+:local(.salary) {
+    color: var(--accent);
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+:local(.details) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+}
+
+:local(.WatchVacancy) {
+    background: var(--accent-gradient);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+:local(.WatchVacancy):hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(104, 251, 210, 0.3);
+}
+
+:local(.dateWrapper) {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+:local(.emptyContainer) {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+:local(.empty) {
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+:local(.empty) p {
+    margin: 8px 0;
+}
+
+:local(.hint) {
     font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.62);
+    color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+    :local(.fullscreenContent) {
+        width: 95%;
+        height: 95%;
+        border-radius: 24px;
+    }
+
+    :local(.vacancyList),
+    :local(.skeletonContainer) {
+        padding: 16px;
+    }
+
+    :local(.vacancyCard) {
+        padding: 16px;
+    }
+
+    :local(.profession) {
+        font-size: 0.9rem;
+    }
+
+    :local(.filters) {
+        padding: 12px 16px;
+    }
+
+    :local(.filterSelect) {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+    }
 }

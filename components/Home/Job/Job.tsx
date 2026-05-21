@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 export default function Job() {
     return (
-            <motion.div className={s.Vacancy} layoutId="vacancy" transition={{ duration: 0.3, ease: "easeOut", type: "tween" }}>
+            <motion.div className={s.Vacancy} layoutId="vacancy" initial={{opacity: 0}} animate={{opacity: 1}} transition={{duration: 0.3}} exit={{opacity: 0}}>
 
                 <motion.div className={s.Content} initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}}>
                     <Link href="/vacancy" style={{ textDecoration: 'none' }} className={s.Link}>

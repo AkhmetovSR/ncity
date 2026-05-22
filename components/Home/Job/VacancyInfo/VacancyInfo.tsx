@@ -154,37 +154,28 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
 
                 <div className={s.header}>
                     <div className={s.headerContent}>
-                        <h2 className={s.title}>{vacancy.profession}</h2>
-                        <motion.button
-                            className={s.closeButton}
-                            onClick={onClose}
-                            whileHover={{ scale: 1.1, rotate: 90 }}
-                            whileTap={{ scale: 0.9 }}
-                        >
-                            ✕
-                        </motion.button>
+                    <div>
+                        <h2 className={s.title}>{vacancy.profession}</h2></div>
+                        <div>
+                            <motion.button className={s.closeButton} onClick={onClose}>✕</motion.button>
+                        </div>
                     </div>
+                    <div>{/* Зарплата - акцентный блок */}
+                        {vacancy.salary && (
+                            <motion.div className={s.salaryBox}>
+                                <span className={s.salaryIcon}>💰</span>
+                                <span className={s.salaryValue}>{vacancy.salary}</span>
+                            </motion.div>
+                        )}</div>
+
                 </div>
 
                 <div className={s.content}>
-                    {/* Зарплата - акцентный блок */}
-                    {vacancy.salary && (
-                        <motion.div
-                            className={s.salaryBox}
-                            initial={{ scale: 0.95, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ delay: 0.1 }}
-                        >
-                            <span className={s.salaryIcon}>💰</span>
-                            <span className={s.salaryValue}>{vacancy.salary}</span>
-                        </motion.div>
-                    )}
-
                     {/* Основная информация в виде карточек */}
                     <motion.div
                         className={s.infoGrid}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
+                        initial={{opacity: 0}}
+                        animate={{opacity: 1}}
                         transition={{ delay: 0.15 }}
                     >
                         {vacancy.organization && (

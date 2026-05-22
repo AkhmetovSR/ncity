@@ -8,8 +8,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(2px);
     z-index: 999;
 }
 
@@ -19,8 +19,8 @@
     bottom: 0;
     left: 0;
     right: 0;
-    /*background: var(--bg-content);*/
-    background: rgba(32, 201, 151, 0.76);
+    background: var(--bg-card);
+    background: rgb(39, 42, 47);
     backdrop-filter: blur(20px);
     border-radius: 28px 28px 0 0;
     box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.2);
@@ -63,18 +63,19 @@
 :local(.header) {
     position: sticky;
     top: 0;
-    background: var(--bg-content);
+    /*background: var(--bg-content);*/
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border-color);
     z-index: 10;
+    border: 1px solid red;
 }
 
 :local(.headerContent) {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 20px 24px;
-    gap: 16px;
+    /*justify-content: space-between;*/
+    /*align-items: flex-start;*/
+    /*padding: 20px 24px;*/
+    /*gap: 16px;*/
 }
 
 :local(.title) {
@@ -115,15 +116,19 @@
 
 /* ========== БЛОК ЗАРПЛАТЫ ========== */
 :local(.salaryBox) {
+    width: 70%;
+    /*border: 1px solid var(--border-color);*/
+    /*width: auto;*/
     background: var(--accent-gradient);
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    box-shadow: 0 8px 20px rgba(104, 251, 210, 0.2);
+    border-radius: 15px;
+    /*padding: 20px;*/
+    /*margin-bottom: 24px;*/
+    text-align: start;
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*justify-content: center;*/
+    /*gap: 12px;*/
+    /*box-shadow: 0 8px 20px rgba(104, 251, 210, 0.2);*/
 }
 
 :local(.salaryIcon) {
@@ -131,10 +136,10 @@
 }
 
 :local(.salaryValue) {
-    font-size: 26px;
-    font-weight: 800;
+    font-size: 1.1rem;
+    /*font-weight: 800;*/
     color: white;
-    letter-spacing: -0.5px;
+    /*letter-spacing: -0.5px;*/
 }
 
 /* ========== СЕТКА ИНФОРМАЦИИ ========== */
@@ -153,12 +158,6 @@
     border-radius: 16px;
     border: 1px solid var(--border-color);
     transition: all 0.2s ease;
-}
-
-:local(.infoCard):hover {
-    background: var(--bg-card-hover);
-    transform: translateY(-2px);
-    border-color: var(--accent);
 }
 
 :local(.infoIcon) {
@@ -282,7 +281,7 @@
 
 /* ========== ТИПОГРАФИКА ========== */
 :local(.paragraph) {
-    font-size: 14px;
+    font-size: 1rem;
     line-height: 1.6;
     color: var(--text-secondary);
     margin: 0 0 12px 0;
@@ -314,7 +313,7 @@
     position: relative;
     padding-left: 24px;
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: 1rem;
     line-height: 1.5;
     color: var(--text-secondary);
 }
@@ -345,9 +344,9 @@
         padding: 20px;
     }
 
-    :local(.salaryValue) {
-        font-size: 22px;
-    }
+    /*:local(.salaryValue) {*/
+    /*    font-size: 1rem;*/
+    /*}*/
 
     :local(.salaryIcon) {
         font-size: 24px;
@@ -376,7 +375,7 @@
         padding: 16px;
     }
 
-    :local(.salaryValue) {
-        font-size: 20px;
-    }
+    /*:local(.salaryValue) {*/
+    /*    font-size: 20px;*/
+    /*}*/
 }

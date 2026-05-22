@@ -1,37 +1,49 @@
 'use client';
 import s from './VacancyInfo.module.css';
-import { motion } from "framer-motion";
-import {JSX} from "react";
-import {Vacancy} from "@/types/vacancy";
+import { motion, AnimatePresence } from "framer-motion";
+import { JSX, useEffect, useState } from "react";
+import { Vacancy } from "@/types/vacancy";
 import Link from "next/link";
 
 interface VacancyInfoProps {
-    vacancy?: Vacancy; // Используем общий тип
+    vacancy?: Vacancy;
     onClose?: () => void;
 }
 
 export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        // Небольшая задержка для плавного появления
+        setTimeout(() => setIsVisible(true), 50);
+        return () => setIsVisible(false);
+    }, []);
+
     if (!vacancy) return null;
 
-    // Функция для парсинга HTML в структурированный текст
+    /**
+     * Парсит HTML в структурированный текст с поддержкой различных тегов
+     * @param html - HTML строка для парсинга
+     * @returns массив JSX элементов
+     */
     const parseHtmlToStructuredText = (html: string): JSX.Element[] => {
         if (!html) return [];
 
         const elements: JSX.Element[] = [];
-
-        // Создаем временный DOM элемент для парсинга HTML
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
         const body = doc.body;
-
         let keyCounter = 0;
 
-        // Рекурсивная функция для обхода узлов
-        const processNode = (node: Node, parentList: boolean = false) => {
+        const processNode = (node: Node, isInsideList: boolean = false) => {
             if (node.nodeType === Node.TEXT_NODE) {
                 const text = node.textContent?.trim();
-                if (text && !parentList) {
-                    elements.push(<p key={keyCounter++} className={s.paragraph}>{text}</p>);
+                if (text && !isInsideList) {
+                    elements.push(
+                        <p key={keyCounter++} className={s.paragraph}>
+                            {text}
+                        </p>
+                    );
                 }
                 return;
             }
@@ -42,36 +54,48 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
 
                 switch (tagName) {
                     case 'p':
-                        // Параграф
                         const pText = element.textContent?.trim();
                         if (pText) {
-                            // Проверяем, является ли параграф заголовком (содержит <b> или <strong>)
                             const hasBold = element.querySelector('b, strong');
-                            if (hasBold) {
-                                elements.push(<h4 key={keyCounter++} className={s.subHeader}>{pText}</h4>);
+                            if (hasBold && pText.length < 100) {
+                                elements.push(
+                                    <h4 key={keyCounter++} className={s.subHeader}>
+                                        {pText}
+                                    </h4>
+                                );
                             } else {
-                                elements.push(<p key={keyCounter++} className={s.paragraph}>{pText}</p>);
+                                elements.push(
+                                    <p key={keyCounter++} className={s.paragraph}>
+                                        {pText}
+                                    </p>
+                                );
                             }
                         }
                         break;
 
                     case 'b':
                     case 'strong':
-                        // Жирный текст как подзаголовок
                         const boldText = element.textContent?.trim();
-                        if (boldText) {
-                            elements.push(<h4 key={keyCounter++} className={s.subHeader}>{boldText}</h4>);
+                        if (boldText && boldText.length < 80) {
+                            elements.push(
+                                <h4 key={keyCounter++} className={s.subHeader}>
+                                    {boldText}
+                                </h4>
+                            );
                         }
                         break;
 
                     case 'ul':
                     case 'ol':
-                        // Список
                         const listItems: JSX.Element[] = [];
                         element.querySelectorAll('li').forEach((li, idx) => {
                             const liText = li.textContent?.trim();
                             if (liText) {
-                                listItems.push(<li key={idx}>{liText}</li>);
+                                listItems.push(
+                                    <li key={idx} className={s.listItem}>
+                                        {liText}
+                                    </li>
+                                );
                             }
                         });
                         if (listItems.length > 0) {
@@ -84,59 +108,85 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                         break;
 
                     case 'br':
-                        // Перенос строки
                         elements.push(<div key={keyCounter++} className={s.spacer} />);
                         break;
 
                     default:
-                        // Рекурсивно обрабатываем дочерние узлы
-                        element.childNodes.forEach(child => processNode(child, parentList));
+                        element.childNodes.forEach(child => processNode(child, isInsideList));
                         break;
                 }
             }
         };
 
         body.childNodes.forEach(node => processNode(node));
-
         return elements;
     };
 
     return (
-        <>
-            {/* Затемненный фон */}
+        <AnimatePresence>
+            {/* Затемнённый фон с анимацией */}
             <motion.div
                 className={s.overlay}
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                animate={{ opacity: isVisible ? 1 : 0 }}
                 exit={{ opacity: 0 }}
                 onClick={onClose}
+                transition={{ duration: 0.2 }}
             />
 
-            {/* Панель с информацией */}
+            {/* Панель с информацией - выезжает снизу */}
             <motion.div
-                className={s.VacancyInfo}
+                className={s.vacancyInfo}
                 initial={{ y: '100%' }}
-                animate={{ y: 0 }}
+                animate={{ y: isVisible ? 0 : '100%' }}
                 exit={{ y: '100%' }}
-                transition={{ duration: 0.3, type: 'tween', ease: 'easeOut' }}
+                transition={{
+                    type: 'spring',
+                    damping: 30,
+                    stiffness: 300,
+                    mass: 0.8
+                }}
             >
+                {/* Индикатор свайпа (для мобильных) */}
+                <div className={s.swipeIndicator}>
+                    <div className={s.swipeBar} />
+                </div>
+
                 <div className={s.header}>
-                    <h2 className={s.title}>{vacancy.profession}</h2>
-                    <button className={s.closeButton} onClick={onClose}>✕</button>
+                    <div className={s.headerContent}>
+                        <h2 className={s.title}>{vacancy.profession}</h2>
+                        <motion.button
+                            className={s.closeButton}
+                            onClick={onClose}
+                            whileHover={{ scale: 1.1, rotate: 90 }}
+                            whileTap={{ scale: 0.9 }}
+                        >
+                            ✕
+                        </motion.button>
+                    </div>
                 </div>
 
                 <div className={s.content}>
-                    {/* Зарплата */}
+                    {/* Зарплата - акцентный блок */}
                     {vacancy.salary && (
-                        <div className={s.section}>
-                            <div className={s.salaryBox}>
-                                💰 {vacancy.salary}
-                            </div>
-                        </div>
+                        <motion.div
+                            className={s.salaryBox}
+                            initial={{ scale: 0.95, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ delay: 0.1 }}
+                        >
+                            <span className={s.salaryIcon}>💰</span>
+                            <span className={s.salaryValue}>{vacancy.salary}</span>
+                        </motion.div>
                     )}
 
                     {/* Основная информация в виде карточек */}
-                    <div className={s.infoGrid}>
+                    <motion.div
+                        className={s.infoGrid}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.15 }}
+                    >
                         {vacancy.organization && (
                             <div className={s.infoCard}>
                                 <div className={s.infoIcon}>🏢</div>
@@ -216,64 +266,109 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                                 </div>
                             </div>
                         )}
-                    </div>
+                    </motion.div>
 
                     {/* Контакты */}
                     {(vacancy.phone || vacancy.email || vacancy.website) && (
-                        <div className={s.contactsSection}>
-                            <h3 className={s.sectionTitle}>📞 Контакты для связи</h3>
+                        <motion.div
+                            className={s.contactsSection}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
+                        >
+                            <h3 className={s.sectionTitle}>
+                                <span className={s.sectionIcon}>📞</span>
+                                Контакты для связи
+                            </h3>
                             <div className={s.contactsGrid}>
                                 {vacancy.phone && (
-                                    <a href={`tel:${vacancy.phone}`} className={s.contactCard}>
+                                    <motion.a
+                                        href={`tel:${vacancy.phone}`}
+                                        className={s.contactCard}
+                                        whileHover={{ x: 5, scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                    >
                                         <span className={s.contactIcon}>📱</span>
-                                        <div>
+                                        <div className={s.contactInfo}>
                                             <div className={s.contactLabel}>Телефон</div>
                                             <div className={s.contactValue}>{vacancy.phone}</div>
                                         </div>
-                                    </a>
+                                        <span className={s.contactArrow}>→</span>
+                                    </motion.a>
                                 )}
                                 {vacancy.email && (
-                                    <a href={`mailto:${vacancy.email}`} className={s.contactCard}>
+                                    <motion.a
+                                        href={`mailto:${vacancy.email}`}
+                                        className={s.contactCard}
+                                        whileHover={{ x: 5, scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                    >
                                         <span className={s.contactIcon}>✉️</span>
-                                        <div>
+                                        <div className={s.contactInfo}>
                                             <div className={s.contactLabel}>Email</div>
                                             <div className={s.contactValue}>{vacancy.email}</div>
                                         </div>
-                                    </a>
+                                        <span className={s.contactArrow}>→</span>
+                                    </motion.a>
                                 )}
                                 {vacancy.website && (
-                                    <a href={vacancy.website} target="_blank" rel="noopener noreferrer" className={s.contactCard}>
+                                    <motion.a
+                                        href={vacancy.website}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={s.contactCard}
+                                        whileHover={{ x: 5, scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                    >
                                         <span className={s.contactIcon}>🌐</span>
-                                        <div>
-                                            <Link href={vacancy.website} className={s.contactLabel}>Посетить сайт компании</Link>
+                                        <div className={s.contactInfo}>
+                                            <div className={s.contactLabel}>Сайт</div>
+                                            <div className={s.contactValue}>{vacancy.website}</div>
                                         </div>
-                                    </a>
+                                        <span className={s.contactArrow}>→</span>
+                                    </motion.a>
                                 )}
                             </div>
-                        </div>
+                        </motion.div>
                     )}
 
                     {/* Описание вакансии */}
                     {vacancy.description && (
-                        <div className={s.section}>
-                            <h3 className={s.sectionTitle}>📝 Описание вакансии</h3>
+                        <motion.div
+                            className={s.section}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.25 }}
+                        >
+                            <h3 className={s.sectionTitle}>
+                                <span className={s.sectionIcon}>📝</span>
+                                Описание вакансии
+                            </h3>
                             <div className={s.contentBox}>
                                 {parseHtmlToStructuredText(vacancy.description)}
                             </div>
-                        </div>
+                        </motion.div>
                     )}
 
                     {/* Требования */}
                     {vacancy.requirements && (
-                        <div className={s.section}>
-                            <h3 className={s.sectionTitle}>⚡ Требования к кандидату</h3>
+                        <motion.div
+                            className={s.section}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                        >
+                            <h3 className={s.sectionTitle}>
+                                <span className={s.sectionIcon}>⚡</span>
+                                Требования к кандидату
+                            </h3>
                             <div className={s.contentBox}>
                                 {parseHtmlToStructuredText(vacancy.requirements)}
                             </div>
-                        </div>
+                        </motion.div>
                     )}
                 </div>
             </motion.div>
-        </>
+        </AnimatePresence>
     );
 }

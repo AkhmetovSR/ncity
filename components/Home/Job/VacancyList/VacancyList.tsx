@@ -272,47 +272,54 @@ export default function VacancyList() {
                                 data-index={index}
                                 // Класс видимости: если индекс в Set, добавляем класс для анимации
                                 className={`${s.vacancyCard} ${visibleCards.has(index) ? s.vacancyCardVisible : ''}`}
-                                onClick={() => {
-                                    // При клике открываем модальное окно с деталями
+                                onClick={(e) => {
+                                    e.stopPropagation();  // Останавливаем всплытие, чтобы не сработал клик на карточке
                                     setSelectedVacancy(vacancy);
-                                    // setVacancyOpen(true);
+                                    setVacancyOpen(true);
                                 }}
                                 initial={{opacity: 0, y: 30}}   // Начинаем снизу и прозрачными
                                 animate={{opacity: 1, y: 0}}     // Анимируем до нормального положения
                                 transition={{delay: index * 0.05, duration: 0.4}}  // Задержка для каждой карточки
                                 whileHover={{scale: 1.01}}        // При наведении чуть увеличивается
                                 whileTap={{scale: 0.99}}          // При нажатии чуть уменьшается (эффект "клика")
+
                             >
                                 <div className={s.vacancyContent}>
                                     {/* Верхняя часть карточки: иконка + профессия */}
                                     <div className={s.cardHeader}>
                                         <div className={s.Wrapper}>
-                                            <div className={s.divIcon1}>📍</div>
-                                            <h3 className={s.profession}>{vacancy.profession}</h3>
+                                            <div className={s.Wrapper1}>
+                                                <div className={s.divIcon1}><div className={s.Icon1}>📌</div></div>
+                                                <div><h3 className={s.profession}>{vacancy.profession}</h3></div>
+                                            </div>
+                                            {/* Зарплата */}
+                                            <div className={s.Wrapper2}>
+                                                <div className={s.divIcon2}><div className={s.Icon2}>🪙</div></div>
+                                                <div><h5 className={s.salary}>{vacancy.salary}</h5></div>
+                                                {/*<div className={s.dateWrapper}>{vacancy.date}</div>*/}
+                                            </div>
                                         </div>
-                                        {/* Зарплата */}
-                                        <div className={s.Wrapper}>
-                                            <div className={s.divIcon2}>💰</div>
-                                            <h5 className={s.salary}>{vacancy.salary}</h5>
+
+                                        <div className={s.details}>
+                                            <motion.button
+                                                className={s.WatchVacancy}
+                                                // whileHover={{scale: 1.05}}
+                                                // whileTap={{scale: 0.95}}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();  // Останавливаем всплытие, чтобы не сработал клик на карточке
+                                                    setSelectedVacancy(vacancy);
+                                                    setVacancyOpen(true);
+                                                }}
+                                            >
+                                                ▶
+                                            </motion.button>
+                                            {/*<div className={s.dateWrapper}>{vacancy.date}</div>*/}
                                         </div>
                                     </div>
 
+
                                     {/* Нижняя часть: кнопка и дата */}
-                                    <div className={s.details}>
-                                        <motion.button
-                                            className={s.WatchVacancy}
-                                            whileHover={{scale: 1.05}}
-                                            whileTap={{scale: 0.95}}
-                                            onClick={(e) => {
-                                                e.stopPropagation();  // Останавливаем всплытие, чтобы не сработал клик на карточке
-                                                setSelectedVacancy(vacancy);
-                                                setVacancyOpen(true);
-                                            }}
-                                        >
-                                            Подробнее →
-                                        </motion.button>
-                                        <div className={s.dateWrapper}>{vacancy.date}</div>
-                                    </div>
+
                                 </div>
                             </motion.div>
                         ))}

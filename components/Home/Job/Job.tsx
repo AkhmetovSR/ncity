@@ -13,7 +13,7 @@ export default function Job() {
                 <motion.div className={s.Content} initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}}>
                     <Link href="/vacancy" style={{ textDecoration: 'none' }} className={s.Link}>
                     <div className={s.Left}>
-                        <div className={s.Title}>Вакансии <br/>нашего города</div>
+                        <div className={s.Title}>Вакансии</div>
                         <div className={s.SearchJob}>смотреть вакансии</div>
                     </div>
                     <div className={s.Right}>

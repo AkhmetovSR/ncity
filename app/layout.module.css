@@ -1,25 +1,47 @@
 .Main{
-    position: absolute;
+    /*position: absolute;*/
     width: 100%;
     height: 100%;
     background-color: #1D1F23;
     /*border: 2px solid red;*/
+    /*height: 100%;*/
+    /*width: 100%;*/
+    /*max-width: 500px;*/
+    overflow: hidden;
+    /*position: absolute;*/
+    display: grid;
 
+    justify-items: center;
+    z-index: 100;
+    /*border-radius: 2rem;*/
+    /*border: 1px solid rgba(255, 255, 255, 0.53);*/
+    /* Фон будет браться из глобальных переменных темы */
+    background: var(--bg-content);
 }
 .Content{
     display: grid;
-    height: 80%;
+    height: 100%;
     width: 100%;
     justify-items: center;
-    /*border: 2px solid blue;*/
+    /*border: 1px solid blue;*/
 }
 .Menu{
-    position: absolute;
+    /*position: absolute;*/
     width: 100%;
-    /*border: 2px solid yellow;*/
+    border: 1px solid red;
     /*height: 5%;*/
     bottom: 5%;
 }
 .Blocked{
 
+}
+
+/* Адаптив для ёлочки на мобильных */
+@media (max-width: 640px) {
+    .Main{
+        width: 100vw;
+        height: 100%;
+        grid-template-rows: 85% 15%;
+        /*border: 1px solid red;*/
+    }
 }

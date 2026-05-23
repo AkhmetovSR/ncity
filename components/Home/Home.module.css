@@ -3,18 +3,30 @@
 :local(.Home) {
     height: 100%;
     width: 100%;
-    max-width: 500px;
-    overflow: hidden;
-    position: absolute;
+    display: grid;
+    grid-template-rows: 30% 1fr;
+    /*padding: 0.5rem 1rem;*/
+    background: #1f1f1f;
+}
+:local(.Top) {
+    /*height: 100%;*/
+    position: relative;
+    background-color: #000000;
+    border-radius: 0 0 30px 30px;
+    display: grid;
+    align-items: start;
+    justify-items: center;
+    /*padding-top: 2%;*/
+}
+.TopContent{
+    height: 92%;
+    width: 95%;
+    /*border: 1px solid red;*/
     display: grid;
     justify-items: center;
-    z-index: 100;
-    border-radius: 2rem;
-    /*border: 1px solid rgba(255, 255, 255, 0.53);*/
-    /* Фон будет браться из глобальных переменных темы */
-    background: var(--bg-content);
+    grid-template-rows: 45% 1fr;
+    /*gap: 0.5rem;*/
 }
-
 /* Обёртка для кнопки темы - позиционируем в правом верхнем углу */
 :local(.themeButtonWrapper) {
     position: fixed;

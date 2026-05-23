@@ -243,8 +243,8 @@ export default function VacancyList() {
 
     // === ОСНОВНОЙ UI: СПИСОК ВАКАНСИЙ ===
     return (
-        <motion.div className={s.fullscreenOverlay} layoutId="vacancy"  initial={{opacity: 0}} animate={{opacity: 1}} transition={{ duration: 0.2, ease: "easeOut", type: "tween" }} exit={{opacity: 0}}>
-            <motion.div className={s.fullscreenContent} onClick={(e) => e.stopPropagation()}>
+        <motion.div className={s.fullscreenOverlay}  layoutId="vacancy">
+            <motion.div className={s.fullscreenContent} onClick={(e) => e.stopPropagation()}   initial={{opacity: 0}} animate={{opacity: 1}} transition={{ duration: 0.2, ease: "easeOut", type: "tween" }} exit={{opacity: 0}}>
                 <motion.div className={s.contentWrapper} initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}}>
                     {/* ХЕДЕР */}
                     <div className={s.header}>

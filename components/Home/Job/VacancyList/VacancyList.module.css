@@ -11,7 +11,8 @@
     display: grid;
     justify-items: center;
     align-items: center;
-    background: var(--bg-content);
+    /*background: var(--bg-content);*/
+    background: rgba(0, 0, 0, 0);
     backdrop-filter: blur(2px);
     overflow: hidden;
 }

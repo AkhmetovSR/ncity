@@ -1,44 +1,47 @@
 .Title{
-    width: 100%;
-    height: 6rem;
-    grid-column: 1 / -1;
+    height: 100%;
+    width: 95%;
+    /*height: 5rem;*/
+    /*grid-column: 1 / -1;*/
     /*padding: 3% 0;*/
     /*border: 1px solid red;*/
     display: grid;
     align-items: center;
     justify-items: center;
     overflow: hidden;
-    user-select: none;
-    -webkit-user-select: none; /* Chrome/Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE/Edge */
-    -webkit-user-drag: none;
+    /*user-select: none;*/
+    /*-webkit-user-select: none; !* Chrome/Safari *!*/
+    /*-moz-user-select: none; !* Firefox *!*/
+    /*-ms-user-select: none; !* IE/Edge *!*/
+    /*-webkit-user-drag: none;*/
 }
 .TitleContent{
     /*border: 1px solid red;*/
-    width: 85%;
-    height: 80%;
+    /*width: 85%;*/
+    /*height: 80%;*/
     display: grid;
-    /*align-items: center;*/
-    grid-template-columns: 45% 55%;
+    overflow: hidden;
+    align-items: center;
+    grid-template-columns: 1fr 1fr;
 }
 .Label{
     width: 100%;
     /*border: 1px solid red;*/
     display: grid;
+    grid-template-rows: 40% 60%;
     align-items: end;
     overflow: hidden;
 }
 .MountainImg{
     overflow: hidden;
-    width: 70%;
+    width: 100%;
     height: 100%;
     /*border: 1px solid red;*/
     display: grid;
-    align-items: end;
+    align-items: start;
 }
 .iconImage{
-    width: 100%;
+    /*width: 100%;*/
     /*opacity: 40%;*/
 }
 
@@ -46,12 +49,13 @@
     /*border: 1px solid blue;*/
     height: 100%;
     display: grid;
-    align-items: start;
+    align-items: center;
     font-family: var(--klab);
-    font-size: 1.9rem;
+    font-size: 2.2rem;
+    line-height: 0;
     font-weight: bold;
     color: #b8b8b8;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    /*text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);*/
     /*margin-bottom: 10px;*/
 }
 .Dobro{
@@ -70,42 +74,7 @@
 /*    color: white;*/
 /*    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);*/
 /*}*/
-.tree {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-}
 
-/* Верхний ярус */
-.top {
-    width: 0;
-    height: 0;
-    border-left: 1.2rem solid transparent;
-    border-right: 1.2rem solid transparent;
-    border-bottom: 1.5rem solid #4caf50;
-    margin-top: -10px;
-}
-
-/* Средний ярус */
-.middle {
-    width: 0;
-    height: 0;
-    border-left: 1.2rem solid transparent;
-    border-right: 1.2rem solid transparent;
-    border-bottom: 1.5rem solid #4caf50;
-    margin-top: -10px;
-}
-
-/* Нижний ярус */
-.bottom {
-    width: 0;
-    height: 0;
-    border-left: 1.2rem solid transparent;
-    border-right: 1.2rem solid transparent;
-    border-bottom: 1.5rem solid #4caf50;
-    margin-top: -10px;
-}
 
 /*!* Ствол *!*/
 /*.trunk {*/

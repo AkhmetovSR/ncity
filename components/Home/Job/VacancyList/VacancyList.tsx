@@ -295,7 +295,7 @@ export default function VacancyList() {
                                             {/* Зарплата */}
                                             <div className={s.Wrapper2}>
                                                 <div className={s.divIcon2}><div className={s.Icon2}>🪙</div></div>
-                                                <div><h5 className={s.salary}>{vacancy.salary}</h5></div>
+                                                <div><h5 className={s.salary}>{vacancy.salary} ₽</h5></div>
                                                 {/*<div className={s.dateWrapper}>{vacancy.date}</div>*/}
                                             </div>
                                         </div>
@@ -313,7 +313,7 @@ export default function VacancyList() {
                                             >
                                                 ▶
                                             </motion.button>
-                                            {/*<div className={s.dateWrapper}>{vacancy.date}</div>*/}
+                                            <div className={s.dateWrapper}>{vacancy.date}</div>
                                         </div>
                                     </div>
 

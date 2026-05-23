@@ -6,16 +6,17 @@
     display: grid;
     grid-template-rows: 30% 1fr;
     /*padding: 0.5rem 1rem;*/
-    background: #1f1f1f;
+    background: #000000;
 }
 :local(.Top) {
     /*height: 100%;*/
     position: relative;
-    background-color: #000000;
+    background-color: #171717;
     border-radius: 0 0 30px 30px;
     display: grid;
     align-items: start;
     justify-items: center;
+    border-bottom: 1px solid var(--border-color);
     /*padding-top: 2%;*/
 }
 .TopContent{

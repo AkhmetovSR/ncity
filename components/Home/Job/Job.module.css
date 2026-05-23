@@ -60,7 +60,7 @@
     width: 100%;
     font-size: 1.4rem;
     line-height: 0;
-    font-family: Mon;
+    font-family: var(--font-montserrat);
     font-weight: bold;
     color: #348770;
     padding-left: 3%;
@@ -75,7 +75,7 @@
     background: #6efbd4;
     border-radius: 0.7rem;
     color: #378f72;
-    /*font-family: Mon;*/
+    font-family: var(--font-montserrat);
     align-items: center;
     justify-items: center;
     /*padding: 0 5%;*/

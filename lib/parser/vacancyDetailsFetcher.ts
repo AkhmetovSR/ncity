@@ -24,13 +24,13 @@ export class VacancyDetailsFetcher {
             // Форматируем зарплату
             let salaryText = 'не указана';
             if (v.salaryMin && v.salaryMax && v.salaryMin === v.salaryMax) {
-                salaryText = `${v.salaryMin.toLocaleString('ru-RU')} руб.`;
+                salaryText = `${v.salaryMin.toLocaleString('ru-RU')}`;
             } else if (v.salaryMin && v.salaryMax) {
-                salaryText = `${v.salaryMin.toLocaleString('ru-RU')} - ${v.salaryMax.toLocaleString('ru-RU')} руб.`;
+                salaryText = `${v.salaryMin.toLocaleString('ru-RU')} - ${v.salaryMax.toLocaleString('ru-RU')}`;
             } else if (v.salaryMin && !v.salaryMax) {
-                salaryText = `от ${v.salaryMin.toLocaleString('ru-RU')} руб.`;
+                salaryText = `от ${v.salaryMin.toLocaleString('ru-RU')}`;
             } else if (v.salaryMax && !v.salaryMin) {
-                salaryText = `до ${v.salaryMax.toLocaleString('ru-RU')} руб.`;
+                salaryText = `до ${v.salaryMax.toLocaleString('ru-RU')}`;
             }
 
             // Форматируем дату

@@ -17,11 +17,11 @@
 }
 .TitleContent{
     /*border: 1px solid red;*/
-    /*width: 85%;*/
-    /*height: 80%;*/
+    width: 100%;
+    height: 100%;
     display: grid;
     overflow: hidden;
-    align-items: center;
+    /*align-items: center;*/
     grid-template-columns: 1fr 1fr;
 }
 .Label{

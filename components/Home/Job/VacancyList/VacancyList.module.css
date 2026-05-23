@@ -134,7 +134,8 @@
     padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 0.5rem;
+
 }
 
 :local(.vacancyList)::-webkit-scrollbar {
@@ -211,7 +212,7 @@
     transform: translateY(30px);
     /*border-top: 1px solid #20c997;*/
     /*border-bottom: 1px solid #20c997;*/
-    box-shadow: 0 3px 5px -3px #02ffb3;
+    /*box-shadow: 0 3px 4px -3px #02ffb3;*/
 }
 :local(.vacancyContent) {
     position: relative;
@@ -289,7 +290,8 @@
     width: 100%;
     /*border: 1px solid red;*/
     color: var(--text-primary);
-    /*font-size: 1.3rem;*/
+    font-size: 1.1rem;
+    font-weight: bold;
     /*font-weight: 1600;*/
     /*margin: 0;*/
     /*line-height: 1.4;*/
@@ -308,6 +310,7 @@
     /*align-self: center;*/
     /*border: 1px solid red;*/
     color: var(--accent);
+    font-family: var(--font-mPlus);
     font-size: 1rem;
     font-weight: 500;
     margin: 0;
@@ -315,22 +318,26 @@
 }
 
 :local(.details) {
+    /*border: 1px solid red;*/
     display: grid;
+    height: 100%;
+    width: 90%;
     align-items: center;
+    grid-template-columns: 1fr 1fr;
     /*justify-content: space-between;*/
     /*margin-top: 8px;*/
 }
 
 :local(.WatchVacancy) {
-    height: 2rem;
-    width: 2rem;
+    /*height: 2rem;*/
+    /*width: 2rem;*/
     display: grid;
     align-items: center;
     justify-items: center;
     background: var(--accent-gradient);
     color: white;
     border: none;
-    /*padding: 8px 10px;*/
+    padding: 8px 10px;
     border-radius: 0.8rem;
     /*font-weight: 600;*/
     font-size: 0.85rem;
@@ -344,11 +351,12 @@
 }
 
 :local(.dateWrapper) {
-    /*position: absolute;*/
+    /*text-align: end;*/
+    position: absolute;
     font-size: 0.75rem;
     color: var(--text-muted);
-    /*bottom: 0.5rem;*/
-    /*right: 0;*/
+    bottom: 0;
+    right: 0;
     /*padding-left: 1rem;*/
     /*border: 1px solid red;*/
 }

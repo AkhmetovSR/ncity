@@ -41,7 +41,7 @@ export default function RootLayout({children}) {
                 {/*<div className={s.Blocked}>Для просмотра, пожалуйста <br/>переверните устройство.</div>*/}
             </div>
         {/* 👇 Кнопка парсера */}
-        {/*<ParserButton />*/}
+        <ParserButton />
         {/*</Providers>*/}
         </body>
         </html>

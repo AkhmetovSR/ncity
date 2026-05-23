@@ -63,28 +63,36 @@
 :local(.header) {
     position: sticky;
     top: 0;
+    /*border: 1px solid red;*/
     /*background: var(--bg-content);*/
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border-color);
     z-index: 10;
-    border: 1px solid red;
+    /*border: 1px solid red;*/
+    display: grid;
+    justify-items: center;
 }
 
 :local(.headerContent) {
-    display: flex;
+    display: grid;
+    width: 90%;
+    /*grid-template-columns: 1fr 8%;*/
+    /*text-align: center;*/
     /*justify-content: space-between;*/
     /*align-items: flex-start;*/
     /*padding: 20px 24px;*/
     /*gap: 16px;*/
+    /*border: 1px solid red;*/
 }
 
 :local(.title) {
-    font-size: 1.35rem;
-    font-weight: 700;
+    /*border: 1px solid red;*/
+    font-size: 1.1rem;
+    /*font-weight: 700;*/
     color: var(--text-primary);
-    margin: 0;
-    line-height: 1.3;
-    flex: 1;
+    /*margin: 0;*/
+    /*line-height: 0;*/
+    /*flex: 1;*/
 }
 
 :local(.closeButton) {
@@ -116,14 +124,16 @@
 
 /* ========== БЛОК ЗАРПЛАТЫ ========== */
 :local(.salaryBox) {
-    width: 70%;
+    /*width: 70%;*/
+    /*border: 1px solid red;*/
+    text-align: start;
     /*border: 1px solid var(--border-color);*/
     /*width: auto;*/
-    background: var(--accent-gradient);
-    border-radius: 15px;
+    /*background: var(--accent-gradient);*/
+    /*border-radius: 15px;*/
     /*padding: 20px;*/
     /*margin-bottom: 24px;*/
-    text-align: start;
+    /*text-align: start;*/
     /*display: flex;*/
     /*align-items: center;*/
     /*justify-content: center;*/
@@ -132,11 +142,13 @@
 }
 
 :local(.salaryIcon) {
-    font-size: 28px;
+    font-size: 0.9rem;
+    /*line-height: 0;*/
 }
 
 :local(.salaryValue) {
-    font-size: 1.1rem;
+    /*line-height: 0;*/
+    font-size: 0.9rem;
     /*font-weight: 800;*/
     color: white;
     /*letter-spacing: -0.5px;*/
@@ -333,13 +345,8 @@
 /* ========== АДАПТИВНОСТЬ ========== */
 @media (max-width: 768px) {
     :local(.headerContent) {
-        padding: 16px 20px;
+        /*padding: 16px 20px;*/
     }
-
-    :local(.title) {
-        font-size: 1.15rem;
-    }
-
     :local(.content) {
         padding: 20px;
     }
@@ -348,9 +355,9 @@
     /*    font-size: 1rem;*/
     /*}*/
 
-    :local(.salaryIcon) {
-        font-size: 24px;
-    }
+    /*:local(.salaryIcon) {*/
+    /*    font-size: 24px;*/
+    /*}*/
 
     :local(.infoGrid) {
         grid-template-columns: 1fr;

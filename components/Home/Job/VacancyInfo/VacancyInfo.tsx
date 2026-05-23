@@ -137,9 +137,9 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
             {/* Панель с информацией - выезжает снизу */}
             <motion.div
                 className={s.vacancyInfo}
-                initial={{ y: '100%' }}
-                animate={{ y: isVisible ? 0 : '100%' }}
-                exit={{ y: '100%' }}
+                initial={{y: '100%'}}
+                animate={{y: 0}}
+                exit={{y: '100%'}}
                 transition={{
                     type: 'spring',
                     damping: 30,
@@ -149,34 +149,31 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
             >
                 {/* Индикатор свайпа (для мобильных) */}
                 <div className={s.swipeIndicator}>
-                    <div className={s.swipeBar} />
+                    <div className={s.swipeBar}/>
                 </div>
 
                 <div className={s.header}>
                     <div className={s.headerContent}>
-                    <div>
-                        <h2 className={s.title}>{vacancy.profession}</h2></div>
-                        <div>
-                            <motion.button className={s.closeButton} onClick={onClose}>✕</motion.button>
-                        </div>
-                    </div>
-                    <div>{/* Зарплата - акцентный блок */}
+                        <div><h2 className={s.title}>{vacancy.profession}</h2></div>
                         {vacancy.salary && (
                             <motion.div className={s.salaryBox}>
-                                <span className={s.salaryIcon}>💰</span>
-                                <span className={s.salaryValue}>{vacancy.salary}</span>
+                                <span className={s.salaryIcon}>🪙 </span>
+                                <span className={s.salaryValue}>{vacancy.salary} ₽</span>
                             </motion.div>
-                        )}</div>
+                        )}
+                        {/*<div className={s.dateWrapper}>{vacancy.date}</div>*/}
+                        {/*<motion.button className={s.closeButton} onClick={onClose}>✕</motion.button>*/}
+                    </div>
 
                 </div>
 
                 <div className={s.content}>
-                    {/* Основная информация в виде карточек */}
+                {/* Основная информация в виде карточек */}
                     <motion.div
                         className={s.infoGrid}
                         initial={{opacity: 0}}
                         animate={{opacity: 1}}
-                        transition={{ delay: 0.15 }}
+                        transition={{delay: 0.15}}
                     >
                         {vacancy.organization && (
                             <div className={s.infoCard}>
@@ -263,9 +260,9 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                     {(vacancy.phone || vacancy.email || vacancy.website) && (
                         <motion.div
                             className={s.contactsSection}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
+                            initial={{opacity: 0, y: 20}}
+                            animate={{opacity: 1, y: 0}}
+                            transition={{delay: 0.2}}
                         >
                             <h3 className={s.sectionTitle}>
                                 <span className={s.sectionIcon}>📞</span>
@@ -276,8 +273,8 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                                     <motion.a
                                         href={`tel:${vacancy.phone}`}
                                         className={s.contactCard}
-                                        whileHover={{ x: 5, scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
+                                        whileHover={{x: 5, scale: 1.02}}
+                                        whileTap={{scale: 0.98}}
                                     >
                                         <span className={s.contactIcon}>📱</span>
                                         <div className={s.contactInfo}>
@@ -291,8 +288,8 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                                     <motion.a
                                         href={`mailto:${vacancy.email}`}
                                         className={s.contactCard}
-                                        whileHover={{ x: 5, scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
+                                        whileHover={{x: 5, scale: 1.02}}
+                                        whileTap={{scale: 0.98}}
                                     >
                                         <span className={s.contactIcon}>✉️</span>
                                         <div className={s.contactInfo}>
@@ -308,8 +305,8 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className={s.contactCard}
-                                        whileHover={{ x: 5, scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
+                                        whileHover={{x: 5, scale: 1.02}}
+                                        whileTap={{scale: 0.98}}
                                     >
                                         <span className={s.contactIcon}>🌐</span>
                                         <div className={s.contactInfo}>
@@ -327,9 +324,9 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                     {vacancy.description && (
                         <motion.div
                             className={s.section}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.25 }}
+                            initial={{opacity: 0, y: 20}}
+                            animate={{opacity: 1, y: 0}}
+                            transition={{delay: 0.25}}
                         >
                             <h3 className={s.sectionTitle}>
                                 <span className={s.sectionIcon}>📝</span>
@@ -345,9 +342,9 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                     {vacancy.requirements && (
                         <motion.div
                             className={s.section}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
+                            initial={{opacity: 0, y: 20}}
+                            animate={{opacity: 1, y: 0}}
+                            transition={{delay: 0.3}}
                         >
                             <h3 className={s.sectionTitle}>
                                 <span className={s.sectionIcon}>⚡</span>

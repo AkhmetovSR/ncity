@@ -1,9 +1,8 @@
 'use client';
 import s from './VacancyInfo.module.css';
-import { motion, AnimatePresence } from "framer-motion";
-import { JSX, useEffect, useState } from "react";
+import { motion, PanInfo } from "framer-motion";
+import { JSX, useEffect, useRef, useState } from "react";
 import { Vacancy } from "@/types/vacancy";
-import Link from "next/link";
 
 interface VacancyInfoProps {
     vacancy?: Vacancy;
@@ -11,24 +10,92 @@ interface VacancyInfoProps {
 }
 
 export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
-    const [isVisible, setIsVisible] = useState(false);
+    const [dragY, setDragY] = useState(0);
+    const contentRef = useRef<HTMLDivElement>(null);
+    const isAtTopRef = useRef(true);
+    const [asd, setAsd] = useState(false);
 
     useEffect(() => {
-        // Небольшая задержка для плавного появления
-        setTimeout(() => setIsVisible(true), 50);
-        return () => setIsVisible(false);
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
     }, []);
 
     if (!vacancy) return null;
 
     /**
-     * Парсит HTML в структурированный текст с поддержкой различных тегов
-     * @param html - HTML строка для парсинга
-     * @returns массив JSX элементов
+     * Проверяем, находится ли контент в самом верху
      */
+    const checkIfAtTop = () => {
+        if (contentRef.current) {
+            isAtTopRef.current = contentRef.current.scrollTop === 0;
+            // alert("asd")
+        }
+    };
+
+    /**
+     * Обработчик скролла контента
+     */
+    const handleScroll = () => {
+        if (contentRef.current) {
+            const atTop = contentRef.current.scrollTop === 0;
+            isAtTopRef.current = atTop;
+
+            // Если мы не вверху - блокируем drag
+            if (contentRef.current.scrollTop === 0) {
+                setAsd(true);
+                setDragY(0);
+            }
+        }
+    };
+
+    /**
+     * Обработчик начала drag
+     */
+    const handleDragStart = () => {
+        // Запоминаем позицию скролла перед drag
+        if (contentRef.current) {
+            isAtTopRef.current = contentRef.current.scrollTop === 0;
+        }
+    };
+
+    /**
+     * Обработчик drag
+     */
+    const handleDrag = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+        // Если контент не вверху - не даём тянуть
+        if (!isAtTopRef.current && info.offset.y > 0) {
+            return;
+        }
+
+        // Если тянем вниз и мы вверху - разрешаем
+        if (info.offset.y > 0 && isAtTopRef.current) {
+            setDragY(info.offset.y);
+        }
+    };
+
+    /**
+     * Обработчик окончания drag
+     */
+    const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+        // Если контент не вверху - не закрываем
+        if (!isAtTopRef.current) {
+            setDragY(0);
+            return;
+        }
+
+        // Если сдвинули вниз больше чем на 100px ИЛИ скорость > 500
+        if (info.offset.y > 100 || info.velocity.y > 500) {
+            onClose?.();
+        } else {
+            // Возвращаем на место
+            setDragY(0);
+        }
+    };
+
     const parseHtmlToStructuredText = (html: string): JSX.Element[] => {
         if (!html) return [];
-
         const elements: JSX.Element[] = [];
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
@@ -123,60 +190,70 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
     };
 
     return (
-        <AnimatePresence>
-            {/* Затемнённый фон с анимацией */}
+        <>
+            {/* Затемнённый фон */}
             <motion.div
                 className={s.overlay}
                 initial={{ opacity: 0 }}
-                animate={{ opacity: isVisible ? 1 : 0 }}
+                animate={{ opacity: dragY > 0 ? 1 - dragY / 500 : 1 }}
                 exit={{ opacity: 0 }}
                 onClick={onClose}
                 transition={{ duration: 0.2 }}
             />
 
-            {/* Панель с информацией - выезжает снизу */}
+            {/* Панель с информацией */}
             <motion.div
                 className={s.vacancyInfo}
-                initial={{y: '100%'}}
-                animate={{y: 0}}
-                exit={{y: '100%'}}
-                transition={{
-                    type: 'spring',
-                    damping: 30,
-                    stiffness: 300,
-                    mass: 0.8
+                initial={{ y: '100%' }}
+                animate={{ y: 0 }}
+                exit={{ y: '100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                ref={contentRef}
+                onScroll={handleScroll}
+                onTouchStart={checkIfAtTop}
+                drag="y"                          // ← ВКЛЮЧАЕТ DRAG ПО ВЕРТИКАЛИ
+                dragDirectionLock                 // ← БЛОКИРУЕТ ГОРИЗОНТАЛЬНОЕ ПЕРЕТАСКИВАНИЕ
+                dragConstraints={{ top: 0 }}      // ← НЕ ДАЁТ ТЯНУТЬ ВВЕРХ (ТОЛЬКО ВНИЗ)
+                dragElastic={{ top: 0, bottom: 0.3 }}  // ← УПРУГОСТЬ ПРИ ПЕРЕТЯГИВАНИИ
+                onDragEnd={(e, { offset, velocity }) => {  // ← КОГДА ОТПУСТИЛИ
+                    if (offset.y > 100 || velocity.y > 500) {
+                        onClose?.();  // ← ЗАКРЫВАЕМ ЕСЛИ СДВИНУЛИ >100px ИЛИ СКОРОСТЬ >500
+                    }
                 }}
             >
-                {/* Индикатор свайпа (для мобильных) */}
+                {/* Индикатор свайпа */}
                 <div className={s.swipeIndicator}>
-                    <div className={s.swipeBar}/>
+                    <div className={s.swipeBar} />
                 </div>
 
                 <div className={s.header}>
                     <div className={s.headerContent}>
                         <div className={s.divTitle}>
                             <div><h2 className={s.title}>{vacancy.profession}</h2></div>
-                            <div className={s.divClose}><button className={s.closeButton} onClick={onClose}>✕</button></div>
+                            <div className={s.divClose}>
+                                <button className={s.closeButton} onClick={onClose}>✕</button>
+                            </div>
                         </div>
                         {vacancy.salary && (
                             <motion.div className={s.salaryBox}>
                                 <span className={s.salaryIcon}>🪙 </span>
                                 <span className={s.salaryValue}>{vacancy.salary} ₽</span>
-                                {/*<div className={s.dateWrapper}>{vacancy.date}</div>*/}
                             </motion.div>
                         )}
-                        {/*<motion.button className={s.closeButton} onClick={onClose}>✕</motion.button>*/}
                     </div>
-
                 </div>
 
-                <div className={s.content}>
-                {/* Основная информация в виде карточек */}
+                {/* Скроллящийся контент */}
+                <div
+
+                    className={s.content}
+
+                >
                     <motion.div
                         className={s.infoGrid}
-                        initial={{opacity: 0}}
-                        animate={{opacity: 1}}
-                        transition={{delay: 0.15}}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.15 }}
                     >
                         {vacancy.date && (
                             <div className={s.infoCard}>
@@ -259,13 +336,12 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                         )}
                     </motion.div>
 
-                    {/* Контакты */}
                     {(vacancy.phone || vacancy.email || vacancy.website) && (
                         <motion.div
                             className={s.contactsSection}
-                            initial={{opacity: 0, y: 20}}
-                            animate={{opacity: 1, y: 0}}
-                            transition={{delay: 0.2}}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
                         >
                             <h3 className={s.sectionTitle}>
                                 <span className={s.sectionIcon}>📞</span>
@@ -276,8 +352,8 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                                     <motion.a
                                         href={`tel:${vacancy.phone}`}
                                         className={s.contactCard}
-                                        whileHover={{x: 5, scale: 1.02}}
-                                        whileTap={{scale: 0.98}}
+                                        whileHover={{ x: 5, scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                     >
                                         <span className={s.contactIcon}>📱</span>
                                         <div className={s.contactInfo}>
@@ -291,8 +367,8 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                                     <motion.a
                                         href={`mailto:${vacancy.email}`}
                                         className={s.contactCard}
-                                        whileHover={{x: 5, scale: 1.02}}
-                                        whileTap={{scale: 0.98}}
+                                        whileHover={{ x: 5, scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                     >
                                         <span className={s.contactIcon}>✉️</span>
                                         <div className={s.contactInfo}>
@@ -308,8 +384,8 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className={s.contactCard}
-                                        whileHover={{x: 5, scale: 1.02}}
-                                        whileTap={{scale: 0.98}}
+                                        whileHover={{ x: 5, scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                     >
                                         <span className={s.contactIcon}>🌐</span>
                                         <div className={s.contactInfo}>
@@ -323,13 +399,12 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                         </motion.div>
                     )}
 
-                    {/* Описание вакансии */}
                     {vacancy.description && (
                         <motion.div
                             className={s.section}
-                            initial={{opacity: 0, y: 20}}
-                            animate={{opacity: 1, y: 0}}
-                            transition={{delay: 0.25}}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.25 }}
                         >
                             <h3 className={s.sectionTitle}>
                                 <span className={s.sectionIcon}>📝</span>
@@ -341,13 +416,12 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                         </motion.div>
                     )}
 
-                    {/* Требования */}
                     {vacancy.requirements && (
                         <motion.div
                             className={s.section}
-                            initial={{opacity: 0, y: 20}}
-                            animate={{opacity: 1, y: 0}}
-                            transition={{delay: 0.3}}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
                         >
                             <h3 className={s.sectionTitle}>
                                 <span className={s.sectionIcon}>⚡</span>
@@ -360,6 +434,6 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                     )}
                 </div>
             </motion.div>
-        </AnimatePresence>
+        </>
     );
 }

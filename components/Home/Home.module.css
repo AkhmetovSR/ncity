@@ -1,12 +1,17 @@
 /* Home.module.css */
 
 :local(.Home) {
+    /*position: fixed;*/
     height: 100%;
     width: 100%;
     display: grid;
+    /*border: 2px solid red;*/
     grid-template-rows: 30% 1fr;
     /*padding: 0.5rem 1rem;*/
     background: #000000;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    /*overflow: hidden;*/
 }
 :local(.Top) {
     /*height: 100%;*/
@@ -31,18 +36,18 @@
 /* Обёртка для кнопки темы - позиционируем в правом верхнем углу */
 :local(.themeButtonWrapper) {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    /*top: 0.1rem;*/
+    left: 1rem;
     z-index: 1000;
 }
 
-/* Адаптив для мобильных */
-@media (max-width: 640px) {
-    :local(.themeButtonWrapper) {
-        top: 12px;
-        right: 12px;
-    }
-}
+/*!* Адаптив для мобильных *!*/
+/*@media (max-width: 640px) {*/
+/*    :local(.themeButtonWrapper) {*/
+/*        top: 12px;*/
+/*        right: 12px;*/
+/*    }*/
+/*}*/
 
 /* ========== ДЕКОРАТИВНАЯ ЁЛОЧКА ========== */
 :local(.tree) {
@@ -95,14 +100,21 @@
     margin-top: -5px;
 }
 
-/* Адаптив для ёлочки на мобильных */
-@media (max-width: 640px) {
-    :local(.Home) {
-        border-radius: 0;
-    }
-    :local(.tree) {
-        transform: scale(0.7);
-        bottom: 10px;
-        left: 10px;
-    }
+/*!* Адаптив для ёлочки на мобильных *!*/
+/*@media (max-width: 640px) {*/
+/*    :local(.Home) {*/
+/*        border-radius: 0;*/
+/*    }*/
+/*    :local(.tree) {*/
+/*        transform: scale(0.7);*/
+/*        bottom: 10px;*/
+/*        left: 10px;*/
+/*    }*/
+/*}*/
+:local(.Services) {
+    /*border: 1px solid red;*/
+    display: grid;
+    /*align-items: center;*/
+    justify-items: center;
+    /*overflow: hidden;*/
 }

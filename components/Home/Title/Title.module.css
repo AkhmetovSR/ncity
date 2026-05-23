@@ -14,11 +14,12 @@
     /*-moz-user-select: none; !* Firefox *!*/
     /*-ms-user-select: none; !* IE/Edge *!*/
     /*-webkit-user-drag: none;*/
+
 }
 .TitleContent{
     /*border: 1px solid red;*/
     width: 100%;
-    height: 100%;
+    height: 90%;
     display: grid;
     overflow: hidden;
     /*align-items: center;*/
@@ -34,15 +35,27 @@
 }
 .MountainImg{
     overflow: hidden;
-    width: 100%;
+    width: 7rem;
     height: 100%;
     /*border: 1px solid red;*/
     display: grid;
-    align-items: start;
+    justify-items: end;
+    /*align-items: start;*/
+}
+.Forest{
+    width: 100%;
+    height: 100%;
+    background-image: url("/images/forest1.webp");
+    background-position: right;
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.3;
+    /*border: 1px solid red;*/
 }
 .iconImage{
-    /*width: 100%;*/
-    /*opacity: 40%;*/
+    /*background-size: 10%;*/
+    width: 100%;
+    opacity: 40%;
 }
 
 .TitleCity {
@@ -50,8 +63,8 @@
     height: 100%;
     display: grid;
     align-items: center;
-    font-family: var(--klab);
-    font-size: 2.2rem;
+    font-family: var(--font-klab);
+    font-size: 2.1rem;
     line-height: 0;
     font-weight: bold;
     color: #b8b8b8;
@@ -60,13 +73,14 @@
 }
 .Dobro{
     /*border: 1px solid red;*/
-    font-family: var(--badScript);
+    font-family: var(--font-badScript);
     font-size: 1rem;
     transform: rotate(-10deg);
     color: #FFFB7C;
     display: grid;
     align-content: center;
     text-align: center;
+    line-height: 1.2;
 }
 
 /*.SearchAll {*/

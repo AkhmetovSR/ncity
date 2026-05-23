@@ -15,7 +15,8 @@ export default function Title() {
                         {/*    <div className={s.bottom}></div>*/}
                         {/*    <div className={s.trunk}></div>*/}
                         {/*</div>*/}
-                        <Image src={Mountain} alt={"Mountain"} className={s.iconImage}/>
+                        <div className={s.Forest}></div>
+                        {/*<Image src={Mountain} alt={"Mountain"} className={s.iconImage}/>*/}
                     </div>
                     <div className={s.TitleCity}>НЯГАНЬ</div>
                     {/*<div className={s.SearchAll}>#НАЙДЕТСЯВСЕ</div>*/}

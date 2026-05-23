@@ -28,7 +28,7 @@
 .Menu{
     /*position: absolute;*/
     width: 100%;
-    border: 1px solid red;
+    border: 1px solid green;
     /*height: 5%;*/
     bottom: 5%;
 }

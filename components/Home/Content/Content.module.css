@@ -1,0 +1,19 @@
+:local(.ContentServ) {
+    height: 95%;
+    width: 95%;
+    /*border: 1px solid blue;*/
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    grid-template-columns: 1fr 1fr;
+    /*overflow-y: scroll;*/
+    /*overflow-x: hidden;*/
+}
+.Div{
+    border: 1px solid red;
+    height: 90%;
+    width: 90%;
+    border-radius: 20px;
+    /*overflow-y: scroll;*/
+    /*overflow-x: hidden;*/
+}

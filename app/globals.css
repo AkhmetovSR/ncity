@@ -53,14 +53,16 @@
   /* ТЁМНАЯ ТЕМА (более светлый фон) */
   --bg-overlay: #000000;
   --bg-content: #000000;
-  --bg-modal: rgb(23, 23, 23);
-  --bg-card: rgba(255, 255, 255, 0.03);
+  /*--bg-modal: rgb(23, 23, 23);*/
+  --bg-modal: linear-gradient(to bottom, rgba(105, 255, 213, 0.8), rgba(177, 255, 233, 0.8));;
+  /*--bg-card: rgba(255, 255, 255, 0.03);*/
+  --bg-card: rgba(8, 97, 94, 0.43);
   --bg-card-hover: rgba(255, 255, 255, 0.1);
-  --text-primary: rgba(202, 202, 202, 0.8);
+  --text-primary: rgb(255, 255, 255);
   --text-secondary: rgba(255, 255, 255, 0.7);
   --text-muted: rgba(255, 255, 255, 0.45);
   --border-color: rgba(104, 251, 210, 0.2);
-  --accent: #98d6b4;
+  --accent: #dacf00;
   --accent-gradient: rgba(255, 255, 255, 0.05);
   --skeleton-base: rgba(255, 255, 255, 0.03);
   --skeleton-highlight: rgba(255, 255, 255, 0.08);

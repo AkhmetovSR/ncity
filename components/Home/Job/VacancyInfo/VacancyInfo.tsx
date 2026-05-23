@@ -154,14 +154,17 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
 
                 <div className={s.header}>
                     <div className={s.headerContent}>
-                        <div><h2 className={s.title}>{vacancy.profession}</h2></div>
+                        <div className={s.divTitle}>
+                            <div><h2 className={s.title}>{vacancy.profession}</h2></div>
+                            <div className={s.divClose}><button className={s.closeButton} onClick={onClose}>✕</button></div>
+                        </div>
                         {vacancy.salary && (
                             <motion.div className={s.salaryBox}>
                                 <span className={s.salaryIcon}>🪙 </span>
                                 <span className={s.salaryValue}>{vacancy.salary} ₽</span>
+                                {/*<div className={s.dateWrapper}>{vacancy.date}</div>*/}
                             </motion.div>
                         )}
-                        {/*<div className={s.dateWrapper}>{vacancy.date}</div>*/}
                         {/*<motion.button className={s.closeButton} onClick={onClose}>✕</motion.button>*/}
                     </div>
 
@@ -175,6 +178,16 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                         animate={{opacity: 1}}
                         transition={{delay: 0.15}}
                     >
+                        {vacancy.date && (
+                            <div className={s.infoCard}>
+                                <div className={s.infoIcon}>📅</div>
+                                <div className={s.infoContent}>
+                                    <div className={s.infoLabel}>Дата публикации</div>
+                                    <div className={s.infoValue}>{vacancy.date}</div>
+                                </div>
+                            </div>
+                        )}
+
                         {vacancy.organization && (
                             <div className={s.infoCard}>
                                 <div className={s.infoIcon}>🏢</div>
@@ -201,16 +214,6 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                                 <div className={s.infoContent}>
                                     <div className={s.infoLabel}>Адрес</div>
                                     <div className={s.infoValue}>{vacancy.address}</div>
-                                </div>
-                            </div>
-                        )}
-
-                        {vacancy.date && (
-                            <div className={s.infoCard}>
-                                <div className={s.infoIcon}>📅</div>
-                                <div className={s.infoContent}>
-                                    <div className={s.infoLabel}>Дата публикации</div>
-                                    <div className={s.infoValue}>{vacancy.date}</div>
                                 </div>
                             </div>
                         )}

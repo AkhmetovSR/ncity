@@ -11,15 +11,19 @@ interface VacancyInfoProps {
 export default function VacancyHeader({ vacancy, onClose }: VacancyInfoProps) {
     return (
         <div className={s.header}>
+            {/* Индикатор свайпа */}
+            <div className={s.swipeIndicator}>
+                <div className={s.swipeBar} />
+            </div>
             <div className={s.headerContent}>
                 <div className={s.divTitle}>
-                    <h2 className={s.title}>{vacancy.profession}</h2>
+                    <h2 className={s.title}>{vacancy?.profession}</h2>
                     <button className={s.closeButton} onClick={onClose}>✕</button>
                 </div>
-                {vacancy.salary && (
+                {vacancy?.salary && (
                     <motion.div className={s.salaryBox}>
                         <span className={s.salaryIcon}>🪙 </span>
-                        <span className={s.salaryValue}>{vacancy.salary} ₽</span>
+                        <span className={s.salaryValue}>{vacancy?.salary} ₽</span>
                     </motion.div>
                 )}
             </div>

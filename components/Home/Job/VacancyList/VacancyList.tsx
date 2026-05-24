@@ -70,19 +70,11 @@ export default function VacancyList() {
     }, [sortBy, vacancies]);
 
     return (
-        <motion.div
-            className={s.fullscreenOverlay}
-            layoutId="vacancy"
-            transition={{duration: 0.3, ease: "easeOut", type: "tween", delay: 0}}
-        >
+        <motion.div className={s.fullscreenOverlay} layoutId="vacancy" transition={{duration: 0.3, ease: "easeOut", type: "tween", delay: 0}}>
             <motion.div className={s.fullscreenContent} onClick={(e) => e.stopPropagation()}>
                 <motion.div className={s.contentWrapper} initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}}>
                     <div className={s.header}>
-                        <select
-                            className={s.filterSelect}
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value as any)}
-                        >
+                        <select className={s.filterSelect} value={sortBy} onChange={(e) => setSortBy(e.target.value as any)}>
                             <option value="date">📅 По дате (новые)</option>
                             <option value="salary-asc">💰 По зарплате (возрастание)</option>
                             <option value="salary-desc">💰 По зарплате (убывание)</option>
@@ -144,11 +136,7 @@ export default function VacancyList() {
             {/* МОДАЛЬНОЕ ОКНО С ДЕТАЛЯМИ ВАКАНСИИ */}
             <AnimatePresence mode="wait">
                 {vacancyOpen && selectedVacancy && (
-                    <VacancyInfo
-                        key="vacancy-info"  // ВАЖНО: добавляем key для AnimatePresence
-                        vacancy={selectedVacancy}
-                        onClose={() => setVacancyOpen(false)}
-                    />
+                    <VacancyInfo key="vacancy-info" vacancy={selectedVacancy} onClose={() => setVacancyOpen(false)}/>
                 )}
             </AnimatePresence>
         </motion.div>

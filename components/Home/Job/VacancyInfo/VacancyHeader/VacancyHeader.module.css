@@ -1,57 +1,9 @@
-/* VacancyHeader.module.css */
-/* Все переменные берутся из globals.css */
-
-/* ========== ОВЕРЛЕЙ (ЗАТЕМНЁННЫЙ ФОН) ========== */
-:local(.overlay) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(2px);
-    z-index: 999;
-}
-
-/* ========== ОСНОВНАЯ ПАНЕЛЬ ========== */
-:local(.vacancyInfo) {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: var(--bg-card);
-    background: rgb(39, 42, 47);
-    backdrop-filter: blur(20px);
-    border-radius: 28px 28px 0 0;
-    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    max-height: 85vh;
-    overflow-y: auto;
-    border-top: 1px solid var(--border-color);
-}
-
-/* Кастомный скроллбар */
-:local(.vacancyInfo)::-webkit-scrollbar {
-    width: 6px;
-}
-
-:local(.vacancyInfo)::-webkit-scrollbar-track {
-    background: var(--border-color);
-    border-radius: 10px;
-}
-
-:local(.vacancyInfo)::-webkit-scrollbar-thumb {
-    background: var(--accent);
-    border-radius: 10px;
-}
-
 /* ========== ИНДИКАТОР СВАЙПА (ДЛЯ МОБИЛЬНЫХ) ========== */
 :local(.swipeIndicator) {
     display: flex;
     justify-content: center;
     padding: 12px 0 4px;
 }
-
 :local(.swipeBar) {
     width: 40px;
     height: 4px;
@@ -73,18 +25,10 @@
     /*gap: 1rem;*/
     justify-items: center;
 }
-
 :local(.headerContent) {
     display: grid;
     width: 85%;
     gap: 0.5rem;
-    /*grid-template-columns: 1fr 8%;*/
-    /*text-align: center;*/
-    /*justify-content: space-between;*/
-    /*align-items: flex-start;*/
-    /*padding: 20px 24px;*/
-    /*gap: 16px;*/
-    /*border: 1px solid red;*/
 }
 :local(.divTitle) {
     display: grid;
@@ -100,13 +44,8 @@
 :local(.title) {
     /*border: 1px solid red;*/
     font-size: 1rem;
-    /*font-weight: 700;*/
     color: var(--text-primary);
-    /*margin: 0;*/
-    /*line-height: 0;*/
-    /*flex: 1;*/
 }
-
 :local(.closeButton) {
     background: var(--bg-card);
     border: none;
@@ -123,281 +62,8 @@
     justify-content: center;
     flex-shrink: 0;
 }
-
 :local(.closeButton):hover {
     background: rgba(255, 68, 68, 0.8);
     color: white;
     border-color: transparent;
-}
-
-/* ========== КОНТЕНТ ========== */
-:local(.content) {
-    padding: 24px;
-}
-
-/* ========== БЛОК ЗАРПЛАТЫ ========== */
-:local(.salaryBox) {
-    /*width: 70%;*/
-    /*border: 1px solid red;*/
-    text-align: start;
-    /*border: 1px solid var(--border-color);*/
-    /*width: auto;*/
-    /*background: var(--accent-gradient);*/
-    /*border-radius: 15px;*/
-    /*padding: 20px;*/
-    /*margin-bottom: 24px;*/
-    /*text-align: start;*/
-    /*display: flex;*/
-    /*align-items: center;*/
-    /*justify-content: center;*/
-    /*line-height: 0;*/
-    /*gap: 12px;*/
-    /*box-shadow: 0 8px 20px rgba(104, 251, 210, 0.2);*/
-}
-
-:local(.salaryIcon) {
-    font-size: 0.9rem;
-    /*line-height: 0;*/
-}
-
-:local(.salaryValue) {
-    /*line-height: 0;*/
-    font-size: 0.9rem;
-    /*font-weight: 800;*/
-    color: white;
-    /*letter-spacing: -0.5px;*/
-}
-
-/* ========== СЕТКА ИНФОРМАЦИИ ========== */
-:local(.infoGrid) {
-    display: grid;
-    /*grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));*/
-    gap: 0.5rem;
-    margin-bottom: 28px;
-}
-
-:local(.infoCard) {
-    display: flex;
-    gap: 14px;
-    padding: 16px;
-    background: rgba(255, 255, 255, 0.11);
-    /*background: var(--bg-card);*/
-    border-radius: 16px;
-    /*border: 1px solid var(--border-color);*/
-    transition: all 0.2s ease;
-}
-
-:local(.infoIcon) {
-    font-size: 28px;
-    flex-shrink: 0;
-}
-
-:local(.infoContent) {
-    flex: 1;
-}
-
-:local(.infoLabel) {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-:local(.infoValue) {
-    font-size: 14px;
-    color: var(--text-primary);
-    font-weight: 500;
-    line-height: 1.4;
-    word-break: break-word;
-}
-
-/* ========== СЕКЦИЯ КОНТАКТОВ ========== */
-:local(.contactsSection) {
-    margin-bottom: 28px;
-}
-
-:local(.sectionTitle) {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin: 0 0 16px 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-:local(.sectionIcon) {
-    font-size: 20px;
-}
-
-:local(.contactsGrid) {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-:local(.contactCard) {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 18px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 14px;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
-
-:local(.contactCard):hover {
-    background: var(--bg-card-hover);
-    border-color: var(--accent);
-}
-
-:local(.contactIcon) {
-    font-size: 24px;
-    flex-shrink: 0;
-}
-
-:local(.contactInfo) {
-    flex: 1;
-}
-
-:local(.contactLabel) {
-    font-size: 11px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-}
-
-:local(.contactValue) {
-    font-size: 14px;
-    color: var(--accent);
-    font-weight: 500;
-    word-break: break-all;
-}
-
-:local(.contactArrow) {
-    font-size: 18px;
-    color: var(--text-muted);
-    transition: transform 0.2s ease;
-}
-
-:local(.contactCard):hover .contactArrow {
-    transform: translateX(4px);
-    color: var(--accent);
-}
-
-/* ========== КОНТЕНТНЫЕ БЛОКИ ========== */
-:local(.section) {
-    margin-bottom: 28px;
-}
-
-:local(.section):last-child {
-    margin-bottom: 0;
-}
-
-:local(.contentBox) {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    padding: 20px;
-}
-
-/* ========== ТИПОГРАФИКА ========== */
-:local(.paragraph) {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--text-secondary);
-    margin: 0 0 12px 0;
-}
-
-:local(.paragraph):last-child {
-    margin-bottom: 0;
-}
-
-:local(.subHeader) {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin: 16px 0 12px 0;
-}
-
-:local(.subHeader):first-child {
-    margin-top: 0;
-}
-
-/* ========== СПИСКИ ========== */
-:local(.list) {
-    margin: 12px 0;
-    padding-left: 0;
-    list-style: none;
-}
-
-:local(.listItem) {
-    position: relative;
-    padding-left: 24px;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    line-height: 1.5;
-    color: var(--text-secondary);
-}
-
-:local(.listItem):before {
-    content: "▹";
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-    font-size: 14px;
-}
-
-:local(.spacer) {
-    height: 8px;
-}
-
-/* ========== АДАПТИВНОСТЬ ========== */
-@media (max-width: 768px) {
-    :local(.headerContent) {
-        /*padding: 16px 20px;*/
-    }
-    :local(.content) {
-        padding: 20px;
-    }
-
-    /*:local(.salaryValue) {*/
-    /*    font-size: 1rem;*/
-    /*}*/
-
-    /*:local(.salaryIcon) {*/
-    /*    font-size: 24px;*/
-    /*}*/
-
-    :local(.infoGrid) {
-        /*grid-template-columns: 1fr;*/
-        /*gap: 10px;*/
-    }
-
-    :local(.infoCard) {
-        padding: 14px;
-    }
-
-    :local(.contactCard) {
-        padding: 12px 16px;
-    }
-
-    :local(.contentBox) {
-        padding: 16px;
-    }
-}
-
-@media (max-width: 480px) {
-    /*:local(.salaryBox) {*/
-    /*    padding: 16px;*/
-    /*}*/
-
-    /*:local(.salaryValue) {*/
-    /*    font-size: 20px;*/
-    /*}*/
 }

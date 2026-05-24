@@ -106,6 +106,7 @@ body {
   background: #1D1F23;;
   display: grid;
   justify-items: center;
+  overscroll-behavior: none; /* Убирает bounce всего окна */
 }
 
 body {

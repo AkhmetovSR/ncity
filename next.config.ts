@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
     reactStrictMode: true,
 
     // Разрешаем доступ с других устройств в локальной сети
-    allowedDevOrigins: ['192.168.0.105', '*.local']
+    allowedDevOrigins: ['192.168.0.116', '*.local']
 };
 
 export default nextConfig;

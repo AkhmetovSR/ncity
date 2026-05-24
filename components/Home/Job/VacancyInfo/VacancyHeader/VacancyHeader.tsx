@@ -1,8 +1,8 @@
 'use client';
 import s from '@/components/Home/Job/VacancyInfo/VacancyHeader/VacancyHeader.module.css';
 import { motion } from "framer-motion";
-import { useRef } from "react";
 import { Vacancy } from "@/types/vacancy";
+
 interface VacancyInfoProps {
     vacancy?: Vacancy;
     onClose?: () => void;
@@ -11,7 +11,6 @@ interface VacancyInfoProps {
 export default function VacancyHeader({ vacancy, onClose }: VacancyInfoProps) {
     return (
         <div className={s.header}>
-            {/* Индикатор свайпа */}
             <div className={s.swipeIndicator}>
                 <div className={s.swipeBar} />
             </div>
@@ -28,5 +27,5 @@ export default function VacancyHeader({ vacancy, onClose }: VacancyInfoProps) {
                 )}
             </div>
         </div>
-    )
+    );
 }

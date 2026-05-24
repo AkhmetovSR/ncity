@@ -5,7 +5,10 @@
     gap: 1.5rem;
     /*border: 1px solid red;*/
     overflow-y: scroll;
+    overscroll-behavior: none; /* Убирает bounce всего окна */
+    overflow-x: hidden;
 }
+
 /* ========== СЕТКА ИНФОРМАЦИИ ========== */
 :local(.infoGrid) {
     display: grid;
@@ -186,3 +189,13 @@
     /*    font-size: 20px;*/
     /*}*/
 }
+/*@supports (-webkit-touch-callout: none) {*/
+/*    :local(.content) {*/
+/*        -webkit-overflow-scrolling: touch;*/
+/*        user-select: auto;*/
+/*        -webkit-user-select: auto;*/
+/*        overflow-y: auto;*/
+/*        overscroll-behavior: contain;*/
+/*        touch-action: pan-y;*/
+/*    }*/
+/*}*/

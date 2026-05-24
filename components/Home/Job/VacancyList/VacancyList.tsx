@@ -99,7 +99,7 @@ export default function VacancyList() {
                                 className={`${s.vacancyCard} ${visibleCards.has(index) ? s.vacancyCardVisible : ''}`}
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    setSelectedVacancy(vacancy);
+                                    // setSelectedVacancy(vacancy.id);
                                     setVacancyOpen(true);
                                 }}
                                 initial={{opacity: 0, y: 30}}

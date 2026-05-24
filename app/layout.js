@@ -25,7 +25,7 @@ const geistMono = Geist_Mono({
 export default function RootLayout({children}) {
     return (
         <html lang="ru">
-        <head title="VacancyInfo">
+        <head title="VacancyHeader">
             <title>Нягань портал</title>
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
         </head>

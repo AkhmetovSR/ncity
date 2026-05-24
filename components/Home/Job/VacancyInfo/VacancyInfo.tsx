@@ -3,7 +3,6 @@ import s from './VacancyInfo.module.css';
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import { Vacancy } from "@/types/vacancy";
-
 interface VacancyInfoProps {
     vacancy?: Vacancy;
     onClose?: () => void;
@@ -11,7 +10,6 @@ interface VacancyInfoProps {
 
 export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
     const contentRef = useRef<HTMLDivElement>(null);
-
     if (!vacancy) return null;
 
     return (

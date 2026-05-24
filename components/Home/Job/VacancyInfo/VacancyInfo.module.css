@@ -14,10 +14,12 @@
     overflow: hidden;
     inset: 0;
     animation: fadeIn 0.2s ease;
+
 }
 
 /* ========== ОСНОВНАЯ ПАНЕЛЬ ========== */
 :local(.vacancyInfo) {
+    /*border: 2px solid red;*/
     position: fixed;
     bottom: 0;
     left: 0;
@@ -32,6 +34,7 @@
     height: 85vh;
     animation: slideUp 0.3s ease-out; /* или просто ease */
     flex-direction: column;
+    overflow: hidden;
     /*border-top: 1px solid var(--border-color);*/
 }
 @keyframes fadeIn {

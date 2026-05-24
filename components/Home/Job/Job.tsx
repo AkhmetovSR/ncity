@@ -1,15 +1,30 @@
 'use client';
 import s from "@/components/Home/Job/Job.module.css"
 import { motion } from "framer-motion";
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import Lottie from 'lottie-react';
 import tapAnimation from '@/public/lottie/business-analysis1.json';
 import Link from 'next/link';
 
 export default function Job() {
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (ref.current) {
+            const rect = ref.current.getBoundingClientRect();
+            console.log('JOB размеры:', {
+                width: rect.width,
+                height: rect.height,
+                top: rect.top,
+                left: rect.left
+            });
+        }
+    }, []);
+
+
     return (
             // <motion.div className={s.Vacancy} layoutId="vacancy" initial={{opacity: 0}} animate={{opacity: 1}} transition={{duration: 0.2}} exit={{opacity: 0}}>
-            <motion.div className={s.Vacancy} layoutId="vacancy" initial={false} transition={{ duration: 0.3, ease: "easeOut", type: "tween", delay: 0 }}>
+            <motion.div className={s.Vacancy} ref={ref} layoutId="vacancy" initial={false} transition={{ duration: 0.3, ease: "easeOut", type: "tween", delay: 0 }}>
 
                 <motion.div className={s.Content} initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}}>
                     <Link href="/vacancy" style={{ textDecoration: 'none' }} className={s.Link}>

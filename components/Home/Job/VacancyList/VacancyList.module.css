@@ -6,6 +6,10 @@
     position: absolute;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
+    /*display: flex;*/
+    /*height: 90vh;*/
     height: 100%;
     width: 100%;
     display: grid;
@@ -21,7 +25,6 @@
     width: 90%;
     max-width: 500px;
     height: 95%;
-    max-height: 95vh;
     border-radius: 25px;
     background: var(--bg-modal);
     /*backdrop-filter: blur(20px);*/

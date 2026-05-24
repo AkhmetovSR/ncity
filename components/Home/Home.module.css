@@ -30,7 +30,7 @@
     /*border: 1px solid red;*/
     display: grid;
     justify-items: center;
-    grid-template-rows: 45% 1fr;
+    grid-template-rows: 45% auto;
     /*gap: 0.5rem;*/
 }
 /* Обёртка для кнопки темы - позиционируем в правом верхнем углу */

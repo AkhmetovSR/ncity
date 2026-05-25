@@ -16,7 +16,7 @@ export default function VacancyHeader({ vacancy, onClose }: VacancyInfoProps) {
             </div>
             <div className={s.headerContent}>
                 <div className={s.divTitle}>
-                    <h2 className={s.title}>{vacancy?.profession}</h2>
+                    <div className={s.divProfession}><h2 className={s.title}>{vacancy?.profession}</h2></div>
                     <button className={s.closeButton} onClick={onClose}>✕</button>
                 </div>
                 {vacancy?.salary && (

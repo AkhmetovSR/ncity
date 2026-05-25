@@ -21,6 +21,15 @@ export default function Job() {
         }
     }, []);
 
+    useEffect(() => {
+        const rect = ref.current?.getBoundingClientRect();
+        if (rect) {
+            localStorage.setItem('jobSize', JSON.stringify({
+                width: rect.width,
+                height: rect.height
+            }));
+        }
+    }, []);
 
     return (
             // <motion.div className={s.Vacancy} layoutId="vacancy" initial={{opacity: 0}} animate={{opacity: 1}} transition={{duration: 0.2}} exit={{opacity: 0}}>

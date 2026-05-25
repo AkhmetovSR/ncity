@@ -1,5 +1,5 @@
 'use client';
-import s from './VacancyList.module.css';
+import s from '@/components/Home/Job/VacancyList/VacancyList.module.css';
 import { motion, AnimatePresence } from "framer-motion";
 import Link from 'next/link';
 import { useEffect, useState, useRef, useCallback } from "react";
@@ -44,6 +44,19 @@ export default function VacancyList() {
                 return sorted;
         }
     }, [sortBy]);
+
+    useEffect(() => {
+        console.log('Текущий URL:', window.location.pathname);
+        console.log('Есть ли Job в DOM?', !!document.querySelector('.Vacancy'));
+
+        // Проверяем layoutId в истории Framer Motion
+        console.log('Страница при открытии:', window.location.pathname);
+
+        return () => {
+            console.log('Страница при закрытии:', window.location.pathname);
+            console.log('Job существует?', !!document.querySelector('.Vacancy'));
+        };
+    }, []);
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' || 'dark';
@@ -108,7 +121,7 @@ export default function VacancyList() {
                                                 <div><h3 className={s.profession}>{vacancy.profession}</h3></div>
                                             </div>
                                             <div className={s.Wrapper2}>
-                                                <div className={s.divIcon2}><div className={s.Icon2}>🪙</div></div>
+                                                <div className={s.divIcon2}><div className={s.Icon2}><div className={s.Ruble}>₽</div></div></div>
                                                 <div><h5 className={s.salary}>{vacancy.salary} ₽</h5></div>
                                             </div>
                                         </div>

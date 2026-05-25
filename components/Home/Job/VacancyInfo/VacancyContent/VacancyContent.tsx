@@ -2,6 +2,7 @@
 import s from '@/components/Home/Job/VacancyInfo/VacancyContent/VacancyContent.module.css';
 import { useEffect, useRef, useState } from "react";
 import { Vacancy } from "@/types/vacancy";
+import {JSX} from "react";
 
 interface VacancyInfoProps {
     vacancy?: Vacancy;
@@ -31,6 +32,94 @@ export default function VacancyContent({ vacancy, onClose, onScrollTopChange }: 
             element.removeEventListener('scroll', handleScroll);
         };
     }, [onScrollTopChange]);
+
+    // Функция для парсинга HTML в структурированный текст
+    const parseHtmlToStructuredText = (html: string): JSX.Element[] => {
+        if (!html) return [];
+
+        const elements: JSX.Element[] = [];
+
+        // Создаем временный DOM элемент для парсинга HTML
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const body = doc.body;
+
+        let keyCounter = 0;
+
+        // Рекурсивная функция для обхода узлов
+        const processNode = (node: Node, parentList: boolean = false) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const text = node.textContent?.trim();
+                if (text && !parentList) {
+                    elements.push(<p key={keyCounter++} className={s.paragraph}>{text}</p>);
+                }
+                return;
+            }
+
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const element = node as Element;
+                const tagName = element.tagName.toLowerCase();
+
+                switch (tagName) {
+                    case 'p':
+                        // Параграф
+                        const pText = element.textContent?.trim();
+                        if (pText) {
+                            // Проверяем, является ли параграф заголовком (содержит <b> или <strong>)
+                            const hasBold = element.querySelector('b, strong');
+                            if (hasBold) {
+                                elements.push(<h4 key={keyCounter++} className={s.subHeader}>{pText}</h4>);
+                            } else {
+                                elements.push(<p key={keyCounter++} className={s.paragraph}>{pText}</p>);
+                            }
+                        }
+                        break;
+
+                    case 'b':
+                    case 'strong':
+                        // Жирный текст как подзаголовок
+                        const boldText = element.textContent?.trim();
+                        if (boldText) {
+                            elements.push(<h4 key={keyCounter++} className={s.subHeader}>{boldText}</h4>);
+                        }
+                        break;
+
+                    case 'ul':
+                    case 'ol':
+                        // Список
+                        const listItems: JSX.Element[] = [];
+                        element.querySelectorAll('li').forEach((li, idx) => {
+                            const liText = li.textContent?.trim();
+                            if (liText) {
+                                listItems.push(<li key={idx}>{liText}</li>);
+                            }
+                        });
+                        if (listItems.length > 0) {
+                            elements.push(
+                                <ul key={keyCounter++} className={s.list}>
+                                    {listItems}
+                                </ul>
+                            );
+                        }
+                        break;
+
+                    case 'br':
+                        // Перенос строки
+                        elements.push(<div key={keyCounter++} className={s.spacer} />);
+                        break;
+
+                    default:
+                        // Рекурсивно обрабатываем дочерние узлы
+                        element.childNodes.forEach(child => processNode(child, parentList));
+                        break;
+                }
+            }
+        };
+
+        body.childNodes.forEach(node => processNode(node));
+
+        return elements;
+    };
 
     return (
         <div
@@ -166,31 +255,23 @@ export default function VacancyContent({ vacancy, onClose, onScrollTopChange }: 
                 </div>
             )}
 
-            {/* DESCRIPTION SECTION */}
+            {/* Описание вакансии */}
             {vacancy?.description && (
                 <div className={s.section}>
-                    <h3 className={s.sectionTitle}>
-                        <span className={s.sectionIcon}>📝</span>
-                        Описание вакансии
-                    </h3>
-                    <div
-                        className={s.contentBox}
-                        dangerouslySetInnerHTML={{ __html: vacancy.description }}
-                    />
+                    <h3 className={s.sectionTitle}>📝 Описание вакансии</h3>
+                    <div className={s.contentBox}>
+                        {parseHtmlToStructuredText(vacancy.description)}
+                    </div>
                 </div>
             )}
 
-            {/* REQUIREMENTS SECTION */}
+            {/* Требования */}
             {vacancy?.requirements && (
                 <div className={s.section}>
-                    <h3 className={s.sectionTitle}>
-                        <span className={s.sectionIcon}>⚡</span>
-                        Требования к кандидату
-                    </h3>
-                    <div
-                        className={s.contentBox}
-                        dangerouslySetInnerHTML={{ __html: vacancy.requirements }}
-                    />
+                    <h3 className={s.sectionTitle}>⚡ Требования к кандидату</h3>
+                    <div className={s.contentBox}>
+                        {parseHtmlToStructuredText(vacancy.requirements)}
+                    </div>
                 </div>
             )}
         </div>

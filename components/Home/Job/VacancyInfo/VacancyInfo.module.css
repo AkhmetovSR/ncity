@@ -4,16 +4,19 @@
 /* ========== ОВЕРЛЕЙ (ЗАТЕМНЁННЫЙ ФОН) ========== */
 :local(.overlay) {
     position: fixed;
+    width: 100%;
+    height: 100%;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(2px);
+    background-color: rgba(0, 0, 0, 0.8);
+    /*background-color: rgba(0, 0, 0, 0.7);*/
+    backdrop-filter: blur(10px);
     z-index: 999;
     overflow: hidden;
-    inset: 0;
-    animation: fadeIn 0.2s ease;
+    /*inset: 0;*/
+    animation: fadeIn 0.1s ease;
 
 }
 
@@ -25,13 +28,13 @@
     left: 0;
     right: 0;
     display: grid;
-    /*background: var(--bg-card);*/
-    background: rgb(39, 42, 47);
-    /*backdrop-filter: blur(20px);*/
-    border-radius: 28px 28px 0 0;
+    background: var(--bg-vacancy-info);
+    /*background: rgba(255, 255, 255, 0.15);*/
+    backdrop-filter: blur(5px);
+    border-radius: 40px 40px 0 0;
     box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.2);
     z-index: 1000;
-    height: 85vh;
+    height: 80vh;
     animation: slideUp 0.3s ease-out; /* или просто ease */
     flex-direction: column;
     overflow: hidden;

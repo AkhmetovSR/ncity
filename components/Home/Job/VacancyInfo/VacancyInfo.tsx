@@ -61,8 +61,6 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
 
             panel.style.transition = 'transform 0.2s ease-out';
 
-            console.log('Delta:', currentY.current); // Для отладки
-
             if (currentY.current > 150) {
                 panel.style.transform = 'translateY(100%)';
                 setTimeout(() => {

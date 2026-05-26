@@ -84,8 +84,8 @@ export default function VacancyList() {
 
     return (
         <motion.div className={s.fullscreenOverlay} layoutId="vacancy" transition={{duration: 0.3, ease: "easeOut", type: "tween", delay: 0}}>
-            <motion.div className={s.fullscreenContent} onClick={(e) => e.stopPropagation()}>
-                <motion.div className={s.contentWrapper} initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}}>
+            <motion.div className={s.fullscreenContent} onClick={(e) => e.stopPropagation()} initial={{scale: 1, y: 0}} animate={{scale: vacancyOpen ? 0.95 : 1, y: vacancyOpen ? -20 : 0}} transition={{duration: 0.1, delay: 0}}>
+                <motion.div className={s.contentWrapper} initial={{opacity: 0}} animate={{opacity: 1}}>
                     <div className={s.header}>
                         <select className={s.filterSelect} value={sortBy} onChange={(e) => setSortBy(e.target.value as any)}>
                             <option value="date">📅 По дате (новые)</option>
@@ -104,7 +104,7 @@ export default function VacancyList() {
                                 className={`${s.vacancyCard} ${visibleCards.has(index) ? s.vacancyCardVisible : ''}`}
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    // setSelectedVacancy(vacancy.id);
+                                    setSelectedVacancy(vacancy);
                                     setVacancyOpen(true);
                                 }}
                                 initial={{opacity: 0, y: 30}}

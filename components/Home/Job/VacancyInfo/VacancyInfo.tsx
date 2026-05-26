@@ -22,7 +22,7 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
             panelRef.current.style.transform = 'translateY(100%)';
             setTimeout(() => {
                 onClose?.();
-            }, 200);
+            }, 100);
         } else {
             onClose?.();
         }
@@ -30,7 +30,7 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
 
     const resetPosition = () => {
         if (panelRef.current) {
-            panelRef.current.style.transition = 'transform 0.2s ease-out';
+            panelRef.current.style.transition = 'transform 0.3s ease-out';
             panelRef.current.style.transform = '';
             currentY.current = 0;
         }
@@ -65,7 +65,7 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
                 panel.style.transform = 'translateY(100%)';
                 setTimeout(() => {
                     onClose?.();
-                }, 200);
+                }, 100);
             } else {
                 panel.style.transform = '';
                 currentY.current = 0;
@@ -87,7 +87,7 @@ export default function VacancyInfo({ vacancy, onClose }: VacancyInfoProps) {
 
     return (
         <>
-            <div className={s.overlay} onClick={closeWithAnimation} />
+            <div className={s.overlay} onClick={closeWithAnimation} ref={panelRef}/>
             <div ref={panelRef} className={s.vacancyInfo}>
                 <VacancyHeader vacancy={vacancy} onClose={closeWithAnimation} />
                 <VacancyContent

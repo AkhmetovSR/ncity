@@ -1,0 +1,583 @@
+[
+  {
+    "id": "1779522471802_9bpnht749",
+    "timestamp": "2026-05-23T07:47:51.802Z",
+    "level": "success",
+    "message": "Парсинг успешно завершен! Сохранено 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779522471798_8nozrnd7a",
+    "timestamp": "2026-05-23T07:47:51.798Z",
+    "level": "success",
+    "message": "Сохранение 10 вакансий в файл",
+    "source": "parser"
+  },
+  {
+    "id": "1779522471796_vd6i1k6hs",
+    "timestamp": "2026-05-23T07:47:51.796Z",
+    "level": "info",
+    "message": "Парсинг завершен. Успешно: 10, Ошибок: 0",
+    "source": "parser"
+  },
+  {
+    "id": "1779522471794_5bqmra24q",
+    "timestamp": "2026-05-23T07:47:51.794Z",
+    "level": "info",
+    "message": "Прогресс: спарсено 10 из 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779522444392_gxevib5me",
+    "timestamp": "2026-05-23T07:47:24.392Z",
+    "level": "info",
+    "message": "Начинаем парсинг детальной информации для 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779522444390_e9kp1e5ev",
+    "timestamp": "2026-05-23T07:47:24.390Z",
+    "level": "info",
+    "message": "Достигнут лимит вакансий для парсинга",
+    "source": "parser"
+  },
+  {
+    "id": "1779522444387_klhuzhkpr",
+    "timestamp": "2026-05-23T07:47:24.387Z",
+    "level": "info",
+    "message": "Всего собрано ссылок: 10 из 10",
+    "source": "parser"
+  },
+  {
+    "id": "1779522444384_dg19m0k0g",
+    "timestamp": "2026-05-23T07:47:24.384Z",
+    "level": "info",
+    "message": "Страница 0: найдено 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779522444025_bvy4y1te7",
+    "timestamp": "2026-05-23T07:47:24.025Z",
+    "level": "info",
+    "message": "Начинаем сбор ссылок на вакансии. Страницы: 0 - 10",
+    "source": "parser"
+  },
+  {
+    "id": "1779522444022_drm75r0mb",
+    "timestamp": "2026-05-23T07:47:24.022Z",
+    "level": "info",
+    "message": "Начало парсинга вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779384687806_r10gfgwhk",
+    "timestamp": "2026-05-21T17:31:27.806Z",
+    "level": "success",
+    "message": "Парсинг успешно завершен! Сохранено 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779384687802_k1k6jedft",
+    "timestamp": "2026-05-21T17:31:27.802Z",
+    "level": "success",
+    "message": "Сохранение 10 вакансий в файл",
+    "source": "parser"
+  },
+  {
+    "id": "1779384687799_3qlgt8epl",
+    "timestamp": "2026-05-21T17:31:27.799Z",
+    "level": "info",
+    "message": "Парсинг завершен. Успешно: 10, Ошибок: 0",
+    "source": "parser"
+  },
+  {
+    "id": "1779384687795_iortqrr7b",
+    "timestamp": "2026-05-21T17:31:27.795Z",
+    "level": "info",
+    "message": "Прогресс: спарсено 10 из 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779384662690_f4rv8ad15",
+    "timestamp": "2026-05-21T17:31:02.690Z",
+    "level": "info",
+    "message": "Начинаем парсинг детальной информации для 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779384662688_5koq1t9tx",
+    "timestamp": "2026-05-21T17:31:02.688Z",
+    "level": "info",
+    "message": "Достигнут лимит вакансий для парсинга",
+    "source": "parser"
+  },
+  {
+    "id": "1779384662687_uvywzli9t",
+    "timestamp": "2026-05-21T17:31:02.687Z",
+    "level": "info",
+    "message": "Всего собрано ссылок: 10 из 10",
+    "source": "parser"
+  },
+  {
+    "id": "1779384662684_hl2z16b4n",
+    "timestamp": "2026-05-21T17:31:02.684Z",
+    "level": "info",
+    "message": "Страница 0: найдено 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779384662320_bnuxg32jp",
+    "timestamp": "2026-05-21T17:31:02.320Z",
+    "level": "info",
+    "message": "Начинаем сбор ссылок на вакансии. Страницы: 0 - 10",
+    "source": "parser"
+  },
+  {
+    "id": "1779384662318_4ftc2cxc3",
+    "timestamp": "2026-05-21T17:31:02.318Z",
+    "level": "info",
+    "message": "Начало парсинга вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779213133818_t0wfnb2vm",
+    "timestamp": "2026-05-19T17:52:13.818Z",
+    "level": "success",
+    "message": "Парсинг успешно завершен! Сохранено 5 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779213133814_t5lst78lb",
+    "timestamp": "2026-05-19T17:52:13.814Z",
+    "level": "success",
+    "message": "Сохранение 5 вакансий в файл",
+    "source": "parser"
+  },
+  {
+    "id": "1779213133810_rwn9fmv5a",
+    "timestamp": "2026-05-19T17:52:13.810Z",
+    "level": "info",
+    "message": "Парсинг завершен. Успешно: 5, Ошибок: 0",
+    "source": "parser"
+  },
+  {
+    "id": "1779213121386_4iypkprmy",
+    "timestamp": "2026-05-19T17:52:01.386Z",
+    "level": "info",
+    "message": "Начинаем парсинг детальной информации для 5 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779213121385_jx7zadfez",
+    "timestamp": "2026-05-19T17:52:01.385Z",
+    "level": "info",
+    "message": "Достигнут лимит вакансий для парсинга",
+    "source": "parser"
+  },
+  {
+    "id": "1779213121383_h0urmv8gl",
+    "timestamp": "2026-05-19T17:52:01.383Z",
+    "level": "info",
+    "message": "Всего собрано ссылок: 5 из 5",
+    "source": "parser"
+  },
+  {
+    "id": "1779213121377_g420wcew5",
+    "timestamp": "2026-05-19T17:52:01.377Z",
+    "level": "info",
+    "message": "Страница 0: найдено 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779213121106_09pyzep7t",
+    "timestamp": "2026-05-19T17:52:01.106Z",
+    "level": "info",
+    "message": "Начинаем сбор ссылок на вакансии. Страницы: 0 - 4",
+    "source": "parser"
+  },
+  {
+    "id": "1779213121104_dwhz3ul84",
+    "timestamp": "2026-05-19T17:52:01.104Z",
+    "level": "info",
+    "message": "Начало парсинга вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779203009715_jqicqr10q",
+    "timestamp": "2026-05-19T15:03:29.715Z",
+    "level": "success",
+    "message": "Парсинг успешно завершен! Сохранено 2 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779203009712_dkil6klg5",
+    "timestamp": "2026-05-19T15:03:29.712Z",
+    "level": "success",
+    "message": "Сохранение 2 вакансий в файл",
+    "source": "parser"
+  },
+  {
+    "id": "1779203009707_ml9p46fbq",
+    "timestamp": "2026-05-19T15:03:29.707Z",
+    "level": "info",
+    "message": "Парсинг завершен. Успешно: 2, Ошибок: 0",
+    "source": "parser"
+  },
+  {
+    "id": "1779203006436_agr6j80g5",
+    "timestamp": "2026-05-19T15:03:26.436Z",
+    "level": "info",
+    "message": "Начинаем парсинг детальной информации для 2 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779203006434_1h5uz4ccn",
+    "timestamp": "2026-05-19T15:03:26.434Z",
+    "level": "info",
+    "message": "Достигнут лимит вакансий для парсинга",
+    "source": "parser"
+  },
+  {
+    "id": "1779203006426_crls75j8d",
+    "timestamp": "2026-05-19T15:03:26.426Z",
+    "level": "info",
+    "message": "Всего собрано ссылок: 2 из 2",
+    "source": "parser"
+  },
+  {
+    "id": "1779203006422_0lbnqrrzz",
+    "timestamp": "2026-05-19T15:03:26.422Z",
+    "level": "info",
+    "message": "Страница 0: найдено 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779203006163_q2tx0eydy",
+    "timestamp": "2026-05-19T15:03:26.163Z",
+    "level": "info",
+    "message": "Начинаем сбор ссылок на вакансии. Страницы: 0 - 1",
+    "source": "parser"
+  },
+  {
+    "id": "1779203006160_e1mc6vu3y",
+    "timestamp": "2026-05-19T15:03:26.160Z",
+    "level": "info",
+    "message": "Начало парсинга вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779202967701_mltgf8vh2",
+    "timestamp": "2026-05-19T15:02:47.701Z",
+    "level": "success",
+    "message": "Парсинг успешно завершен! Сохранено 2 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779202967697_uu8tuusvk",
+    "timestamp": "2026-05-19T15:02:47.697Z",
+    "level": "success",
+    "message": "Сохранение 2 вакансий в файл",
+    "source": "parser"
+  },
+  {
+    "id": "1779202967690_9bnik8t4v",
+    "timestamp": "2026-05-19T15:02:47.690Z",
+    "level": "info",
+    "message": "Парсинг завершен. Успешно: 2, Ошибок: 0",
+    "source": "parser"
+  },
+  {
+    "id": "1779202964511_lk2sdragw",
+    "timestamp": "2026-05-19T15:02:44.511Z",
+    "level": "info",
+    "message": "Начинаем парсинг детальной информации для 2 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779202964507_m4p8yp60e",
+    "timestamp": "2026-05-19T15:02:44.507Z",
+    "level": "info",
+    "message": "Достигнут лимит вакансий для парсинга",
+    "source": "parser"
+  },
+  {
+    "id": "1779202964505_tmvwccf07",
+    "timestamp": "2026-05-19T15:02:44.505Z",
+    "level": "info",
+    "message": "Всего собрано ссылок: 2 из 2",
+    "source": "parser"
+  },
+  {
+    "id": "1779202964503_aq6gim8nt",
+    "timestamp": "2026-05-19T15:02:44.503Z",
+    "level": "info",
+    "message": "Страница 0: найдено 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779202964252_nhza2clx2",
+    "timestamp": "2026-05-19T15:02:44.252Z",
+    "level": "info",
+    "message": "Начинаем сбор ссылок на вакансии. Страницы: 0 - 1",
+    "source": "parser"
+  },
+  {
+    "id": "1779202964250_s8qf5mxv8",
+    "timestamp": "2026-05-19T15:02:44.250Z",
+    "level": "info",
+    "message": "Начало парсинга вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779202493558_77i92fx1d",
+    "timestamp": "2026-05-19T14:54:53.558Z",
+    "level": "success",
+    "message": "Парсинг успешно завершен! Сохранено 2 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779202493554_o8s38wmeh",
+    "timestamp": "2026-05-19T14:54:53.554Z",
+    "level": "success",
+    "message": "Сохранение 2 вакансий в файл",
+    "source": "parser"
+  },
+  {
+    "id": "1779202493552_gywo4sg1y",
+    "timestamp": "2026-05-19T14:54:53.552Z",
+    "level": "info",
+    "message": "Парсинг завершен. Успешно: 2, Ошибок: 0",
+    "source": "parser"
+  },
+  {
+    "id": "1779202490216_1l8txuo3u",
+    "timestamp": "2026-05-19T14:54:50.216Z",
+    "level": "info",
+    "message": "Начинаем парсинг детальной информации для 2 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779202490214_c6r4faueo",
+    "timestamp": "2026-05-19T14:54:50.214Z",
+    "level": "info",
+    "message": "Достигнут лимит вакансий для парсинга",
+    "source": "parser"
+  },
+  {
+    "id": "1779202490210_1u3floxoe",
+    "timestamp": "2026-05-19T14:54:50.210Z",
+    "level": "info",
+    "message": "Всего собрано ссылок: 2 из 2",
+    "source": "parser"
+  },
+  {
+    "id": "1779202490207_7i33zmkwo",
+    "timestamp": "2026-05-19T14:54:50.207Z",
+    "level": "info",
+    "message": "Страница 0: найдено 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779202489928_sgi1l8p8e",
+    "timestamp": "2026-05-19T14:54:49.928Z",
+    "level": "info",
+    "message": "Начинаем сбор ссылок на вакансии. Страницы: 0 - 1",
+    "source": "parser"
+  },
+  {
+    "id": "1779202489924_0nyevatkw",
+    "timestamp": "2026-05-19T14:54:49.924Z",
+    "level": "info",
+    "message": "Начало парсинга вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779202074445_y267knvn4",
+    "timestamp": "2026-05-19T14:47:54.445Z",
+    "level": "success",
+    "message": "Парсинг успешно завершен! Сохранено 2 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779202074441_fy3bpepn3",
+    "timestamp": "2026-05-19T14:47:54.441Z",
+    "level": "success",
+    "message": "Сохранение 2 вакансий в файл",
+    "source": "parser"
+  },
+  {
+    "id": "1779202074438_fu65o2jcs",
+    "timestamp": "2026-05-19T14:47:54.438Z",
+    "level": "info",
+    "message": "Парсинг завершен. Успешно: 2, Ошибок: 0",
+    "source": "parser"
+  },
+  {
+    "id": "1779202071055_wxgovdext",
+    "timestamp": "2026-05-19T14:47:51.055Z",
+    "level": "info",
+    "message": "Начинаем парсинг детальной информации для 2 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779202071053_ftrr4qqmg",
+    "timestamp": "2026-05-19T14:47:51.053Z",
+    "level": "info",
+    "message": "Достигнут лимит вакансий для парсинга",
+    "source": "parser"
+  },
+  {
+    "id": "1779202071050_txk5hzcai",
+    "timestamp": "2026-05-19T14:47:51.050Z",
+    "level": "info",
+    "message": "Всего собрано ссылок: 2 из 2",
+    "source": "parser"
+  },
+  {
+    "id": "1779202071045_sr4q9lbru",
+    "timestamp": "2026-05-19T14:47:51.045Z",
+    "level": "info",
+    "message": "Страница 0: найдено 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779202070758_whlgt2sqz",
+    "timestamp": "2026-05-19T14:47:50.758Z",
+    "level": "info",
+    "message": "Начинаем сбор ссылок на вакансии. Страницы: 0 - 1",
+    "source": "parser"
+  },
+  {
+    "id": "1779202070756_rukhnkwfb",
+    "timestamp": "2026-05-19T14:47:50.756Z",
+    "level": "info",
+    "message": "Начало парсинга вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779201508056_r8vhqrzdp",
+    "timestamp": "2026-05-19T14:38:28.056Z",
+    "level": "success",
+    "message": "Парсинг успешно завершен! Сохранено 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779201508053_rv1qwll0x",
+    "timestamp": "2026-05-19T14:38:28.053Z",
+    "level": "success",
+    "message": "Сохранение 10 вакансий в файл",
+    "source": "parser"
+  },
+  {
+    "id": "1779201508051_eq6k3tn7u",
+    "timestamp": "2026-05-19T14:38:28.051Z",
+    "level": "info",
+    "message": "Парсинг завершен. Успешно: 10, Ошибок: 0",
+    "source": "parser"
+  },
+  {
+    "id": "1779201508049_7dqhci8ct",
+    "timestamp": "2026-05-19T14:38:28.049Z",
+    "level": "info",
+    "message": "Прогресс: спарсено 10 из 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779201481729_irhjmulw7",
+    "timestamp": "2026-05-19T14:38:01.729Z",
+    "level": "info",
+    "message": "Начинаем парсинг детальной информации для 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779201479514_xwisjaw7z",
+    "timestamp": "2026-05-19T14:37:59.514Z",
+    "level": "info",
+    "message": "Всего собрано ссылок: 10 из 500",
+    "source": "parser"
+  },
+  {
+    "id": "1779201479512_1p2shl6iw",
+    "timestamp": "2026-05-19T14:37:59.512Z",
+    "level": "info",
+    "message": "Страница 0: найдено 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779201479230_oooo70kdy",
+    "timestamp": "2026-05-19T14:37:59.230Z",
+    "level": "info",
+    "message": "Начинаем сбор ссылок на вакансии. Страницы: 0 - 1",
+    "source": "parser"
+  },
+  {
+    "id": "1779201479226_ombzkkfyj",
+    "timestamp": "2026-05-19T14:37:59.226Z",
+    "level": "info",
+    "message": "Начало парсинга вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779128093624_nc9e0ajh6",
+    "timestamp": "2026-05-18T18:14:53.624Z",
+    "level": "success",
+    "message": "Парсинг успешно завершен! Сохранено 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779128093620_0vm38s9dx",
+    "timestamp": "2026-05-18T18:14:53.620Z",
+    "level": "success",
+    "message": "Сохранение 10 вакансий в файл",
+    "source": "parser"
+  },
+  {
+    "id": "1779128093618_r39d9iy8p",
+    "timestamp": "2026-05-18T18:14:53.618Z",
+    "level": "info",
+    "message": "Парсинг завершен. Успешно: 10, Ошибок: 0",
+    "source": "parser"
+  },
+  {
+    "id": "1779128093607_x997p8vgj",
+    "timestamp": "2026-05-18T18:14:53.607Z",
+    "level": "info",
+    "message": "Прогресс: спарсено 10 из 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779128066816_wzxsl2trb",
+    "timestamp": "2026-05-18T18:14:26.816Z",
+    "level": "info",
+    "message": "Начинаем парсинг детальной информации для 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779128064094_m69e5nu3j",
+    "timestamp": "2026-05-18T18:14:24.094Z",
+    "level": "info",
+    "message": "Всего собрано ссылок: 10 из 500",
+    "source": "parser"
+  },
+  {
+    "id": "1779128064090_mlyu31uts",
+    "timestamp": "2026-05-18T18:14:24.090Z",
+    "level": "info",
+    "message": "Страница 0: найдено 10 вакансий",
+    "source": "parser"
+  },
+  {
+    "id": "1779128063820_nn53ba6mx",
+    "timestamp": "2026-05-18T18:14:23.820Z",
+    "level": "info",
+    "message": "Начинаем сбор ссылок на вакансии. Страницы: 0 - 1",
+    "source": "parser"
+  },
+  {
+    "id": "1779128063818_e2uhjcls4",
+    "timestamp": "2026-05-18T18:14:23.818Z",
+    "level": "info",
+    "message": "Начало парсинга вакансий",
+    "source": "parser"
+  }
+]

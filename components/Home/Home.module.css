@@ -1,109 +1,64 @@
 /* Home.module.css */
-
 :local(.Home) {
-    /*position: fixed;*/
     height: 100%;
     width: 100%;
     display: grid;
-    /*border: 2px solid red;*/
-    grid-template-rows: 30% 1fr;
-    /*padding: 0.5rem 1rem;*/
-    background: #000000;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    /*overflow: hidden;*/
+    /*grid-template-rows: auto 70%;*/
+    gap: clamp(10.2px, 1vw, 78.4px);
+    /*border: 1px solid red;*/
+    /*background: #000000;*/
+    overflow: hidden;
 }
 :local(.Top) {
     /*height: 100%;*/
-    position: relative;
-    background-color: #171717;
-    border-radius: 0 0 30px 30px;
+    /*border-bottom: 1px solid var(--border-color);*/
     display: grid;
-    align-items: start;
     justify-items: center;
-    border-bottom: 1px solid var(--border-color);
+    /*border: 1px solid red;*/
+    /*gap: 5rem;*/
     /*padding-top: 2%;*/
+    /*overflow: hidden;*/
 }
 .TopContent{
-    height: 92%;
-    width: 95%;
+    /*height: 100%;*/
+    width: 90%;
     /*border: 1px solid red;*/
     display: grid;
-    justify-items: center;
-    grid-template-rows: 45% auto;
+    gap: clamp(10.2px, 4vw, 78.4px);
+    /*justify-items: center;*/
+    /*grid-template-rows: 45% 55%;*/
+    /*overflow: hidden;*/
     /*gap: 0.5rem;*/
 }
 /* Обёртка для кнопки темы - позиционируем в правом верхнем углу */
 :local(.themeButtonWrapper) {
-    position: fixed;
+    /*position: fixed;*/
     /*top: 0.1rem;*/
     left: 1rem;
     z-index: 1000;
 }
 
-/*!* Адаптив для мобильных *!*/
-/*@media (max-width: 640px) {*/
-/*    :local(.themeButtonWrapper) {*/
-/*        top: 12px;*/
-/*        right: 12px;*/
-/*    }*/
-/*}*/
-
-/* ========== ДЕКОРАТИВНАЯ ЁЛОЧКА ========== */
-:local(.tree) {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    opacity: 0.3; /* Делаем ёлочку полупрозрачной, чтобы не отвлекала */
-    pointer-events: none; /* Чтобы ёлочка не мешала кликам */
-}
-
-/* Общий стиль для треугольников (ярусов ёлки) */
-:local(.triangle) {
-    width: 0;
-    height: 0;
-    border-left: 50px solid transparent;
-    border-right: 50px solid transparent;
-    border-bottom: 100px solid green;
-}
-
-/* Размеры и отступы для каждого яруса */
-:local(.top) {
-    border-bottom: 60px solid #2e7d32;
-    border-left-width: 40px;
-    border-right-width: 40px;
-}
-
-:local(.middle) {
-    border-bottom: 80px solid #388e3c;
-    border-left-width: 60px;
-    border-right-width: 60px;
-    margin-top: -10px; /* наложение треугольников для реалистичности */
-}
-
-:local(.bottom) {
-    border-bottom: 100px solid #4caf50;
-    border-left-width: 80px;
-    border-right-width: 80px;
-    margin-top: -10px;
-}
-
-/* Ствол ёлки */
-:local(.trunk) {
-    width: 30px;
-    height: 40px;
-    background-color: #8d6e63;
-    margin-top: -5px;
+:local(.Services) {
+    /*border: 1px solid red;*/
+    height: 100%;
+    width: 100%;
+    display: grid;
+    /*align-items: start;*/
+    justify-items: center;
+    /*border-radius: 1rem;*/
+    overflow-y: scroll;
+    /*overflow: hidden;*/
 }
 
 /*!* Адаптив для ёлочки на мобильных *!*/
-/*@media (max-width: 640px) {*/
+/*@media (min-width: 640px) {*/
 /*    :local(.Home) {*/
-/*        border-radius: 0;*/
+/*        width: 35%;*/
+/*        border-radius: 3rem;*/
+/*        padding: 1.5%;*/
+/*    }*/
+/*    :local(.HomeContent){*/
+/*        width: 95%;*/
 /*    }*/
 /*    :local(.tree) {*/
 /*        transform: scale(0.7);*/
@@ -111,10 +66,3 @@
 /*        left: 10px;*/
 /*    }*/
 /*}*/
-:local(.Services) {
-    /*border: 1px solid red;*/
-    display: grid;
-    /*align-items: center;*/
-    justify-items: center;
-    /*overflow: hidden;*/
-}

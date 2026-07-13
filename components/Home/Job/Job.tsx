@@ -39,7 +39,9 @@ export default function Job() {
                     <Link href="/vacancy" style={{ textDecoration: 'none' }} className={s.Link}>
                     <div className={s.Left}>
                         <div className={s.Title}>Вакансии</div>
-                        <div className={s.SearchJob}>смотреть вакансии</div>
+                        <div className={s.SearchJob}>
+                            <div className={s.searchBtn}>смотреть вакансии</div>
+                        </div>
                     </div>
                     <div className={s.Right}>
                         <div className={s.WorkImg}>

@@ -23,7 +23,7 @@ export default function DarkWhiteTheme() {
     return (
         <button onClick={toggleTheme} className={s.themeToggle}>
             <span className={s.themeIcon}>{theme === 'dark' ? '☀️' : '🌙'}</span>
-            <span className={s.themeText}>{theme === 'dark' ? 'Светлая' : 'Тёмная'}</span>
+            {/*<span className={s.themeText}>{theme === 'dark' ? 'Светлая' : 'Тёмная'}</span>*/}
         </button>
     );
 }

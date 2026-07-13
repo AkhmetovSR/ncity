@@ -1,47 +1,40 @@
 .Main{
-    /*position: absolute;*/
+    position: fixed;
     width: 100%;
     height: 100%;
     background-color: #1D1F23;
-    /*border: 2px solid red;*/
+    /*border: 2px solid blue;*/
     /*height: 100%;*/
     /*width: 100%;*/
     /*max-width: 500px;*/
     overflow: hidden;
     /*position: absolute;*/
+    /*left: 0;*/
+    /*top: 0;*/
     display: grid;
+    grid-template-rows: 85% 15%;
 
-    justify-items: center;
-    z-index: 100;
+    /*justify-items: center;*/
+    /*z-index: 100;*/
     /*border-radius: 2rem;*/
     /*border: 1px solid rgba(255, 255, 255, 0.53);*/
     /* Фон будет браться из глобальных переменных темы */
-    background: var(--bg-content);
+    /*background: var(--bg-content);*/
 }
 .Content{
-    display: grid;
-    height: 100%;
-    width: 100%;
-    justify-items: center;
-    /*border: 1px solid blue;*/
+    /*display: grid;*/
+    /*height: 100%;*/
+    /*width: 100%;*/
+    /*justify-items: center;*/
+    /*border: 1px solid red;*/
 }
 .Menu{
     /*position: absolute;*/
-    width: 100%;
-    border: 1px solid green;
+    /*width: 100%;*/
+    /*border: 1px solid red;*/
     /*height: 5%;*/
-    bottom: 5%;
+    /*bottom: 5%;*/
 }
 .Blocked{
 
-}
-
-/* Адаптив для ёлочки на мобильных */
-@media (max-width: 640px) {
-    .Main{
-        width: 100vw;
-        height: 100%;
-        grid-template-rows: 85% 15%;
-        /*border: 1px solid red;*/
-    }
 }

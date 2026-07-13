@@ -1,44 +1,49 @@
-// // app/api/vacancies/route.ts
-// import { NextResponse } from 'next/server';
-// import fs from 'fs';
-// import path from 'path';
-// import { config } from '@/lib/config';
-//
-// export const dynamic = 'force-dynamic';
-//
-// export async function GET() {
-//     try {
-//         const DATA_DIR = config.DATA_DIR;
-//         // Используем фиксированное имя файла
-//         const fileName = 'vacancyList.json';
-//         const filePath = path.join(DATA_DIR, fileName);
-//         // Проверяем, существует ли файл
-//         if (!fs.existsSync(filePath)) {
-//             console.log('Файл vacancyList.json не найден');
-//             return NextResponse.json([], { status: 200 });
-//         }
-//         // Читаем файл
-//         const fileContent = fs.readFileSync(filePath, 'utf8');
-//         const vacancies = JSON.parse(fileContent);
-//         return NextResponse.json(vacancies);
-//
-//     } catch (error: unknown) {
-//         console.error('Ошибка:', error);
-//         return NextResponse.json([], { status: 200 });
-//     }
-// }
-
+// app/api/vacancies/route.ts
 import { NextResponse } from 'next/server';
-import vacanciesData from '@/data/vacancyList.json'; // ← просто импортируем
+import pool from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+    let client;
     try {
-        // Возвращаем импортированные данные
-        return NextResponse.json(vacanciesData);
+        client = await pool.connect();
+
+        // SQL-запрос с маппингом полей (AS) под интерфейс Vacancy.
+        // Форматируем TIMESTAMP из БД в строку "ДД.ММ.ГГГГ" для клиентской функции parseDate.
+        const query = `
+            SELECT 
+                id,
+                title AS profession,
+                salary,
+                company_name AS company,
+                schedule,
+                region,
+                address,
+                experience,
+                education,
+                contact_phone,
+                contact_email,
+                contact_website,
+                description,
+                requirements,
+                is_active,
+                to_char(created_at, 'DD.MM.YYYY') AS date
+            FROM vacancies 
+            WHERE is_active = TRUE 
+            ORDER BY id DESC;
+        `;
+
+        const { rows } = await client.query(query);
+
+        return NextResponse.json(rows);
     } catch (error: unknown) {
-        console.error('Ошибка:', error);
+        console.error('Ошибка при запросе к PostgreSQL:', error);
+        // Возвращаем пустой массив, защищая фронтенд от падения при сбоях БД
         return NextResponse.json([], { status: 200 });
+    } finally {
+        if (client) {
+            client.release(); // Освобождаем соединение обратно в пул
+        }
     }
 }

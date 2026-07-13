@@ -11,21 +11,16 @@ export default function Home() {
     return (
         <AnimatePresence>
             <div className={s.Home}>
-                <div className={s.Top}>
-                    <div className={s.TopContent}>
-                        {/* Кнопка переключения темы в правом верхнем углу */}
-                        <div className={s.themeButtonWrapper}>
-                            <DarkWhiteTheme />
+                    <div className={s.Top}>
+                        <div className={s.TopContent}>
+                            <Title />
+                            <Job />
                         </div>
-                        <Title />
-                        <Job />
+                    </div>
+                    <div className={s.Services}>
+                        <Content/>
                     </div>
                 </div>
-                <div className={s.Services}>
-                    <Content/>
-                </div>
-                {/*<div></div>*/}
-            </div>
         </AnimatePresence>
     );
 }

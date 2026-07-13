@@ -1,3 +1,4 @@
+// components/Home/Job/VacancyList/VacancyList.tsx
 'use client';
 import s from '@/components/Home/Job/VacancyList/VacancyList.module.css';
 import { motion, AnimatePresence } from "framer-motion";
@@ -20,12 +21,16 @@ export default function VacancyList() {
     const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
     function parseDate(dateStr: string): Date {
+        if (!dateStr) return new Date();
         const [day, month, year] = dateStr.split('.');
         return new Date(Number(year), Number(month) - 1, Number(day));
     }
 
-    function parseSalary(salaryStr: string): number {
-        const numbers = salaryStr.match(/\d+/g);
+    // Безопасный парсинг: корректно обрабатывает числовой INT из PostgreSQL и строки
+    function parseSalary(salary: any): number {
+        if (typeof salary === 'number') return salary;
+        if (!salary) return 0;
+        const numbers = String(salary).match(/\d+/g);
         if (!numbers) return 0;
         const nums = numbers.map(Number);
         return nums.reduce((a, b) => a + b, 0) / nums.length;
@@ -48,8 +53,6 @@ export default function VacancyList() {
     useEffect(() => {
         console.log('Текущий URL:', window.location.pathname);
         console.log('Есть ли Job в DOM?', !!document.querySelector('.Vacancy'));
-
-        // Проверяем layoutId в истории Framer Motion
         console.log('Страница при открытии:', window.location.pathname);
 
         return () => {
@@ -73,14 +76,17 @@ export default function VacancyList() {
                 setFilteredVacancies(sortedData);
                 setLoading(false);
             })
-            .catch(() => setLoading(false));
-    }, []);
+            .catch((err) => {
+                console.error('Ошибка загрузки вакансий:', err);
+                setLoading(false);
+            });
+    }, [sortVacancies]);
 
     useEffect(() => {
         if (vacancies.length > 0) {
             setFilteredVacancies(sortVacancies(vacancies));
         }
-    }, [sortBy, vacancies]);
+    }, [sortBy, vacancies, sortVacancies]);
 
     return (
         <motion.div className={s.fullscreenOverlay} layoutId="vacancy" transition={{duration: 0.3, ease: "easeOut", type: "tween", delay: 0}}>
@@ -96,52 +102,58 @@ export default function VacancyList() {
                     </div>
 
                     <div className={s.vacancyList}>
-                        {filteredVacancies.map((vacancy, index) => (
-                            <motion.div
-                                key={vacancy.id || index}
-                                ref={el => { cardsRef.current[index] = el }}
-                                data-index={index}
-                                className={`${s.vacancyCard} ${visibleCards.has(index) ? s.vacancyCardVisible : ''}`}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedVacancy(vacancy);
-                                    setVacancyOpen(true);
-                                }}
-                                initial={{opacity: 0, y: 30}}
-                                animate={{opacity: 1, y: 0}}
-                                transition={{delay: index * 0.05, duration: 0.4}}
-                                whileHover={{scale: 1.01}}
-                                whileTap={{scale: 0.99}}
-                            >
-                                <div className={s.vacancyContent}>
-                                    <div className={s.cardHeader}>
-                                        <div className={s.Wrapper}>
-                                            <div className={s.Wrapper1}>
-                                                <div className={s.divIcon1}><div className={s.Icon1}>📌</div></div>
-                                                <div><h3 className={s.profession}>{vacancy.profession}</h3></div>
+                        {loading ? (
+                            <div className={s.loading}>Загрузка вакансий...</div>
+                        ) : filteredVacancies.length === 0 ? (
+                            <div className={s.noVacancies}>Список вакансий пуст</div>
+                        ) : (
+                            filteredVacancies.map((vacancy, index) => (
+                                <motion.div
+                                    key={vacancy.id || index}
+                                    ref={el => { cardsRef.current[index] = el }}
+                                    data-index={index}
+                                    className={`${s.vacancyCard} ${visibleCards.has(index) ? s.vacancyCardVisible : ''}`}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setSelectedVacancy(vacancy);
+                                        setVacancyOpen(true);
+                                    }}
+                                    initial={{opacity: 0, y: 30}}
+                                    animate={{opacity: 1, y: 0}}
+                                    transition={{delay: index * 0.05, duration: 0.4}}
+                                    whileHover={{scale: 1.01}}
+                                    whileTap={{scale: 0.99}}
+                                >
+                                    <div className={s.vacancyContent}>
+                                        <div className={s.cardHeader}>
+                                            <div className={s.Wrapper}>
+                                                <div className={s.Wrapper1}>
+                                                    <div className={s.divIcon1}><div className={s.Icon1}>📌</div></div>
+                                                    <div><h3 className={s.profession}>{vacancy.profession}</h3></div>
+                                                </div>
+                                                <div className={s.Wrapper2}>
+                                                    <div className={s.divIcon2}><div className={s.Icon2}><div className={s.Ruble}>₽</div></div></div>
+                                                    <div><h5 className={s.salary}>{vacancy.salary ? `${vacancy.salary} ₽` : 'Зарплата не указана'}</h5></div>
+                                                </div>
                                             </div>
-                                            <div className={s.Wrapper2}>
-                                                <div className={s.divIcon2}><div className={s.Icon2}><div className={s.Ruble}>₽</div></div></div>
-                                                <div><h5 className={s.salary}>{vacancy.salary} ₽</h5></div>
+                                            <div className={s.details}>
+                                                <motion.button
+                                                    className={s.WatchVacancy}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setSelectedVacancy(vacancy);
+                                                        setVacancyOpen(true);
+                                                    }}
+                                                >
+                                                    ▶
+                                                </motion.button>
+                                                <div className={s.dateWrapper}>{vacancy.date}</div>
                                             </div>
-                                        </div>
-                                        <div className={s.details}>
-                                            <motion.button
-                                                className={s.WatchVacancy}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setSelectedVacancy(vacancy);
-                                                    setVacancyOpen(true);
-                                                }}
-                                            >
-                                                ▶
-                                            </motion.button>
-                                            <div className={s.dateWrapper}>{vacancy.date}</div>
                                         </div>
                                     </div>
-                                </div>
-                            </motion.div>
-                        ))}
+                                </motion.div>
+                            ))
+                        )}
                     </div>
                 </motion.div>
             </motion.div>

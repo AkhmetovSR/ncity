@@ -1,5 +1,5 @@
 :local(.ContentServ) {
-    height: 95%;
+    height: 100%;
     width: 95%;
     /*border: 1px solid blue;*/
     display: grid;
@@ -10,7 +10,9 @@
     /*overflow-x: hidden;*/
 }
 .Div{
-    border: 1px solid red;
+    border: 1px solid #656565;
+    color: black;
+    /*position: relative;*/
     height: 90%;
     width: 90%;
     border-radius: 20px;

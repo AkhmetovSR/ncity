@@ -1,13 +1,14 @@
 .Vacancy{
-    height: 100%;
+    /*height: 5rem;*/
+    /*height: 300px;*/
     width: 100%;
-    overflow: hidden;
-    max-height: 30vh;
+    /*overflow: hidden;*/
+    /*max-height: 30vh;*/
     /*position: relative;*/
     /*bottom: 0;*/
     /*top: 6rem;*/
-    border-radius: 1.5rem;
-    /*border: 1px solid red;*/
+    border-radius: clamp(10.2px, 5vw, 78.4px);
+    /*border: 1px solid blue;*/
     /*background-color: #20c997;*/
     /*padding: rem;*/
     background: linear-gradient(to bottom, #69FFD5, #B1FFE9);
@@ -17,6 +18,7 @@
     display: grid;
     align-items: center;
     justify-items: center;
+    padding: 3% 3%;
     /*transition: transform 0.2s ease;*/
 }
 /*.GreenBoard {*/
@@ -37,9 +39,10 @@
 /*}*/
 
 .Content {
+    /*border: 1px solid red;*/
     /*position: relative;*/
-    width: 90%;
-    height: 80%;
+    /*width: 93%;*/
+    /*height: 76%;*/
     overflow: hidden;
 }
 .Link{
@@ -51,15 +54,15 @@
 }
 .Left {
     display: grid;
-    grid-template-rows: 50% 50%;
+    grid-template-rows: 35% 65%;
     height: 100%;
     width: 100%;
-    justify-items: start;
+    /*justify-items: start;*/
     /*border: 1px solid red;*/
 }
 .Title {
     width: 100%;
-    font-size: 1.7rem;
+    font-size: clamp(10.2px, 6vw, 78.4px);
     line-height: 0;
     font-family: Forum;
     font-weight: bold;
@@ -71,19 +74,29 @@
     align-items: center;
 }
 .SearchJob {
-    width: 85%;
+    /*width: 100%;*/
+    height: 100%;
     display: grid;
-    background: #6efbd4;
-    border-radius: 0.7rem;
-    color: #378f72;
-    font-family: var(--font-montserrat);
-    align-items: center;
-    justify-items: center;
+    align-items: end;
     /*padding: 0 5%;*/
     /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
     /*overflow: hidden;*/
     /*border: 1px solid red;*/
-    font-size: 1rem;
+}
+.searchBtn{
+    height: 80%;
+    width: 80%;
+    overflow: hidden;
+    background: #6efbd4;
+    border-radius: 15px;
+    color: #378f72;
+    font-family: var(--font-montserrat);
+    display: grid;
+    align-items: center;
+    text-align: center;
+    /*padding-left: 5%;*/
+    font-size: clamp(10.2px, 3.7vw, 78.4px);
+    /*justify-items: center;*/
 }
 .Right {
     width: 100%;
@@ -102,3 +115,63 @@
     justify-items: center;
     /*border: 1px solid red;*/
 }
+
+/*!* ==========================================*/
+/*   375px+ (iPhone 6/7/8, X, 11)*/
+/*   ========================================== *!*/
+/*@media (min-width: 375px) {*/
+/*    .Title {*/
+/*        font-size: 3rem; !* Ваш текущий размер для iPhone 11 *!*/
+/*    }*/
+/*    .searchBtn {*/
+/*        font-size: 1.6rem; !* Ваш текущий размер для iPhone 11 *!*/
+/*    }*/
+/*}*/
+
+/*!* ==========================================*/
+/*   428px+ (iPhone 12/13/14 Plus, Pro Max)*/
+/*   ========================================== *!*/
+/*@media (min-width: 428px) {*/
+/*    .Title {*/
+/*        font-size: 3.6rem;*/
+/*    }*/
+/*    .searchBtn {*/
+/*        font-size: 1.7rem; !* Ваш текущий размер для iPhone 11 *!*/
+/*    }*/
+/*}*/
+
+/*!* ==========================================*/
+/*   768px+ (Планшеты)*/
+/*   ========================================== *!*/
+/*@media (min-width: 768px) {*/
+/*    .Title {*/
+/*        font-size: 4rem;*/
+/*    }*/
+/*    .searchBtn {*/
+/*        font-size: 2.8rem; !* Ваш текущий размер для iPhone 11 *!*/
+/*    }*/
+/*}*/
+
+/*!* ==========================================*/
+/*   1024px+ (Ноутбуки)*/
+/*   ========================================== *!*/
+/*@media (min-width: 1024px) {*/
+/*    .Title {*/
+/*        font-size: 4.4rem;*/
+/*    }*/
+/*    .searchBtn {*/
+/*        font-size: 3.2rem; !* Ваш текущий размер для iPhone 11 *!*/
+/*    }*/
+/*}*/
+
+/*!* ==========================================*/
+/*   1440px+ (Большие мониторы)*/
+/*   ========================================== *!*/
+/*@media (min-width: 1440px) {*/
+/*    .Title {*/
+/*        font-size: 5.6rem;*/
+/*    }*/
+/*    .searchBtn {*/
+/*        font-size: 3.2rem; !* Ваш текущий размер для iPhone 11 *!*/
+/*    }*/
+/*}*/

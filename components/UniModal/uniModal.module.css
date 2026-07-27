@@ -1,0 +1,22 @@
+.UniModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1); /* Затемнение фона */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modalContent {
+    background: #fb0202; /* Или ваш цвет фона */
+    border-radius: 25px;
+    padding: 24px;
+    height: 70%;
+    width: 80%;
+    /*max-width: 600px;*/
+    overflow: hidden; /* Важно для скругления углов при анимации */
+}

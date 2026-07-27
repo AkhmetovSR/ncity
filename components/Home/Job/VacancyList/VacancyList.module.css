@@ -14,6 +14,7 @@
     display: grid;
     justify-items: center;
     align-items: center;
+    /*border: 1px solid red;*/
     /* APPLE STYLE: чистый темный фон с легким градиентом */
     /*background: rgba(0, 0, 0, 0);*/
     /*backdrop-filter: blur(40px) saturate(1.4);*/

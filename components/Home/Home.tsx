@@ -1,26 +1,33 @@
-'use client';
+import type { Metadata } from "next";
 import React from "react";
-import s from "@/components/Home/Home.module.css"
-import Title from "@/components/Home/Title/Title";
+import s from "@/components/Home/Home.module.css";
 import Job from "@/components/Home/Job/Job";
-import { AnimatePresence, motion } from "framer-motion";
-import DarkWhiteTheme from "@/components/DarkWhireTheme/DarkWhiteTheme";
-import Content from "@/components/Home/Content/Content"; // Импортируем кнопку темы
+import Actions from "@/components/Home/Actions/Actions";
+import AI from "@/components/Home/AI/AI";
+import Water from "@/components/Home/Water/Water";
+import Wed from "@/components/Home/Wed/Wed";
+import Title from "@/components/Home/Title/Title";
+import {AnimatePresence} from "framer-motion";
 
-export default function Home() {
+export const metadata: Metadata = {
+    title: "Главная",
+    description: "Актуальные вакансии и информационный портал города Нягань.",
+};
+
+const vidgets = [Actions, AI, Water, Wed];
+
+export default function HomePage() {
     return (
-        <AnimatePresence>
-            <div className={s.Home}>
-                    <div className={s.Top}>
-                        <div className={s.TopContent}>
-                            <Title />
-                            <Job />
-                        </div>
-                    </div>
-                    <div className={s.Services}>
-                        <Content/>
-                    </div>
+        <div className={s.Home}>
+            <AnimatePresence>
+                {/*<Title/>*/}
+                <Job/>
+                <div className={s.Vidgets}>
+                    {vidgets.map((Component, index) => (
+                        <Component key={index} />
+                    ))}
                 </div>
-        </AnimatePresence>
+            </AnimatePresence>
+        </div>
     );
 }

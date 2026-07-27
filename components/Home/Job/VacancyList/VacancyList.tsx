@@ -1,43 +1,63 @@
-// components/Home/Job/VacancyList/VacancyList.tsx
 'use client';
+
+import React, { useEffect, useState, useMemo } from "react";
 import s from '@/components/Home/Job/VacancyList/VacancyList.module.css';
 import { motion, AnimatePresence } from "framer-motion";
-import Link from 'next/link';
-import { useEffect, useState, useRef, useCallback } from "react";
 import VacancyInfo from "@/components/Home/Job/VacancyInfo/VacancyInfo";
 import { Vacancy } from '@/types/vacancy';
 
 export default function VacancyList() {
     const [vacancies, setVacancies] = useState<Vacancy[]>([]);
-    const [filteredVacancies, setFilteredVacancies] = useState<Vacancy[]>([]);
     const [loading, setLoading] = useState(true);
     const [vacancyOpen, setVacancyOpen] = useState(false);
     const [selectedVacancy, setSelectedVacancy] = useState<Vacancy | null>(null);
-    const [theme, setTheme] = useState<'dark' | 'light'>('dark');
     const [sortBy, setSortBy] = useState<'date' | 'salary-asc' | 'salary-desc'>('date');
-    const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
 
-    const observerRef = useRef<IntersectionObserver | null>(null);
-    const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
-
-    function parseDate(dateStr: string): Date {
+    // 1. Вспомогательные функции парсинга (вынесены для чистоты кода)
+    const parseDate = (dateStr: string): Date => {
         if (!dateStr) return new Date();
         const [day, month, year] = dateStr.split('.');
         return new Date(Number(year), Number(month) - 1, Number(day));
-    }
+    };
 
-    // Безопасный парсинг: корректно обрабатывает числовой INT из PostgreSQL и строки
-    function parseSalary(salary: any): number {
+    const parseSalary = (salary: any): number => {
         if (typeof salary === 'number') return salary;
         if (!salary) return 0;
         const numbers = String(salary).match(/\d+/g);
         if (!numbers) return 0;
         const nums = numbers.map(Number);
         return nums.reduce((a, b) => a + b, 0) / nums.length;
-    }
+    };
 
-    const sortVacancies = useCallback((vacanciesList: Vacancy[]) => {
-        const sorted = [...vacanciesList];
+    // 2. Асинхронный безопасный запрос данных (Server Data Fetching pattern)
+    useEffect(() => {
+        const controller = new AbortController();
+
+        fetch('/api/vacancies', { signal: controller.signal })
+            .then(res => res.json())
+            .then((data: Vacancy[]) => {
+                setVacancies(data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                if (err.name !== 'AbortError') {
+                    console.error('Ошибка загрузки вакансий:', err);
+                    setLoading(false);
+                }
+            });
+
+        return () => controller.abort();
+    }, []);
+
+    // 3. Синхронизация темы оформления
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    }, []);
+
+    // 4. Senior Optimization: Сортировка на лету через useMemo (минус 1 стейт, минус лишние рендеры)
+    const processedVacancies = useMemo(() => {
+        const sorted = [...vacancies];
         switch (sortBy) {
             case 'date':
                 return sorted.sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime());
@@ -48,122 +68,116 @@ export default function VacancyList() {
             default:
                 return sorted;
         }
-    }, [sortBy]);
-
-    useEffect(() => {
-        console.log('Текущий URL:', window.location.pathname);
-        console.log('Есть ли Job в DOM?', !!document.querySelector('.Vacancy'));
-        console.log('Страница при открытии:', window.location.pathname);
-
-        return () => {
-            console.log('Страница при закрытии:', window.location.pathname);
-            console.log('Job существует?', !!document.querySelector('.Vacancy'));
-        };
-    }, []);
-
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' || 'dark';
-        setTheme(savedTheme);
-        document.documentElement.setAttribute('data-theme', savedTheme);
-    }, []);
-
-    useEffect(() => {
-        fetch('/api/vacancies')
-            .then(res => res.json())
-            .then((data: Vacancy[]) => {
-                const sortedData = sortVacancies(data);
-                setVacancies(sortedData);
-                setFilteredVacancies(sortedData);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.error('Ошибка загрузки вакансий:', err);
-                setLoading(false);
-            });
-    }, [sortVacancies]);
-
-    useEffect(() => {
-        if (vacancies.length > 0) {
-            setFilteredVacancies(sortVacancies(vacancies));
-        }
-    }, [sortBy, vacancies, sortVacancies]);
+    }, [vacancies, sortBy]);
 
     return (
-        <motion.div className={s.fullscreenOverlay} layoutId="vacancy" transition={{duration: 0.3, ease: "easeOut", type: "tween", delay: 0}}>
-            <motion.div className={s.fullscreenContent} onClick={(e) => e.stopPropagation()} initial={{scale: 1, y: 0}} animate={{scale: vacancyOpen ? 0.95 : 1, y: vacancyOpen ? -20 : 0}} transition={{duration: 0.1, delay: 0}}>
-                <motion.div className={s.contentWrapper} initial={{opacity: 0}} animate={{opacity: 1}}>
-                    <div className={s.header}>
-                        <select className={s.filterSelect} value={sortBy} onChange={(e) => setSortBy(e.target.value as any)}>
-                            <option value="date">📅 По дате (новые)</option>
-                            <option value="salary-asc">💰 По зарплате (возрастание)</option>
-                            <option value="salary-desc">💰 По зарплате (убывание)</option>
-                        </select>
-                        <Link href="/" className={s.closeButton}>✕</Link>
-                    </div>
+        <div className={s.contentWrapper}>
+            {/* Хедер модального окна с селектором сортировки */}
+            {/*<div className={s.header}>*/}
+            {/*    <select*/}
+            {/*        className={s.filterSelect}*/}
+            {/*        value={sortBy}*/}
+            {/*        onChange={(e) => setSortBy(e.target.value as any)}*/}
+            {/*    >*/}
+            {/*        <option value="date">📅 По дате (новые)</option>*/}
+            {/*        <option value="salary-asc">💰 По зарплате (возрастание)</option>*/}
+            {/*        <option value="salary-desc">💰 По зарплате (убывание)</option>*/}
+            {/*    </select>*/}
+            {/*    /!* Кнопка закрытия удалена отсюда, так как она вынесена на уровень AppleModal *!/*/}
+            {/*</div>*/}
 
-                    <div className={s.vacancyList}>
-                        {loading ? (
-                            <div className={s.loading}>Загрузка вакансий...</div>
-                        ) : filteredVacancies.length === 0 ? (
-                            <div className={s.noVacancies}>Список вакансий пуст</div>
-                        ) : (
-                            filteredVacancies.map((vacancy, index) => (
-                                <motion.div
-                                    key={vacancy.id || index}
-                                    ref={el => { cardsRef.current[index] = el }}
-                                    data-index={index}
-                                    className={`${s.vacancyCard} ${visibleCards.has(index) ? s.vacancyCardVisible : ''}`}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setSelectedVacancy(vacancy);
-                                        setVacancyOpen(true);
-                                    }}
-                                    initial={{opacity: 0, y: 30}}
-                                    animate={{opacity: 1, y: 0}}
-                                    transition={{delay: index * 0.05, duration: 0.4}}
-                                    whileHover={{scale: 1.01}}
-                                    whileTap={{scale: 0.99}}
-                                >
-                                    <div className={s.vacancyContent}>
-                                        <div className={s.cardHeader}>
-                                            <div className={s.Wrapper}>
-                                                <div className={s.Wrapper1}>
-                                                    <div className={s.divIcon1}><div className={s.Icon1}>📌</div></div>
-                                                    <div><h3 className={s.profession}>{vacancy.profession}</h3></div>
-                                                </div>
-                                                <div className={s.Wrapper2}>
-                                                    <div className={s.divIcon2}><div className={s.Icon2}><div className={s.Ruble}>₽</div></div></div>
-                                                    <div><h5 className={s.salary}>{vacancy.salary ? `${vacancy.salary} ₽` : 'Зарплата не указана'}</h5></div>
+            {/* Основной контейнер списка */}
+            <div className={s.vacancyList}>
+                {loading ? (
+                    /* Стабилизирующий лоадер, который выталкивает высоту окна изнутри, не давая ему сжаться в полоску */
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        minHeight: '320px',
+                        width: '100%',
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        fontSize: '16px'
+                    }}>
+                        Загрузка вакансий...
+                    </div>
+                ) : processedVacancies.length === 0 ? (
+                    <div className={s.noVacancies}>Список вакансий пуст</div>
+                ) : (
+                    processedVacancies.map((vacancy, index) => (
+                        <motion.div
+                            key={vacancy.id || index}
+                            className={s.vacancyCard}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedVacancy(vacancy);
+                                setVacancyOpen(true);
+                            }}
+                            /*
+                              Появление карточек сдвинуто по таймингу,
+                              чтобы они плавно "проявлялись" только после того,
+                              как сама коробка модального окна завершит анимацию раскрытия.
+                            */
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.03 + 0.15, duration: 0.3 }}
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.99 }}
+                        >
+                            <div className={s.vacancyContent}>
+                                <div className={s.cardHeader}>
+                                    <div className={s.Wrapper}>
+                                        <div className={s.Wrapper1}>
+                                            <div className={s.divIcon1}>
+                                                <div className={s.Icon1}>📌</div>
+                                            </div>
+                                            <div>
+                                                <h3 className={s.profession}>{vacancy.profession}</h3>
+                                            </div>
+                                        </div>
+                                        <div className={s.Wrapper2}>
+                                            <div className={s.divIcon2}>
+                                                <div className={s.Icon2}>
+                                                    <div className={s.Ruble}>₽</div>
                                                 </div>
                                             </div>
-                                            <div className={s.details}>
-                                                <motion.button
-                                                    className={s.WatchVacancy}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setSelectedVacancy(vacancy);
-                                                        setVacancyOpen(true);
-                                                    }}
-                                                >
-                                                    ▶
-                                                </motion.button>
-                                                <div className={s.dateWrapper}>{vacancy.date}</div>
+                                            <div>
+                                                <h5 className={s.salary}>
+                                                    {vacancy.salary ? `${vacancy.salary} ₽` : 'Зарплата не указана'}
+                                                </h5>
                                             </div>
                                         </div>
                                     </div>
-                                </motion.div>
-                            ))
-                        )}
-                    </div>
-                </motion.div>
-            </motion.div>
+                                    <div className={s.details}>
+                                        <button
+                                            className={s.WatchVacancy}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setSelectedVacancy(vacancy);
+                                                setVacancyOpen(true);
+                                            }}
+                                        >
+                                            ▶
+                                        </button>
+                                        <div className={s.dateWrapper}>{vacancy.date}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))
+                )}
+            </div>
 
-            {/* МОДАЛЬНОЕ ОКНО С ДЕТАЛЯМИ ВАКАНСИИ */}
+            {/* Вложенное модальное окно детальной информации о конкретной вакансии */}
             <AnimatePresence mode="wait">
                 {vacancyOpen && selectedVacancy && (
-                    <VacancyInfo key="vacancy-info" vacancy={selectedVacancy} onClose={() => setVacancyOpen(false)}/>
+                    <VacancyInfo
+                        key="vacancy-info"
+                        vacancy={selectedVacancy}
+                        onClose={() => setVacancyOpen(false)}
+                    />
                 )}
             </AnimatePresence>
-        </motion.div>
+        </div>
     );
 }

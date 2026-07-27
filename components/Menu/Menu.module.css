@@ -1,6 +1,20 @@
-/*.Menu{*/
-/*    height: 100%;*/
-/*    width: 100%;*/
-/*    !*border: 1px solid red;*!*/
-/*    z-index: 100;*/
-/*}*/
+.Menu{
+    /*border: 2px solid blue;*/
+    /*color: red;*/
+    height: 100%;
+    width: 100%;
+    /*border: 1px solid white;*/
+    z-index: 100;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    /*margin-top: 90%;*/
+}
+
+
+.linksContainer {
+    display: flex;
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}

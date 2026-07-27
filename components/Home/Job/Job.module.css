@@ -1,177 +1,63 @@
-.Vacancy{
-    /*height: 5rem;*/
-    /*height: 300px;*/
-    width: 100%;
-    /*overflow: hidden;*/
-    /*max-height: 30vh;*/
-    /*position: relative;*/
-    /*bottom: 0;*/
-    /*top: 6rem;*/
-    border-radius: clamp(10.2px, 5vw, 78.4px);
-    /*border: 1px solid blue;*/
-    /*background-color: #20c997;*/
-    /*padding: rem;*/
-    background: linear-gradient(to bottom, #69FFD5, #B1FFE9);
-    /*border-radius: 1.5rem;*/
-    /*overflow: hidden;*/
+.VacancyCard {
+    /*position: absolute;*/
+    width: 80%;
+    height: 10%;
+    /*min-height: 140px; !* Стартовая высота карточки до расширения *!*/
+    background: linear-gradient(135deg, #1e293b 0%, #0aff7b 100%);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
     cursor: pointer;
-    display: grid;
-    align-items: center;
-    justify-items: center;
-    padding: 3% 3%;
-    /*transition: transform 0.2s ease;*/
-}
-/*.GreenBoard {*/
-/*    display: grid;*/
-/*    align-items: center;*/
-/*    justify-items: center;*/
-/*    width: 90%;*/
-/*    height: 1rem;*/
-/*    background: linear-gradient(to bottom, #69FFD5, #B1FFE9);*/
-/*    border-radius: 1.5rem;*/
-/*    overflow: hidden;*/
-/*    cursor: pointer;*/
-/*    transition: transform 0.2s ease;*/
-/*}*/
-
-/*.GreenBoard:hover {*/
-/*    transform: scale(1.02);*/
-/*}*/
-
-.Content {
-    /*border: 1px solid red;*/
+    overflow: hidden;
+    /*display: flex;*/
     /*position: relative;*/
-    /*width: 93%;*/
-    /*height: 76%;*/
-    overflow: hidden;
+    /*box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);*/
 }
-.Link{
+
+.Link {
+    display: flex;
+    width: 100%;
     height: 100%;
-    width: 100%;
-    display: grid;
-    /*border: 1px solid red;*/
-    grid-template-columns: 65% 35%;
+    padding: 24px;
+    text-decoration: none !important;
 }
-.Left {
-    display: grid;
-    grid-template-rows: 35% 65%;
-    height: 100%;
+
+.placeholderContent {
+    display: flex;
     width: 100%;
-    /*justify-items: start;*/
-    /*border: 1px solid red;*/
-}
-.Title {
-    width: 100%;
-    font-size: clamp(10.2px, 6vw, 78.4px);
-    line-height: 0;
-    font-family: Forum;
-    font-weight: bold;
-    color: #348770;
-    padding-left: 3%;
-    /*border: 1px solid red;*/
-    overflow: hidden;
-    display: grid;
+    justify-content: space-between;
     align-items: center;
 }
-.SearchJob {
-    /*width: 100%;*/
-    height: 100%;
-    display: grid;
-    align-items: end;
-    /*padding: 0 5%;*/
-    /*box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
+
+.placeholderContent h3 {
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0;
+}
+.VacancyCard {
+    width: 80%;
+    /*min-height: 140px;*/
+    /*background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);*/
+    /*border-radius: 20px;*/
+    /*border: 1px solid rgba(255, 255, 255, 0.05);*/
+    /*cursor: pointer;*/
     /*overflow: hidden;*/
-    /*border: 1px solid red;*/
+    /*display: flex;*/
+    /*position: relative;*/
+    /*box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);*/
+
+    /* ── ФИКС ДЛЯ ANDROID ── */
+    will-change: transform, width, height; /* Заставляет GPU держать геометрию наготове */
+    transform: translateZ(0); /* Включает аппаратное 3D-ускорение */
+    -webkit-transform: translateZ(0);
 }
-.searchBtn{
-    height: 80%;
-    width: 80%;
-    overflow: hidden;
-    background: #6efbd4;
-    border-radius: 15px;
-    color: #378f72;
-    font-family: var(--font-montserrat);
-    display: grid;
-    align-items: center;
-    text-align: center;
-    /*padding-left: 5%;*/
-    font-size: clamp(10.2px, 3.7vw, 78.4px);
-    /*justify-items: center;*/
-}
-.Right {
+
+.Link {
+    display: block;
+    text-decoration: none;
     width: 100%;
-    display: grid;
-    /*border: 1px solid red;*/
-    /*align-items: center;*/
-    justify-items: end;
-    overflow: hidden;
+    color: inherit;
+    /* Защита от вылезания кликабельной зоны за пределы карточки */
+    position: relative;
+    z-index: 1;
 }
-.WorkImg {
-    width: 80%;
-    overflow: hidden;
-    /*height: 5rem;*/
-    /*width: 5rem;*/
-    display: grid;
-    justify-items: center;
-    /*border: 1px solid red;*/
-}
-
-/*!* ==========================================*/
-/*   375px+ (iPhone 6/7/8, X, 11)*/
-/*   ========================================== *!*/
-/*@media (min-width: 375px) {*/
-/*    .Title {*/
-/*        font-size: 3rem; !* Ваш текущий размер для iPhone 11 *!*/
-/*    }*/
-/*    .searchBtn {*/
-/*        font-size: 1.6rem; !* Ваш текущий размер для iPhone 11 *!*/
-/*    }*/
-/*}*/
-
-/*!* ==========================================*/
-/*   428px+ (iPhone 12/13/14 Plus, Pro Max)*/
-/*   ========================================== *!*/
-/*@media (min-width: 428px) {*/
-/*    .Title {*/
-/*        font-size: 3.6rem;*/
-/*    }*/
-/*    .searchBtn {*/
-/*        font-size: 1.7rem; !* Ваш текущий размер для iPhone 11 *!*/
-/*    }*/
-/*}*/
-
-/*!* ==========================================*/
-/*   768px+ (Планшеты)*/
-/*   ========================================== *!*/
-/*@media (min-width: 768px) {*/
-/*    .Title {*/
-/*        font-size: 4rem;*/
-/*    }*/
-/*    .searchBtn {*/
-/*        font-size: 2.8rem; !* Ваш текущий размер для iPhone 11 *!*/
-/*    }*/
-/*}*/
-
-/*!* ==========================================*/
-/*   1024px+ (Ноутбуки)*/
-/*   ========================================== *!*/
-/*@media (min-width: 1024px) {*/
-/*    .Title {*/
-/*        font-size: 4.4rem;*/
-/*    }*/
-/*    .searchBtn {*/
-/*        font-size: 3.2rem; !* Ваш текущий размер для iPhone 11 *!*/
-/*    }*/
-/*}*/
-
-/*!* ==========================================*/
-/*   1440px+ (Большие мониторы)*/
-/*   ========================================== *!*/
-/*@media (min-width: 1440px) {*/
-/*    .Title {*/
-/*        font-size: 5.6rem;*/
-/*    }*/
-/*    .searchBtn {*/
-/*        font-size: 3.2rem; !* Ваш текущий размер для iPhone 11 *!*/
-/*    }*/
-/*}*/

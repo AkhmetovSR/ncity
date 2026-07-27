@@ -1,13 +1,30 @@
+.main{
+    background-color: #e0e0e0;
+    width: 200px;
+    height: 200px;
+}
 /* Home.module.css */
 :local(.Home) {
+    /*position: fixed;*/
     height: 100%;
     width: 100%;
+    left: 0;
+    top: 0;
     display: grid;
     /*grid-template-rows: auto 70%;*/
-    gap: clamp(10.2px, 1vw, 78.4px);
-    /*border: 1px solid red;*/
+
+    border: 1px solid red;
     /*background: #000000;*/
     overflow: hidden;
+
+    /*gap: 20px; !* Отступ между элементами (измените на свой вкус) *!*/
+}
+.Vidgets{
+    /*border: 1px solid red;*/
+    height: 100%;
+    display: grid;
+    gap: clamp(10.2px, 1vw, 78.4px);
+    grid-template-columns: 1fr 1fr /* Сетка из двух равных колонок */
 }
 :local(.Top) {
     /*height: 100%;*/
@@ -66,3 +83,9 @@
 /*        left: 10px;*/
 /*    }*/
 /*}*/
+.Actions{
+    border-radius: 25px;
+    height: 100%;
+    width: 90%;
+    background: #4c4c4c;
+}

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Mountain from "@/public/images/forest1.webp";
 import s from "@/components/Home/Title/Title.module.css";
 import React from "react";
-import DarkWhiteTheme from "@/components/DarkWhireTheme/DarkWhiteTheme";
+// import DarkWhiteTheme from "@/components/DarkWhireTheme/DarkWhiteTheme";
 
 export default function Title() {
     return (
@@ -16,7 +16,7 @@ export default function Title() {
                         {/*    <div className={s.bottom}></div>*/}
                         {/*    <div className={s.trunk}></div>*/}
                         {/*</div>*/}
-                        <div className={s.themeButtonWrapper}><DarkWhiteTheme/></div>
+                        {/*<div className={s.themeButtonWrapper}><DarkWhiteTheme/></div>*/}
                         <div className={s.Forest}></div>
                         {/*<Image src={Mountain} alt={"Mountain"} className={s.iconImage}/>*/}
                     </div>

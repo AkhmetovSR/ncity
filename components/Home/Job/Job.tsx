@@ -1,56 +1,49 @@
 'use client';
-import s from "@/components/Home/Job/Job.module.css"
+
+import React from "react";
 import { motion } from "framer-motion";
-import React, {useEffect, useRef} from "react";
-import Lottie from 'lottie-react';
-import tapAnimation from '@/public/lottie/business-analysis1.json';
-import Link from 'next/link';
+// import { useModal } from "@/context/ModalContext";
+import s from "@/components/Home/Job/Job.module.css";
+import { Link } from 'next-view-transitions';
 
 export default function Job() {
-    const ref = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (ref.current) {
-            const rect = ref.current.getBoundingClientRect();
-            console.log('JOB размеры:', {
-                width: rect.width,
-                height: rect.height,
-                top: rect.top,
-                left: rect.left
-            });
-        }
-    }, []);
-
-    useEffect(() => {
-        const rect = ref.current?.getBoundingClientRect();
-        if (rect) {
-            localStorage.setItem('jobSize', JSON.stringify({
-                width: rect.width,
-                height: rect.height
-            }));
-        }
-    }, []);
+    const cardId = "vacancy"; // Уникальный ID для связи с модалкой
+    // const { openModal } = useModal(); // Достаем функцию открытия из контекста
+    //
+    // const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    //     e.preventDefault(); // Полностью блокируем переход браузера по ссылке
+    //
+    //     // 1. Мгновенно запускаем локальную анимацию расширения карточки
+    //     openModal(cardId);
+    //
+    //     // 2. Красиво меняем URL в строке браузера без перезагрузки страницы и без участия роутера Next.js
+    //     window.history.pushState(null, "", `/view/${cardId}`);
+    // };
 
     return (
-            // <motion.div className={s.Vacancy} layoutId="vacancy" initial={{opacity: 0}} animate={{opacity: 1}} transition={{duration: 0.2}} exit={{opacity: 0}}>
-            <motion.div className={s.Vacancy} ref={ref} layoutId="vacancy" initial={false} transition={{ duration: 0.3, ease: "easeOut", type: "tween", delay: 0 }}>
+        /*
+          Заменили <Link> на обычный тег <a>.
+          Роботы SEO видят чистый href="/view/vacancy" и идеально индексируют страницу.
+          А Next.js больше не может сломать анимацию своим скрытым фоновым префетчем!
+        */
 
-                <motion.div className={s.Content} initial={{opacity: 0}} animate={{opacity: 1}} transition={{delay: 0.2}}>
-                    <Link href="/vacancy" style={{ textDecoration: 'none' }} className={s.Link}>
-                    <div className={s.Left}>
-                        <div className={s.Title}>Вакансии</div>
-                        <div className={s.SearchJob}>
-                            <div className={s.searchBtn}>смотреть вакансии</div>
-                        </div>
-                    </div>
-                    <div className={s.Right}>
-                        <div className={s.WorkImg}>
-                            <Lottie animationData={tapAnimation} loop={true} autoplay={true}/>
-                        </div>
-                    </div>
+        <motion.div
+            className={s.VacancyCard}
+            layoutId={cardId} // Связующий ID для Framer Motion
+            transition={{type: "spring", stiffness: 220, damping: 26}} // iOS-пружина
+            whileHover={{scale: 1.015}}
+            whileTap={{scale: 0.985}}
+        >
+            {/*<a href={`/view/${cardId}`} onClick={handleClick} className={s.Link}>*/}
+                <motion.div layout="position" className={s.placeholderContent}>
+                    <h3></h3>
+                    <Link href={`/view/vacancy`} >
+                        <div>открыть</div>
                     </Link>
                 </motion.div>
+            {/*</a>*/}
+        </motion.div>
 
-            </motion.div>
-    );
+)
+    ;
 }

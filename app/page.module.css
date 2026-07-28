@@ -1,20 +1,23 @@
 .storeContainer {
-    position: relative;
-    min-height: 100vh;
-    background-color: #000000;
+    /*position: absolute;*/
+    height: 100%;
+    width: 100%;
+    /*background-color: #000000;*/
+    border: 2px solid red;
+    overflow: hidden;
 }
 
-.main {
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem;
-}
+/*.main {*/
+/*    max-width: 480px;*/
+/*    margin: 0 auto;*/
+/*    padding: 3rem 1.5rem;*/
+/*}*/
 
 .pageTitle {
-    color: #ffffff;
-    font-size: 2.25rem;
-    font-weight: 800;
-    margin-bottom: 2rem;
+    /*color: #ffffff;*/
+    /*font-size: 2.25rem;*/
+    /*font-weight: 800;*/
+    /*margin-bottom: 2rem;*/
 }
 
 .grid {
@@ -62,14 +65,20 @@
 }
 
 .expandedCard {
-    position: fixed;
-    inset: 0;
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    top: 5%;
+    left: 5%;
+    /*inset: 0;*/
     z-index: 100;
     color: #ffffff;
     overflow-y: auto;
-    padding: 5rem 2rem 2rem 2rem;
+    border-radius: 25px;
+    /*padding: 5rem 2rem 2rem 2rem;*/
     will-change: transform, width, height; /* Оптимизация под мобильный GPU */
     -webkit-overflow-scrolling: touch;
+    border: 2px solid red;
 }
 
 @media (min-width: 768px) {

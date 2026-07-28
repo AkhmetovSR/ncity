@@ -5,8 +5,7 @@ import Menu from "@/components/Menu/Menu";
 import s from "./layout.module.css";
 
 export default function RootLayout({
-                                       children,
-                                       modal, // Принимаем параллельный маршрут
+                                       children
                                    }: {
     children: React.ReactNode;
     modal: React.ReactNode;
@@ -20,7 +19,6 @@ export default function RootLayout({
             {/* Верхние 80% экрана с независимым скроллом контента */}
             <div className={s.mainContent}>
                 {children}
-                {modal}
             </div>
 
             <div className={s.Menu}>

@@ -42,6 +42,14 @@ export default function HomePage() {
             history.scrollRestoration = 'manual';
         }
     }, []);
+    useEffect(() => {
+        const handleGlobalClick = (e: MouseEvent) => {
+            console.log("🌐 ГЛОБАЛЬНЫЙ КЛИК БРАУЗЕРА по элементу:", e.target);
+        };
+        window.addEventListener('click', handleGlobalClick);
+        return () => window.removeEventListener('click', handleGlobalClick);
+    }, []);
+
 
     return (
         <div className={s.storeContainer}>
@@ -54,12 +62,12 @@ export default function HomePage() {
                             href={`/card/${card.id}`}
                             className={s.cardLink}
                             onClick={(e) => {
-                                // Если зажат Ctrl/Cmd или кликнули колесиком на ПК — открываем в новой вкладке (SEO-стандарт)
+                                console.log("👉 КЛИК ПО МАЛЕНЬКОЙ КАРТОЧКЕ, activeId сейчас:", activeId);
                                 if (e.metaKey || e.ctrlKey || e.button === 1) return;
-
-                                e.preventDefault(); // Запрещаем роутеру делать Hard-переход на мобилках!
-                                setActiveId(card.id); // Запускаем синхронную пружину
+                                e.preventDefault();
+                                setActiveId(card.id);
                             }}
+
                         >
                             <motion.div
                                 layoutId={`card-bg-${card.id}`}
@@ -81,7 +89,7 @@ export default function HomePage() {
             </main>
 
             {/* УНИВЕРСАЛЬНОЕ ОКНО (Рендерится в одном контексте с главной) */}
-            <AnimatePresence>
+            <AnimatePresence onExitComplete={() => console.log("🧹 Модалка полностью удалена из DOM")}>
                 {activeId && (() => {
                     const card = CARD_REGISTRY[activeId];
                     if (!card) return null;
@@ -89,42 +97,42 @@ export default function HomePage() {
 
                     return (
                         <>
-                            {/* Размытый оверлей */}
+                            {/* ИЗЯЩНЫЙ ОВЕРЛЕЙ-ПЕРЕХВАТЧИК */}
                             <motion.div
                                 className={s.overlay}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                onClick={() => setActiveId(null)}
+                                onClick={() => {
+                                    // Если мы кликаем по оверлею на полпути вниз,
+                                    // мы принудительно перезаписываем стейт, возвращая ID карточки.
+                                    // Пружина Framer Motion увидит этот пинок и развернется вверх!
+                                    setActiveId(card.id);
+                                }}
                             />
 
-                            {/* Раскрывающееся окно */}
                             <motion.div
                                 layoutId={`card-bg-${activeId}`}
                                 className={s.expandedCard}
                                 style={{ background: card.gradient }}
-                                transition={{ type: 'spring', stiffness: 220, damping: 26 }}
+                                transition={{ type: 'spring', stiffness: 150, damping: 24 }}
                             >
-                                <button className={s.closeButton} onClick={() => setActiveId(null)}>✕</button>
+                                <button
+                                    className={s.closeButton}
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // Чтобы клик не триггерил оверлей
+                                        setActiveId(null);   // Запускаем анимацию закрытия
+                                    }}
+                                >
+                                    ✕
+                                </button>
 
                                 <div className={s.contentWrapper}>
-                                    <motion.span layoutId={`card-tag-${activeId}`} className={s.tag}>
-                                        {card.tag}
-                                    </motion.span>
-                                    <motion.h2 layoutId={`card-title-${activeId}`} className={s.cardTitle}>
-                                        {card.title}
-                                    </motion.h2>
-
-                                    {/* Текст плавно проявляется, чтобы строки не плыли при расширении */}
-                                    <motion.div
-                                        className={s.bodyText}
-                                        initial={{ opacity: 0, y: 15 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0 }}
-                                        transition={{ delay: 0.15, duration: 0.25 }}
-                                    >
+                                    <span className={s.tag}>{card.tag}</span>
+                                    <h2 className={s.cardTitle}>{card.title}</h2>
+                                    <div className={s.bodyText}>
                                         <ContentComponent />
-                                    </motion.div>
+                                    </div>
                                 </div>
                             </motion.div>
                         </>

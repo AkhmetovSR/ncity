@@ -81,6 +81,7 @@
     border: 2px solid red;
 }
 
+
 @media (min-width: 768px) {
     .expandedCard {
         inset: 3rem auto;

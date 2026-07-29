@@ -56,89 +56,71 @@ export default function HomePage() {
             <main className={s.main}>
                 <h1 className={s.pageTitle}>Today</h1>
                 <div className={s.grid}>
-                    {cards.map((card) => (
-                        <Link
-                            key={card.id}
-                            href={`/card/${card.id}`}
-                            className={s.cardLink}
-                            onClick={(e) => {
-                                console.log("👉 КЛИК ПО МАЛЕНЬКОЙ КАРТОЧКЕ, activeId сейчас:", activeId);
-                                if (e.metaKey || e.ctrlKey || e.button === 1) return;
-                                e.preventDefault();
-                                setActiveId(card.id);
-                            }}
+                    {cards.map((card) => {
+                        // Проверяем, открыта ли конкретно ЭТА карточка
+                        const isOpen = activeId === card.id;
+                        const ContentComponent = card.component;
 
-                        >
-                            <motion.div
-                                layoutId={`card-bg-${card.id}`}
-                                className={s.card}
-                                style={{ background: card.gradient }}
-                                whileTap={{ scale: 0.96 }} // iOS микро-сжатие при тапе
-                                transition={{ type: 'spring', stiffness: 220, damping: 26 }}
-                            >
-                                <motion.span layoutId={`card-tag-${card.id}`} className={s.tag}>
-                                    {card.tag}
-                                </motion.span>
-                                <motion.h2 layoutId={`card-title-${card.id}`} className={s.cardTitle}>
-                                    {card.title}
-                                </motion.h2>
-                            </motion.div>
-                        </Link>
-                    ))}
-                </div>
-            </main>
-
-            {/* УНИВЕРСАЛЬНОЕ ОКНО (Рендерится в одном контексте с главной) */}
-            <AnimatePresence onExitComplete={() => console.log("🧹 Модалка полностью удалена из DOM")}>
-                {activeId && (() => {
-                    const card = CARD_REGISTRY[activeId];
-                    if (!card) return null;
-                    const ContentComponent = card.component;
-
-                    return (
-                        <>
-                            {/* ИЗЯЩНЫЙ ОВЕРЛЕЙ-ПЕРЕХВАТЧИК */}
-                            <motion.div
-                                className={s.overlay}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                onClick={() => {
-                                    // Если мы кликаем по оверлею на полпути вниз,
-                                    // мы принудительно перезаписываем стейт, возвращая ID карточки.
-                                    // Пружина Framer Motion увидит этот пинок и развернется вверх!
-                                    setActiveId(card.id);
-                                }}
-                            />
-
-                            <motion.div
-                                layoutId={`card-bg-${activeId}`}
-                                className={s.expandedCard}
-                                style={{ background: card.gradient }}
-                                transition={{ type: 'spring', stiffness: 150, damping: 24 }}
-                            >
-                                <button
-                                    className={s.closeButton}
+                        return (
+                            // Оборачиваем в Fragment, чтобы сохранять валидную разметку в гриде
+                            <section key={card.id}>
+                                <Link
+                                    href={`/card/${card.id}`}
+                                    className={s.cardLink}
                                     onClick={(e) => {
-                                        e.stopPropagation(); // Чтобы клик не триггерил оверлей
-                                        setActiveId(null);   // Запускаем анимацию закрытия
+                                        if (e.metaKey || e.ctrlKey || e.button === 1) return;
+                                        e.preventDefault();
+                                        setActiveId(card.id);
                                     }}
                                 >
-                                    ✕
-                                </button>
+                                    <motion.div
+                                        layoutId={`card-bg-${card.id}`}
+                                        className={s.card}
+                                        style={{background: card.gradient}}
+                                        whileTap={{scale: 0.96}}
+                                        transition={{type: 'spring', stiffness: 220, damping: 26}}
+                                    >
+                                        <motion.span layoutId={`card-tag-${card.id}`} className={s.tag}>
+                                            {card.tag}
+                                        </motion.span>
+                                        <motion.h2 layoutId={`card-title-${card.id}`} className={s.cardTitle}>
+                                            {card.title}
+                                        </motion.h2>
+                                    </motion.div>
+                                </Link>
 
-                                <div className={s.contentWrapper}>
-                                    <span className={s.tag}>{card.tag}</span>
-                                    <h2 className={s.cardTitle}>{card.title}</h2>
-                                    <div className={s.bodyText}>
-                                        <ContentComponent />
-                                    </div>
-                                </div>
-                            </motion.div>
-                        </>
-                    );
-                })()}
-            </AnimatePresence>
+                                {/* Каждая карточка сама управляет своей модалкой */}
+                                <AnimatePresence>
+                                    {isOpen && (
+                                        <motion.div
+                                            layoutId={`card-bg-${card.id}`}
+                                            className={s.expandedCard}
+                                            style={{background: card.gradient}}
+                                            transition={{type: 'spring', stiffness: 150, damping: 24}}
+                                            onClick={() => setActiveId(null)}
+                                        >
+                                            <button
+                                                className={s.closeButton}
+                                                onClick={() => setActiveId(null)}
+                                            >
+                                                ✕
+                                            </button>
+
+                                            <div className={s.contentWrapper}>
+                                                <span className={s.tag}>{card.tag}</span>
+                                                <h2 className={s.cardTitle}>{card.title}</h2>
+                                                <div className={s.bodyText}>
+                                                    <ContentComponent/>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </section>
+                        );
+                    })}
+                </div>
+            </main>
         </div>
     );
 }

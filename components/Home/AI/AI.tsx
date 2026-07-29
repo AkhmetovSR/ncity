@@ -4,7 +4,7 @@ import s from "@/components/Home/Home.module.css";
 
 export default function AI() {
     return (
-        <div className={s.Actions}>
+        <div className={s.AI}>
             AI
         </div>
     );

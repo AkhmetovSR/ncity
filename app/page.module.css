@@ -21,9 +21,14 @@
 }
 
 .grid {
-    display: flex;
+    display: grid;
     flex-direction: column;
     gap: 1.5rem;
+    border: 1px solid green;
+    overflow-y: scroll;
+    grid-template-areas:
+    "Actions Actions Actions"
+    "AI";
 }
 
 .cardLink {

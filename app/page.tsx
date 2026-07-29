@@ -21,16 +21,17 @@ export default function HomePage() {
             <main className={s.main}>
                 <h1 className={s.pageTitle}>Today</h1>
 
+                <SpecialPromoCard
+                    activeId={activeId}
+                    setActiveId={setActiveId}
+                />
+
                 <CardGrid
                     cards={CARDS_LIST} // Передаем оптимизированный список
                     activeId={activeId}
                     setActiveId={setActiveId}
                 />
 
-                <SpecialPromoCard
-                    activeId={activeId}
-                    setActiveId={setActiveId}
-                />
             </main>
         </div>
     );

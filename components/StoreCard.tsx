@@ -66,7 +66,8 @@ export function StoreCard({
                         className={s.expandedCard}
                         style={{ background: gradient }}
                         // transition={EXPANDED_TRANSITION}
-                        onClick={(e) => e.stopPropagation()}
+                        // onClick={(e) => e.stopPropagation()}
+                        onClick={() => setActiveId(null)}
                     >
                         <button className={s.closeButton} onClick={() => setActiveId(null)}>
                             ✕

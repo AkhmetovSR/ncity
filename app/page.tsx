@@ -5,6 +5,7 @@ import { CARD_REGISTRY } from './cards';
 import { CardGrid } from '@/components/CardGrid';
 import { SpecialPromoCard } from '@/components/SpecialPromoCard';
 import { useCardHistory } from '@/hooks/useCardHistory';
+import Title from "@/components/Home/Title/Title";
 import s from './page.module.css';
 
 // Выносим сюда. Теперь массив создается ровно ОДИН раз при загрузке приложения,
@@ -19,7 +20,7 @@ export default function HomePage() {
     return (
         <div className={s.storeContainer}>
             <main className={s.main}>
-                <h1 className={s.pageTitle}>Today</h1>
+                <Title/>
 
                 <SpecialPromoCard
                     activeId={activeId}

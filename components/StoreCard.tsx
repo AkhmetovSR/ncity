@@ -6,33 +6,31 @@ import s from '@/app/page.module.css';
 
 interface StoreCardProps {
     id: string;
-    tag: string;
-    title: string;
-    gradient: string;
+    // gradient: string;
     activeId: string | null;
     setActiveId: (id: string | null) => void;
+    tag?: string;    // 🌟 Сделали необязательным
+    title?: string;  // 🌟 Сделали необязательным
     children?: React.ReactNode;
 }
 
-// 🛠 Выносим настройки анимаций (чистый код, легко менять тайминги)
 const TAP_ANIMATION = { scale: 0.96 };
 const CARD_TRANSITION = { type: 'spring', stiffness: 220, damping: 26 };
 const EXPANDED_TRANSITION = { type: 'spring', stiffness: 150, damping: 24 };
 
-export function StoreCard({
-                              id,
-                              tag,
-                              title,
-                              gradient,
-                              activeId,
-                              setActiveId,
-                              children
-                          }: StoreCardProps) {
+export default function StoreCard({
+                                      id,
+                                      activeId,
+                                      setActiveId,
+                                      tag,
+                                      title,
+                                      children
+                                  }: StoreCardProps) {
     const isOpen = activeId === id;
 
     return (
         <section>
-            {/* 1. СВЕРНУТАЯ КАРТОЧКА */}
+            {/* 1. СВЕРНУТАЯ КАРТОЧКА (В ЛЕНТЕ) */}
             <Link
                 href={`/card/${id}`}
                 className={s.cardLink}
@@ -45,41 +43,34 @@ export function StoreCard({
                 <motion.div
                     layoutId={`card-bg-${id}`}
                     className={s.card}
-                    style={{ background: gradient }}
+                    // style={{ background: gradient }}
                     whileTap={TAP_ANIMATION}
                     // transition={CARD_TRANSITION}
                 >
-                    <motion.span layoutId={`card-tag-${id}`} className={s.tag}>
-                        {tag}
-                    </motion.span>
-                    <motion.h2 layoutId={`card-title-${id}`} className={s.cardTitle}>
-                        {title}
-                    </motion.h2>
+                    {/* Если тег и титул переданы (как в CardGrid), показываем их */}
+                    {tag && <motion.span layoutId={`card-tag-${id}`} className={s.tag}>{tag}</motion.span>}
+                    {title && <motion.h2 layoutId={`card-title-${id}`} className={s.cardTitle}>{title}</motion.h2>}
+
+                    {/* Если это твоя карточка с Lottie (без тегов), рендерится чистый children */}
+                    {!isOpen && children}
                 </motion.div>
             </Link>
 
-            {/* 2. РАЗВЕРНУТАЯ КАРТОЧКА */}
+            {/* 2. РАЗВЕРНУТАЯ КАРТОЧКА (МОДАЛКА) */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
                         layoutId={`card-bg-${id}`}
                         className={s.expandedCard}
-                        style={{ background: gradient }}
+                        // style={{ background: gradient }}
                         // transition={EXPANDED_TRANSITION}
-                        // onClick={(e) => e.stopPropagation()}
-                        onClick={() => setActiveId(null)}
+                        onClick={(e) => e.stopPropagation()}
                     >
-                        <button className={s.closeButton} onClick={() => setActiveId(null)}>
-                            ✕
-                        </button>
+                        <button className={s.closeButton} onClick={() => setActiveId(null)}>✕</button>
                         <div className={s.contentWrapper}>
-                            {/* Добавили layoutId, чтобы текст не прыгал, а плавно увеличивался */}
-                            <motion.span layoutId={`card-tag-${id}`} className={s.tag}>
-                                {tag}
-                            </motion.span>
-                            <motion.h2 layoutId={`card-title-${id}`} className={s.cardTitle}>
-                                {title}
-                            </motion.h2>
+                            {/* Текст для обычных карточек из грида */}
+                            {tag && <motion.span layoutId={`card-tag-${id}`} className={s.tag}>{tag}</motion.span>}
+                            {title && <motion.h2 layoutId={`card-title-${id}`} className={s.cardTitle}>{title}</motion.h2>}
 
                             <div className={s.bodyText}>
                                 {children}

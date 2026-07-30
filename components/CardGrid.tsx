@@ -1,15 +1,14 @@
 'use client';
 
-import { StoreCard } from './StoreCard';
+import StoreCard from './StoreCard'; // Без фигурных скобок — дефолтный импорт
 import s from '@/app/page.module.css';
 
-// Описываем тип для отдельной карточки из регистра
 interface CardItem {
     id: string;
     tag: string;
     title: string;
-    gradient: string;
-    component: React.ComponentType; // Тип для React-компонента контента
+    // gradient: string;
+    component: React.ComponentType;
 }
 
 interface CardGridProps {
@@ -29,7 +28,7 @@ export function CardGrid({ cards, activeId, setActiveId }: CardGridProps) {
                         id={card.id}
                         tag={card.tag}
                         title={card.title}
-                        gradient={card.gradient}
+                        // gradient={card.gradient}
                         activeId={activeId}
                         setActiveId={setActiveId}
                     >

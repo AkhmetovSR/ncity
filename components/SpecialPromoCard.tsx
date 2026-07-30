@@ -1,35 +1,33 @@
 'use client';
 
-import { StoreCard } from './StoreCard';
+import s from "@/components/vidgets.module.css"
+import StoreCard from '@/components/StoreCard';
+import Job from "@/components/Home/Job/Job"; // Твоя маленькая карточка с Lottie
+import VacancyList from "@/components/Home/Job/VacancyList/VacancyList"; // Твой список вакансий
 
-// Компонент принимает только стейт управления, чтобы синхронизироваться с остальными карточками
 interface SpecialPromoCardProps {
     activeId: string | null;
     setActiveId: (id: string | null) => void;
 }
 
-// Внутренний контент, который нужен только этой карточке
-function SpecialContent() {
-    return (
-        <div>
-            <p>Это контент эксклюзивной карточки, импортированной отдельно!</p>
-            {/* Сюда можно добавить кнопки, картинки или формы */}
-        </div>
-    );
-}
-
 export function SpecialPromoCard({ activeId, setActiveId }: SpecialPromoCardProps) {
+    const id = "vacancy"; // Уникальный ID для этой промо-карточки
+    const isOpen = activeId === id;
+
     return (
-        <div style={{ marginTop: '2rem' }}>
+        <div style={{ marginTop: '2rem' }} className={s.VacancyCard}>
             <StoreCard
-                id="special-promo"
-                tag="Эксклюзив"
-                title="Отдельная карточка"
-                gradient="linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%)"
+                id={id}
+                // gradient="linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%)" // Фон, который плавно расширится
                 activeId={activeId}
                 setActiveId={setActiveId}
             >
-                <SpecialContent />
+                {/*
+                  Управляем показом контента:
+                  Если модалка открыта — рендерим список вакансий,
+                  Если закрыта — рендерим маленькую карточку с Lottie
+                */}
+                {isOpen ? <VacancyList /> : <Job />}
             </StoreCard>
         </div>
     );

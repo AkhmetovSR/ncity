@@ -1,5 +1,5 @@
 .Title{
-    /*height: 100%;*/
+    /*height: 10px;*/
     /*width: 100%;*/
     /*padding: 2% 5%;*/
     /*height: 5rem;*/
@@ -18,7 +18,7 @@
     /*-moz-user-select: none; !* Firefox *!*/
     /*-ms-user-select: none; !* IE/Edge *!*/
     /*-webkit-user-drag: none;*/
-
+    /*overflow: hidden;*/
 }
 .TitleContent{
     /*border: 1px solid red;*/

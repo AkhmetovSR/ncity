@@ -7,9 +7,11 @@
     grid-template-rows: 85% 15%;
     border: 2px solid blue;
     overflow: hidden;
+    background-color: dimgrey;
 }
 .mainContent, .Menu{
     height: 100%;
     width: 100%;
     overflow: hidden;
+    border: 3px solid white;
 }

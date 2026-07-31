@@ -1,9 +1,10 @@
 'use client';
 
+import React from 'react';
+import { GridCard } from './GridCard';
 import StoreCard from './StoreCard';
 import s from '@/app/page.module.css';
 
-// Исправили только тип, чтобы Next.js не ругался на реестр
 interface CardItem {
     id: string;
     cardComponent: React.ComponentType<{ isOpen: boolean }>;
@@ -19,20 +20,21 @@ export function CardGrid({ cards, activeId, setActiveId }: CardGridProps) {
     return (
         <div className={s.grid}>
             {cards.map((card) => {
-                // Забираем твой cardComponent и сохраняем в твою переменную ContentComponent
                 const ContentComponent = card.cardComponent;
                 const isOpen = activeId === card.id;
 
                 return (
-                    <StoreCard
-                        key={card.id}
-                        id={card.id}
-                        activeId={activeId}
-                        setActiveId={setActiveId}
-                    >
-                        {/* Твой вызов компонента остался прежним, просто прокинули стейт */}
-                        <ContentComponent isOpen={isOpen} />
-                    </StoreCard>
+                    <section key={card.id}>
+                        {/* 1. Квадратная карточка в сетке */}
+                        <GridCard id={card.id} setActiveId={setActiveId}>
+                            {!isOpen && <ContentComponent isOpen={false} />}
+                        </GridCard>
+
+                        {/* 2. Её независимая модалка */}
+                        <StoreCard id={card.id} activeId={activeId} setActiveId={setActiveId}>
+                            <ContentComponent isOpen={true} />
+                        </StoreCard>
+                    </section>
                 );
             })}
         </div>

@@ -19,7 +19,7 @@ export default function HomePage() {
 
     return (
         <div className={s.storeContainer}>
-            <main className={s.main}>
+            {/*<main className={s.main}>*/}
                 <Title/>
 
                 <SpecialPromoCard
@@ -33,7 +33,7 @@ export default function HomePage() {
                     setActiveId={setActiveId}
                 />
 
-            </main>
+            {/*</main>*/}
         </div>
     );
 }

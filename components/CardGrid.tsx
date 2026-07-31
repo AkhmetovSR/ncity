@@ -1,14 +1,12 @@
 'use client';
 
-import StoreCard from './StoreCard'; // Без фигурных скобок — дефолтный импорт
+import StoreCard from './StoreCard';
 import s from '@/app/page.module.css';
 
+// Исправили только тип, чтобы Next.js не ругался на реестр
 interface CardItem {
     id: string;
-    tag: string;
-    title: string;
-    // gradient: string;
-    component: React.ComponentType;
+    cardComponent: React.ComponentType<{ isOpen: boolean }>;
 }
 
 interface CardGridProps {
@@ -21,18 +19,19 @@ export function CardGrid({ cards, activeId, setActiveId }: CardGridProps) {
     return (
         <div className={s.grid}>
             {cards.map((card) => {
-                const ContentComponent = card.component;
+                // Забираем твой cardComponent и сохраняем в твою переменную ContentComponent
+                const ContentComponent = card.cardComponent;
+                const isOpen = activeId === card.id;
+
                 return (
                     <StoreCard
                         key={card.id}
                         id={card.id}
-                        tag={card.tag}
-                        title={card.title}
-                        // gradient={card.gradient}
                         activeId={activeId}
                         setActiveId={setActiveId}
                     >
-                        <ContentComponent />
+                        {/* Твой вызов компонента остался прежним, просто прокинули стейт */}
+                        <ContentComponent isOpen={isOpen} />
                     </StoreCard>
                 );
             })}

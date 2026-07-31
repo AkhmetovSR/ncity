@@ -15,7 +15,7 @@ export function SpecialPromoCard({ activeId, setActiveId }: SpecialPromoCardProp
     const isOpen = activeId === id;
 
     return (
-        <div style={{ marginTop: '2rem' }} className={s.VacancyCard}>
+        <div className={s.VacancyCard}>
             <StoreCard
                 id={id}
                 // gradient="linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%)" // Фон, который плавно расширится

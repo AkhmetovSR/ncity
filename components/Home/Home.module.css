@@ -83,9 +83,10 @@
 /*        left: 10px;*/
 /*    }*/
 /*}*/
-.Actions{
-    border-radius: 25px;
+.Actions, .AI{
+    border-radius: 15px;
     height: 100%;
-    width: 90%;
+    width: 100%;
     background: #4c4c4c;
+    border: 1px solid red;
 }

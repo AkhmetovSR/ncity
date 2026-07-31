@@ -133,9 +133,19 @@ body {
   margin: 0;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+a, a:link, a:visited, a:active, a:focus {
+  color: inherit !important;
+  text-decoration: none !important;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+}
+
+@layer base {
+  a, a:active, a:focus {
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

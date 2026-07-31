@@ -1,6 +1,6 @@
 .Title{
-    /*height: 10px;*/
-    /*width: 100%;*/
+    height: 100%;
+    width: 85%;
     /*padding: 2% 5%;*/
     /*height: 5rem;*/
     /*grid-column: 1 / -1;*/
@@ -19,13 +19,14 @@
     /*-ms-user-select: none; !* IE/Edge *!*/
     /*-webkit-user-drag: none;*/
     /*overflow: hidden;*/
+    border: 1px solid white;
 }
 .TitleContent{
     /*border: 1px solid red;*/
     /*width: 100%;*/
     height: 100%;
-    margin-top: 2%;
-    padding-left: 3%;
+    /*margin-top: 2%;*/
+    /*padding-left: 3%;*/
     display: grid;
     /*align-content: center;*/
     grid-template-columns: 1fr 1fr;

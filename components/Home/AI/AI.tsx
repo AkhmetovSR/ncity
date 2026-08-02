@@ -5,7 +5,10 @@ import s from "@/components/Home/Home.module.css";
 export default function AI() {
     return (
         <div className={s.AI}>
-            AI
+            <div>asd</div>
+            <div>asd</div>
+            <div>asd</div>
+            <div>asd</div>
         </div>
     );
 }

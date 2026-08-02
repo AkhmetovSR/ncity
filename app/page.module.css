@@ -4,14 +4,13 @@
     overflow: hidden;
     /*align-items: start;*/
     /* dvh гарантирует точную высоту на мобильных, игнорируя панели браузера */
-
     width: 100%;
     height: 100dvh;
     /*background-color: #0f0f12; !* Современный глубокий темный фон *!*/
     color: #ffffff;
     display: grid;
     /* Четко задаем пропорции: 15% титл, ~18% промо, остальное под сетку */
-    grid-template-rows: 10% 13% 1fr;
+    grid-template-rows: 10% 11% 1fr;
     justify-items: center;
     max-width: 480px; /* Ограничение под стандартный мобильный хэндсет */
     /*padding: 16px 0;*/
@@ -19,46 +18,42 @@
     gap: 0.3rem; /* Аккуратные отступы между блоками */
 }
 
-/*.main {*/
-/*    max-width: 480px;*/
-/*    margin: 0 auto;*/
-/*    padding: 3rem 1.5rem;*/
-/*}*/
-
-.pageTitle {
-    /*color: #ffffff;*/
-    /*font-size: 2.25rem;*/
-    /*font-weight: 800;*/
-    /*margin-bottom: 2rem;*/
-}
-
+/* Контейнер сетки*/
 .grid {
-    width: 85%;
     display: grid;
+    height: 100%;
+    width: 85%;
     grid-template-columns: 1fr 1fr 1fr;
-    align-items: start;
+    align-content: start;
     /*flex-direction: column;*/
     gap: 0.3rem;
-    border: 1px solid white;
+    border: 1px solid grey;
     overflow-y: scroll;
-    grid-template-areas:
-    "Actions Actions Actions"
-    "AI";
+    overflow-x: hidden;
+    border-radius: 15px;
+    /*grid-template-areas:*/
+    /*"WidgetWaterBalance WidgetWaterBalance WidgetWaterBalance"*/
+    /*"AI";*/
 }
 
+
 .cardLink {
+    height: 100%;
+    width: 100%;
     text-decoration: none;
     /*border: 3px solid red;*/
-    /*display: grid;*/
+    display: grid;
 }
+
 .cardBase{
-    border: 1px solid blue;
+    /*border: 1px solid blue;*/
 }
 .VacancyCard{
     height: 100%;
     width: 85%;
-    border: 1px solid white;
+    /*border: 1px solid white;*/
     display: grid;
+    /*grid-template-rows: 1fr;*/
 }
 .card {
     /*height: 280px;*/
@@ -110,8 +105,9 @@
     /*padding: 5rem 2rem 2rem 2rem;*/
     will-change: transform, width, height; /* Оптимизация под мобильный GPU */
     -webkit-overflow-scrolling: touch;
-    border: 2px solid red;
-    background-color: #4c4c4c;
+    /*border: 1px solid red;*/
+    /*background: white;*/
+    background-color: grey;
 }
 
 
@@ -124,6 +120,7 @@
         max-width: 600px;
         border-radius: 32px;
         height: calc(100vh - 6rem);
+        /*background-color: white;*/
     }
 }
 
@@ -143,70 +140,4 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-/*.contentWrapper {*/
-/*    max-width: 500px;*/
-/*    margin: 0 auto;*/
-/*}*/
-
-/*.bodyText {*/
-/*    margin-top: 2.5rem;*/
-/*    font-size: 1.125rem;*/
-/*    line-height: 1.6;*/
-/*}*/
-/* Контейнер на всю высоту экрана мобильного устройства */
-
-
-/* Главная мобильная оболочка */
-
-
-/* Элемент Title: 15% высоты (задано выше) и 85% ширины */
-.main > :global(header),
-.main > :first-child {
-    width: 90%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    overflow: hidden;
-}
-
-/* Промо-карточка: чуть выше титла, занимает 90% ширины для воздуха */
-.main > :nth-child(2) {
-    width: 90%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    /*overflow: hidden;*/
-}
-
-/* Сетка карточек с независимым скроллом */
-.main > :nth-child(3) {
-    width: 100%;
-    height: 100%;
-    padding: 0 16px; /* Внутренние отступы, чтобы карточки не липли к краям */
-    overflow-y: auto; /* Включаем вертикальный скролл */
-    overflow-x: hidden;
-    box-sizing: border-box;
-
-    /* Плавный сеньорский скролл на iOS и Android */
-    /*webkit-overflow-scrolling: touch;*/
-    scroll-behavior: smooth;
-}
-
-/* Кастомизация скроллбара, чтобы он выглядел нативно и эстетично */
-.main > :nth-child(3)::-webkit-scrollbar {
-    width: 4px;
-}
-
-.main > :nth-child(3)::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.main > :nth-child(3)::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
 }

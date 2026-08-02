@@ -33,7 +33,7 @@ export function SpecialPromoCard({ activeId, setActiveId }: SpecialPromoCardProp
                     layoutId={`card-bg-${id}`}
                     className={s.cardBase} // Только базовые стили (скругление, курсор)
                     // style={{ background: gradient, padding: '1.5rem', height: '140px' }} // Твои кастомные размеры для Job
-                    whileTap={{ scale: 0.98 }}
+                    // whileTap={{ scale: 0.98 }}
                 >
                     {!isOpen && <Job />}
                 </motion.div>

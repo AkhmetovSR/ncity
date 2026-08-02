@@ -1,6 +1,6 @@
 .Title{
     height: 100%;
-    width: 85%;
+    width: 80%;
     /*padding: 2% 5%;*/
     /*height: 5rem;*/
     /*grid-column: 1 / -1;*/
@@ -10,7 +10,7 @@
     /*padding: 2% 3%;*/
     /*border: 1px solid blue;*/
     /*display: grid;*/
-    /*align-items: center;*/
+    /*align-items: start;*/
     /*justify-items: center;*/
     /*overflow: hidden;*/
     /*user-select: none;*/
@@ -19,7 +19,7 @@
     /*-ms-user-select: none; !* IE/Edge *!*/
     /*-webkit-user-drag: none;*/
     /*overflow: hidden;*/
-    border: 1px solid white;
+    /*border: 1px solid white;*/
 }
 .TitleContent{
     /*border: 1px solid red;*/
@@ -28,7 +28,7 @@
     /*margin-top: 2%;*/
     /*padding-left: 3%;*/
     display: grid;
-    /*align-content: center;*/
+    align-content: center;
     grid-template-columns: 1fr 1fr;
 }
 .Label{

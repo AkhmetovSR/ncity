@@ -1,0 +1,79 @@
+/* Компактный квадратный виджет Apple Bento */
+.WidgetWaterBalance {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /*width: 170px; !* Идеальный размер под сетку Apple Small Widget (1х1) *!*/
+    /*height: 170px;*/
+    padding: 16px;
+
+    /* Эффект матового стекла Apple + сложный градиент */
+    background: radial-gradient(circle at 80% 20%, rgba(224, 242, 254, 0.4) 0%, rgba(255, 255, 255, 0.7) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    /*border: 1px solid rgba(255, 255, 255, 0.6);*/
+    border-radius: 28px; /* Каноническое скругление Apple для маленьких виджетов */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
+    overflow: hidden;
+    box-sizing: border-box;
+    cursor: pointer;
+    /*border: 1px solid red;*/
+}
+
+/* Декоративное неоновое свечение на заднем плане внутри виджета */
+.WidgetWaterBalance::before {
+    content: "";
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 100px;
+    height: 100px;
+    background: #38bdf8;
+    filter: blur(40px);
+    opacity: 0.35;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Иконка-картинка сверху */
+.widgetIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: #ffffff;
+    border-radius: 12px;
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    z-index: 1;
+}
+
+/* Текстовый блок снизу */
+.widgetTextContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 1;
+}
+
+.widgetLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: #8e8e93; /* Классический подзаголовок iOS Сaption */
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin: 0;
+}
+
+.widgetTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1d1d1f; /* Фирменный черный Apple */
+    letter-spacing: -0.3px;
+    line-height: 1.2;
+    margin: 0;
+}

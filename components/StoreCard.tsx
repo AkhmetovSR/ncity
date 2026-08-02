@@ -28,7 +28,7 @@ export default function StoreCard({
                 <motion.div
                     layoutId={`card-bg-${id}`}
                     className={s.expandedCard}
-                    style={{ background: gradient }}
+                    // style={{ background: gradient }}
                     // transition={EXPANDED_TRANSITION}
                     onClick={(e) => e.stopPropagation()} // Защита от закрытия при клике на контент
                 >

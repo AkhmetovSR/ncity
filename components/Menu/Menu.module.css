@@ -2,19 +2,103 @@
     /*border: 2px solid blue;*/
     /*color: red;*/
     height: 100%;
-    width: 100%;
+    width: 80%;
     /*border: 1px solid white;*/
-    z-index: 100;
     display: grid;
     align-items: center;
     justify-items: center;
+    justify-self: center
+;
+    z-index: 1000;
+
+    /* Эффект матового стекла Apple (Glassmorphism) */
+    /*background-color: rgba(255, 255, 255, 0.8);*/
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    /* Тонкая фирменная граница сверху */
+    border-top: 0.5px solid rgba(0, 0, 0, 0.15);
+
+    /* Учет нижней полосы на iPhone (Safe Area) */
+    padding-bottom: env(safe-area-inset-bottom, 0);
     /*margin-top: 90%;*/
 }
 
 
 .linksContainer {
+    width: 80%;
+    height: 80%;
     display: flex;
     gap: 24px;
     max-width: 1200px;
     margin: 0 auto;
+    border: 1px solid white;
+    border-radius: 1rem;
 }
+
+/*!* Темная тема (включается автоматически, если ОС пользователя в dark mode) *!*/
+/*@media (prefers-color-scheme: dark) {*/
+/*    .Menu {*/
+/*        background-color: rgba(29, 29, 31, 0.75);*/
+/*        border-top: 0.5px solid rgba(255, 255, 255, 0.1);*/
+/*    }*/
+/*}*/
+
+.linksContainer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 49px; /* Эталонная высота Tab Bar в iOS */
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 12px;
+}
+
+.link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+    text-decoration: none;
+    gap: 2px;
+
+    /* Цвета для неактивного состояния (iOS Gray) */
+    color: #8E8E93;
+    fill: none;
+    stroke: #8E8E93;
+
+    transition: color 0.2s ease, stroke 0.2s ease, fill 0.2s ease;
+    -webkit-tap-highlight-color: transparent; /* Убирает дефолтный синий клик в Safari */
+}
+
+.link span {
+    font-size: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+}
+
+/* Активное состояние (iOS Accent Blue) */
+.link.active {
+    color: #007AFF;
+    stroke: #007AFF;
+}
+
+/* Заливка иконки при активности (имитация стиля SF Symbols) */
+.link.active svg {
+    fill: #007AFF;
+}
+
+/* Настройки темной темы для активного состояния */
+@media (prefers-color-scheme: dark) {
+    .link.active {
+        color: #0A84FF;
+        stroke: #0A84FF;
+    }
+    .link.active svg {
+        fill: #0A84FF;
+    }
+}
+

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import React from "react";
 import s from "@/components/Home/Home.module.css";
 import Job from "@/components/Home/Job/Job";
-import Actions from "@/components/Home/Actions/Actions";
+import Actions from "@/components/Home/WidgetWaterBalance/WidgetWaterBalance";
 import AI from "@/components/Home/AI/AI";
 import Water from "@/components/Home/Water/Water";
 import Wed from "@/components/Home/Wed/Wed";

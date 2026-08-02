@@ -8,12 +8,11 @@ interface Props {
     params: Promise<{ id: string }>;
 }
 
-// 1. ГЕНЕРАЦИЯ МЕТАДАННЫХ (Заголовка вкладки)
+// 1. ГЕНЕРАЦИЯ МЕТАДАННЫХ
 export async function generateMetadata({ params }: Props) {
     const { id } = await params;
     const card = CARD_REGISTRY[id];
 
-    // Так как в реестре больше нет card.title, мы можем сделать красивый маппинг заголовков для SEO
     const titles: Record<string, string> = {
         'travel': '5 Inspiring Apps for Your Next Trip',
         'coding': 'Как верстают архитекторы интерфейсов',
@@ -31,7 +30,6 @@ export default function StaticCardPage({ params }: Props) {
 
     if (!card) notFound();
 
-    // Переименовываем cardComponent с большой буквы для JSX
     const ContentComponent = card.cardComponent;
 
     return (
@@ -40,12 +38,8 @@ export default function StaticCardPage({ params }: Props) {
                 <Link href="/" className={s.backButton}>
                     ← Назад на главную
                 </Link>
-
                 <div className={s.text}>
-                    {/*
-                      🌟 Рендерим твой индивидуальный компонент в режиме открытого окна (isOpen={true}).
-                      Он сам внутри себя покажет нужный заголовок, тексты и верстку!
-                    */}
+                    {/* 🌟 Передаем isOpen={true}, чтобы компонент отрендерил большой контент */}
                     <ContentComponent isOpen={true} />
                 </div>
             </article>

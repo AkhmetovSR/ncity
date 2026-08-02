@@ -1,0 +1,7 @@
+.VacancyCard{
+    height: 100%;
+    width: 85%;
+    border: 1px solid white;
+    display: grid;
+    grid-template-rows: 1fr;
+}

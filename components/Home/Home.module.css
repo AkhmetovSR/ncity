@@ -83,10 +83,14 @@
 /*        left: 10px;*/
 /*    }*/
 /*}*/
-.Actions, .AI{
-    border-radius: 15px;
-    height: 100%;
-    width: 100%;
-    background: #4c4c4c;
-    border: 1px solid red;
-}
+/*.Actions, .AI, .WidgetWaterBalance{*/
+/*    border-radius: 15px;*/
+/*    height: 100%;*/
+/*    width: 100%;*/
+/*    !*background: #4c4c4c;*!*/
+/*    !*border: 1px solid red;*!*/
+/*    color: white;*/
+/*}*/
+/*.WidgetWaterBalance{*/
+/*    background-color: li;*/
+/*}*/

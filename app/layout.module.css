@@ -4,7 +4,7 @@
     height: 100%;
     width: 100%;
     display: grid;
-    grid-template-rows: 85% 15%;
+    grid-template-rows: 88% 12%;
     /*border: 2px solid blue;*/
     overflow: hidden;
     background-color: #2b2d30;
@@ -13,5 +13,5 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
-    border: 1px solid red;
+    /*border: 1px solid red;*/
 }

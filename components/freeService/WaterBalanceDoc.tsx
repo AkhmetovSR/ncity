@@ -79,7 +79,10 @@ export default function WaterBalanceDoc({ inputs, results, currentDate }: WaterB
                         <td style={{textAlign: 'center'}}>{inputs.gardenArea > 0 ? 3 : 2}</td>
                         <td>Обеспечение нужд бани / сауны на придомовой территории</td>
                         <td style={{textAlign: 'center'}}>чел.</td>
-                        <td style={{textAlign: 'center'}}>{WATER_NORMS.BANYA}</td>
+
+                        {/* ИСПРАВЛЕНО: Заменили BANYA на BANYA_PER_USE */}
+                        <td style={{textAlign: 'center'}}>{WATER_NORMS.BANYA_PER_USE}</td>
+
                         <td style={{textAlign: 'center'}}>{inputs.residents}</td>
                         <td style={{textAlign: 'center', fontWeight: 'bold'}}>{results.waterBanya.toFixed(3)}</td>
                         <td style={{textAlign: 'center', fontWeight: 'bold'}}>{results.sewageBanya.toFixed(3)}</td>
@@ -93,7 +96,10 @@ export default function WaterBalanceDoc({ inputs, results, currentDate }: WaterB
                         </td>
                         <td>Технологическое обслуживание и подпитка бассейна (V={inputs.poolVolume} м³)</td>
                         <td style={{textAlign: 'center'}}>м³</td>
-                        <td style={{textAlign: 'center'}}>10%/сут</td>
+
+                        {/* СКОРРЕКТИРОВАНО: Текст приведен в соответствие с калькулятором */}
+                        <td style={{textAlign: 'center'}}>3%/сут</td>
+
                         <td style={{textAlign: 'center'}}>1</td>
                         <td style={{textAlign: 'center', fontWeight: 'bold'}}>{results.waterPool.toFixed(3)}</td>
                         <td style={{textAlign: 'center', fontWeight: 'bold'}}>{results.sewagePool.toFixed(3)}</td>

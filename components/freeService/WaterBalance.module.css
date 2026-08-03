@@ -1,79 +1,652 @@
-/* Компактный квадратный виджет Apple Bento */
-.WidgetWaterBalance {
-    position: relative;
+/* ==========================================================================
+   1. ОБЩАЯ СТРУКТУРА ЭКРАНА (Полноэкранный Web App режим)
+   ========================================================================== */
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    /*box-sizing: border-box;*/
+
+    /* Использование clamp для адаптивной высоты строк грида в зависимости от вьюпорта */
+    display: grid;
+    justify-items: center;
+    grid-template-rows: clamp(50px, 7vh, 80px) 1fr clamp(80px, 12vh, 120px);
+
+    background-color: white;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1d1d1f;
+    overflow: hidden;
+}
+
+/* 1-я строка: Адаптивный заголовок */
+.title {
+    /*border: 1px solid red;*/
+    display: grid;
+    align-items: center;
+    text-align: center;
+    /*justify-items: center;*/
+    width: 90%;
+    /*grid-row: 1;*/
+    /* Шрифты и отступы плавно масштабируются от iPhone 4 до Desktop */
+    font-size: 1rem;
+    font-weight: 600;
+    hyphens: auto;
+    /*letter-spacing: -0.01em;*/
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*padding: 0 clamp(12px, 3vw, 24px);*/
+    /*margin: 0;*/
+    /*background-color: white;*/
+    white-space: inherit;
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
+}
+
+/* 2-я строка: Контентная область с независимым скроллом */
+.interfaceBlock {
+    /*width: 95%;*/
+    padding: 1rem 1.5rem;
+    /*border: 1px solid red;*/
+    /*grid-row: 2;*/
+    /* Плавные внешние зазоры и внутренние отступы через clamp */
+    /*margin: 0 clamp(10px, 3vw, 24px);*/
+    /*padding: clamp(12px, 4vw, 32px);*/
+    /*box-sizing: border-box;*/
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.formSection {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    /*width: 170px; !* Идеальный размер под сетку Apple Small Widget (1х1) *!*/
-    /*height: 170px;*/
-    padding: 16px;
+    gap: clamp(16px, 3vh, 24px);
+}
 
-    /* Эффект матового стекла Apple + сложный градиент */
-    background: radial-gradient(circle at 80% 20%, rgba(224, 242, 254, 0.4) 0%, rgba(255, 255, 255, 0.7) 100%);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+/* Умная сетка для полей: на iPhone 4 встает в 1 колонку, на экранах побольше — в 2 */
+.grid2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: clamp(16px, 3vw, 20px);
+}
 
-    /*border: 1px solid rgba(255, 255, 255, 0.6);*/
-    border-radius: 28px; /* Каноническое скругление Apple для маленьких виджетов */
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.8);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
-    overflow: hidden;
+/* ==========================================================================
+   2. ТЕКСТОВЫЕ ПОЛЯ И FLOATING LABELS (Защита от вылетов)
+   ========================================================================== */
+.inputContainer {
+    position: relative;
+    width: 100%;
     box-sizing: border-box;
-    cursor: pointer;
-    /*border: 1px solid red;*/
 }
 
-/* Декоративное неоновое свечение на заднем плане внутри виджета */
-.WidgetWaterBalance::before {
-    content: "";
+.input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: clamp(12px, 2vh, 16px) 12px;
+    font-size: 16px; /* Строго 16px для предотвращения принудительного iOS-зума */
+    border-radius: 12px;
+    border: 1px solid #d2d2d7;
+    background-color: #ffffff;
+    color: #1d1d1f;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.input:focus {
+    border-color: #0071e3;
+    box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.15);
+}
+
+.inputError {
+    border-color: #ff3b30 !important;
+}
+
+.inputError:focus {
+    box-shadow: 0 0 0 4px rgba(255, 59, 48, 0.15) !important;
+}
+
+.floatingLabel {
     position: absolute;
-    top: -40px;
-    right: -40px;
-    width: 100px;
-    height: 100px;
-    background: #38bdf8;
-    filter: blur(40px);
-    opacity: 0.35;
-    z-index: 0;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #86868b;
+    font-size: 15px;
     pointer-events: none;
+    transition: all 0.2s ease-in-out;
+    background-color: transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 85%;
 }
 
-/* Иконка-картинка сверху */
-.widgetIcon {
+.input:focus ~ .floatingLabel,
+.input:not(:placeholder-shown) ~ .floatingLabel {
+    top: 0;
+    font-size: 11px;
+    color: #0071e3;
+    padding: 0 4px;
+    background-color: #ffffff;
+    transform: translateY(-50%) scale(0.9);
+    left: 10px;
+    max-width: 90%;
+}
+
+.inputError:focus ~ .floatingLabel,
+.inputError:not(:placeholder-shown) ~ .floatingLabel {
+    color: #ff3b30;
+}
+
+.errorText {
+    display: block;
+    font-size: 12px;
+    color: #ff3b30;
+    margin-top: 6px;
+    padding-left: 4px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* ==========================================================================
+   3. ЧЕКБОКСЫ И ОПЦИИ УЧАСТКА (Плоский Apple стиль)
+   ========================================================================== */
+.checkboxSection {
+    border-top: 1px solid #e5e5ea;
+    padding-top: 24px;
+    margin-top: 8px;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(8px, 2vw, 14px);
+    padding: clamp(12px, 2vh, 16px);
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e5e5ea;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.01);
+}
+
+.checkboxLabel:hover {
+    border-color: #0071e3;
+    box-shadow: 0 4px 12px rgba(0, 113, 227, 0.05);
+}
+
+.checkboxLabel strong {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1d1d1f;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.hint {
+    font-size: 13px;
+    color: #86868b;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #d2d2d7;
+    border-radius: 7px;
+    background-color: #ffffff;
+    outline: none;
+    display: inline-grid;
+    place-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+
+.checkbox:checked {
+    background-color: #0071e3;
+    border-color: #0071e3;
+}
+
+.checkbox:checked::before {
+    content: "";
+    width: 10px;
+    height: 6px;
+    border-left: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    transform: rotate(-45deg) translate(1px, -2px);
+}
+
+/* ==========================================================================
+   4. ТУЛБАР УПРАВЛЕНИЯ (3-я строка Grid)
+   ========================================================================== */
+.stickyBar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /*grid-row: 3;*/
+    width: 90%;
+    /*box-sizing: border-box;*/
+    /*background: rgba(255, 255, 255, 0.8);*/
+    /*backdrop-filter: blur(20px) saturate(180%);*/
+    /*-webkit-backdrop-filter: blur(20px) saturate(180%);*/
+    /*border-top: 1px solid rgba(0, 0, 0, 0.08);*/
+
+    /*display: flex;*/
+    /* Флекс-сетка с переносом контента: если кнопки не влезают в ряд (экран < 350px),
+       они автоматически встанут друг под друга вертикально */
+    /*flex-wrap: wrap;*/
+    justify-items: center;
+    align-items: center;
+    /*gap: 1rem;*/
+    /*padding: 8px clamp(12px, 3vw, 24px);*/
+    /*padding-bottom: calc(8px + env(safe-area-inset-bottom));*/
+}
+
+.btnPrimary, .btnSecondary {
+    width: 90%;
+    /*font-size: 14px;*/
+    /*font-weight: 500;*/
+    padding: 1rem;
+    border-radius: 1.2rem;
+    border: none;
+    cursor: pointer;
+    /*transition: all 0.2s ease;*/
+    outline: none;
+
+    /* Кнопки занимают всю ширину, если сработал flex-wrap (на маленьких экранах),
+       но сдерживаются максимальным размером на десктопе */
+    /*flex: 1 1 260px;*/
+    /*max-width: 320px;*/
+    /*text-align: center;*/
+}
+
+.btnPrimary {
+    background-color: #0071e3;
+    color: #ffffff;
+}
+
+.btnPrimary:hover {
+    background-color: #0077ed;
+}
+
+.btnSecondary {
+    background-color: #e8e8ed;
+    color: #1d1d1f;
+}
+
+.btnSecondary:hover {
+    background-color: #d2d2d7;
+}
+
+/* ==========================================================================
+   5. МОДАЛЬНОЕ ОКНО ПРЕДПРОСМОТРА БЛАНКА (Адаптивный Senior-подход)
+   ========================================================================== */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: clamp(0.5rem, 3vw, 2rem) clamp(0.5rem, 2vw, 1.5rem);
+    overflow-y: auto; /* Скроллится вся модалка, если документ А4 не влезает по высоте */
+    z-index: 200;
+}
+
+.modalContent {
+    background-color: #ffffff;
+    border-radius: 1.25rem;
+    width: 100%;
+    max-width: 53rem; /* ~850px эталонная ширина А4 с полями */
+    padding: clamp(1rem, 4vw, 2.5rem);
+    box-shadow: 0 1.25rem 2.5rem rgba(0, 0, 0, 0.15);
+    position: relative;
+    box-sizing: border-box;
+
+    /* КРИТИЧЕСКИЙ ФИКС ДЛЯ ANDROID И ПК:
+       Предотвращаем распирание контентом и создаем безопасный внутренний контейнер */
+    min-width: 0;
+    overflow-x: hidden;
+}
+
+.closeModalBtn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    background-color: #f5f5f7;
+    border: none;
+    font-size: 0.9rem;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    background: #ffffff;
-    border-radius: 12px;
-    font-size: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    z-index: 1;
+    color: #86868b;
+    transition: background-color 0.15s ease;
+    z-index: 10;
 }
 
-/* Текстовый блок снизу */
-.widgetTextContainer {
+.closeModalBtn:hover {
+    background-color: #e8e8ed;
+    color: #1d1d1f;
+}
+
+/* ==========================================================================
+   6. ПЕЧАТНЫЙ ДОКУМЕНТ (Fluid + Защита геометрии таблиц)
+   ========================================================================== */
+.documentArea {
+    background: #ffffff;
+    color: #000000;
+    font-family: "Times New Roman", Times, serif;
+    line-height: 1.4;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.docHeader {
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    z-index: 1;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    font-size: 0.85rem;
+    text-align: left;
+    width: min(100%, 18rem);
+    margin-left: auto;
 }
 
-.widgetLabel {
-    font-size: 11px;
-    font-weight: 600;
-    color: #8e8e93; /* Классический подзаголовок iOS Сaption */
+.docHeader p {
+    width: 100%;
+    word-wrap: break-word; /* Защита от вылета длинных ФИО или названий организаций */
+}
+
+.docTitle {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.docTitle h1 {
+    font-size: clamp(1.1rem, 2.5vw, 1.3rem); /* Идеальное масштабирование заголовка бланка */
+    font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 0.4px;
     margin: 0;
+    line-height: 1.2;
 }
 
-.widgetTitle {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1d1d1f; /* Фирменный черный Apple */
-    letter-spacing: -0.3px;
-    line-height: 1.2;
-    margin: 0;
+.docText {
+    font-size: 0.9rem;
+    text-indent: 1.25cm;
+    text-align: justify;
+    margin-bottom: 1.5rem;
+}
+
+/* ФИКС ТАБЛИЦЫ ДЛЯ АНДРОИД И ХРОМА НА ПК */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+
+    /* Магия динамического сжатия: на экранах ПК это честный 0.85rem (~13.6px),
+       на смартфонах Android шрифт плавно падает до оптимального минимума,
+       чтобы ячейки физически ужимались в ширину экрана */
+    font-size: clamp(0.6rem, 1.8vw, 0.85rem);
+
+    table-layout: fixed; /* Жестко заставляем колонки подчиняться заданным процентам */
+    word-break: break-word; /* Если длинное слово не влезает в ячейку — оно перенесется, а не порвет таблицу */
+}
+
+.table th, .table td {
+    border: 1px solid #000000;
+    padding: 0.5rem 0.3rem; /* Адаптивные внутренние отступы в rem */
+    vertical-align: middle;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.notes {
+    margin-top: 1.5rem;
+    font-size: 0.75rem;
+    font-style: italic;
+    line-height: 1.3;
+}
+
+.notes p {
+    margin: 0.3rem 0;
+}
+
+/* Оформление блока подписей внизу бланка */
+.signatures {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 2.5rem;
+    font-size: 0.9rem;
+    gap: 1rem;
+}
+
+.signatures > div {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Перестраиваем подписи вертикально, если экран смартфона экстремально узкий */
+@supports (display: flex) {
+    @media (max-width: 480px) {
+        .signatures {
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .signatures > div {
+            text-align: left !important;
+        }
+    }
+}
+
+
+/* ==========================================================================
+   7. ВЕРТИКАЛЬНЫЙ СТЕППЕР (Premium Apple Touch-Target Stepper)
+   ========================================================================== */
+.stepperWrapper {
+    /*display: grid;*/
+    /*justify-items: center;*/
+    flex-direction: column;
+    gap: 0.6rem;
+    width: 100%;
+}
+.stepper{
+    display: grid;
+    justify-items: center;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+.stepperContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    border: 1px solid #d2d2d7;
+    border-radius: 1.25rem; /* Фирменное глубокое скругление Apple */
+    padding: 0.8rem;
+    width: 100%;
+    min-height: 14rem; /* Высокий блок для удобного хвата на iPhone */
+    box-sizing: border-box;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+}
+
+/* Кнопки Плюс и Минус — Крупные, на всю ширину, с огромной зоной клика */
+.stepperBtn {
+    width: 80%;
+    height: 3rem; /* Огромная высота тача (>50px) — невозможно промахнуться */
+    border: none;
+    background-color: #f5f5f7; /* Мягкий серый фон кнопки */
+    color: #0071e3;
+    font-size: 1.6rem; /* Крупный, читаемый символ */
+    /*font-weight: 400;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 0.85rem;
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    user-select: none;
+    /*padding: 0;*/
+}
+
+/* Эффекты ховера и нативного продавливания iOS */
+.stepperBtn:hover:not(:disabled) {
+    background-color: #e8e8ed;
+}
+
+.stepperBtn:active:not(:disabled) {
+    background-color: #d2d2d7;
+    transform: scale(0.97); /* Фирменный тактильный отклик при нажатии */
+}
+
+/* Идеальное угасание заблокированной кнопки */
+.stepperBtn:disabled {
+    color: #86868b;
+    background-color: #f5f5f7;
+    cursor: not-allowed;
+    opacity: 0.35;
+}
+
+/* Центральный блок с цифрой */
+.stepperGroup{
+    /*border: 1px solid #d2d2d7;*/
+    display: grid;
+    gap: 1rem;
+    text-align: center;
+}
+.stepperValueContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0.5rem 0;
+    user-select: none;
+}
+
+.stepperValue {
+    width: 100%;
+    /*border: 1px solid red;*/
+    display: grid;
+    align-items: center;
+    text-align: center;
+    font-size: 1.5rem; /* Огромная премиальная цифра по центру */
+    font-weight: bold;
+    color: #1d1d1f;
+    line-height: 1;
+    font-variant-numeric: tabular-nums; /* Защита от прыжков интерфейса */
+}
+
+.stepperValueLabel {
+    /*font-size: 0.2rem;*/
+    color: #86868b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.4rem;
+    font-weight: 500;
+}
+/* ==========================================================================
+   9. ЭЛЕГАНТНАЯ ПАНЕЛЬ ДЕЙСТВИЙ В МОДАЛЬНОМ ОКНЕ (Apple Action Bar)
+   ========================================================================== */
+.modalActions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e5ea;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Базовый класс для кнопок внутри модалки */
+.modalBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem; /* Зазор между аккуратной иконкой и текстом */
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.75rem 1.4rem;
+    border-radius: 60rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    outline: none;
+    flex: 1 1 12rem; /* Адаптивность: на мобильных они растянутся, на ПК встанут в ряд */
+    max-width: 16rem;
+    text-align: center;
+}
+
+/* Главная кнопка — Отправка (Залитая, акцентная) */
+.btnSubmit {
+    background-color: #0071e3;
+    color: #ffffff;
+}
+
+.btnSubmit:hover {
+    background-color: #0077ed;
+}
+
+.btnSubmit:active {
+    transform: scale(0.97);
+}
+
+/* Второстепенная кнопка — Печать (Тонкий контур, в стиле macOS Big Sur+) */
+.btnPrint {
+    background-color: transparent;
+    color: #0071e3;
+    border: 1px solid #0071e3;
+}
+
+.btnPrint:hover {
+    background-color: rgba(0, 113, 227, 0.05);
+}
+
+.btnPrint:active {
+    transform: scale(0.97);
+}
+
+/* Текстовая кнопка — Назад (Абсолютный минимализм, без рамок) */
+.btnCancel {
+    background-color: transparent;
+    color: #86868b;
+    flex: 0 1 auto; /* Не растягивается на всю ширину */
+}
+
+.btnCancel:hover {
+    color: #1d1d1f;
+    background-color: #f5f5f7;
+}
+
+/* SVG-иконки внутри кнопок (задаем им тонкий адаптивный размер) */
+.modalBtn svg {
+    width: 1.15rem;
+    height: 1.15rem;
+    stroke-width: 2px; /* Тонкие аккуратные линии, как в iOS */
+    fill: none;
 }

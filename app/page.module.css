@@ -92,22 +92,21 @@
 }
 
 .expandedCard {
-    position: absolute;
     width: 90%;
     height: 90%;
-    top: 5%;
-    left: 5%;
-    /*inset: 0;*/
-    z-index: 100;
     color: #ffffff;
-    overflow-y: auto;
+    overflow: hidden;
+    /*overflow-x: hidden;*/
+    /*overflow-y: scroll;*/
     border-radius: 25px;
-    /*padding: 5rem 2rem 2rem 2rem;*/
     will-change: transform, width, height; /* Оптимизация под мобильный GPU */
     -webkit-overflow-scrolling: touch;
-    /*border: 1px solid red;*/
-    /*background: white;*/
     background-color: grey;
+    display: grid;
+    position: fixed; /* Fixed надежнее для модалок, чем absolute */
+    inset: 5vh 5vw;  /* Современная замена top/left/width/height */
+    z-index: 100;
+    /*will-change: transform; !* Не перегружаем оптимизациями то, что не меняется *!*/
 }
 
 

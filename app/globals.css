@@ -74,6 +74,7 @@
   --bg-vacancy-info-point: rgba(128, 128, 128, 0.15);
   --bg-vacancy-info-point-label: rgba(241, 241, 241, 0.57);
   --bg-vacancy-info-point-text: rgba(241, 241, 241, 0.79);
+  font-size: clamp(13px, 0.8rem + 1vw, 16px);
 }
 
 /* СВЕТЛАЯ ТЕМА */
@@ -120,6 +121,11 @@ body {
   /*display: grid;*/
   /*justify-items: center;*/
   overscroll-behavior: none; /* Убирает bounce всего окна */
+  margin: 0;
+  padding: 0;
+  /*background-color: #f5f5f7;*/
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -169,4 +175,48 @@ a, a:link, a:visited, a:active, a:focus {
   width: 100% !important;
   object-fit: cover !important;
   object-position: top center !important;
+}
+@media print {
+  /* Прячем все элементы управления интерфейсом */
+  [class*="interfaceBlock"],
+  [class*="stickyBar"],
+  [class*="closeModalBtn"],
+  header, footer, nav, aside,
+  [class*="header"], [class*="footer"], [class*="nav"], [class*="aside"] {
+    display: none !important;
+  }
+
+  /* Сбрасываем модальное окно до обычного прозрачного контейнера */
+  [class*="modalOverlay"] {
+    position: static !important;
+    background: none !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  [class*="modalContent"] {
+    box-shadow: none !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Геометрия листа А4 */
+  @page {
+    size: A4 portrait;
+    margin: 20mm 15mm 20mm 15mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a:focus, button:focus {
+  outline: none;
 }

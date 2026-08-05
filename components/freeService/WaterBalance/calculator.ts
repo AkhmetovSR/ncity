@@ -88,12 +88,12 @@ export function generateDocxTemplate(
     </tr>` : '';
 
     return `
-    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://w3.org'>
+    <html lang="ru" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://w3.org">
     <head>
       <title>Баланс БВВ Нягань</title>
       <!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom><w:DoNotOptimizeForBrowser/></w:WordDocument></xml><![endif]-->
       <style>
-        body { font-family: "Times New Roman", Serif; font-size: 12pt; line-height: 1.3; color: #000000; }
+        body { font-family: "Times New Roman", Times, serif; font-size: 14px; line-height: 1.4; color: #000000; padding: 20px; }
         p.docText { text-indent: 1.25cm; text-align: justify; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 11pt; }
         th { background-color: #f2f2f2; font-weight: bold; border: 1px solid #000000; padding: 6px; }

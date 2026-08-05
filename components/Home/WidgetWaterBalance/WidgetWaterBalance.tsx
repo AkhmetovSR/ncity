@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import s from "@/components/freeService/WaterBalance.module.css";
+import s from "@/components/freeService/WaterBalance/WaterBalance.module.css";
 import { motion } from "framer-motion";
 
 export default function WidgetWaterBalance() {

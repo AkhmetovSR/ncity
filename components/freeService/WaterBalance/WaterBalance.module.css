@@ -469,28 +469,38 @@
 .stepperWrapper {
     /*display: grid;*/
     /*justify-items: center;*/
-    flex-direction: column;
-    gap: 0.6rem;
-    width: 100%;
+    /*flex-direction: column;*/
+    /*gap: 2rem;*/
+    /*width: 100%;*/
 }
 .stepper{
+    /*display: grid;*/
+    /*gap: 1rem;*/
+    /*justify-items: center;*/
+    /*grid-template-columns: 1fr 1fr 1fr;*/
+}
+.label{
+    /*padding: 1rem;*/
+    /*border: 1px solid red;*/
+    /*text-align: center;*/
+}
+.stepperContainer {
+    /*display: flex;*/
+    /*margin-top: 1rem;*/
     display: grid;
     justify-items: center;
     grid-template-columns: 1fr 1fr 1fr;
-}
-.stepperContainer {
-    display: flex;
-    flex-direction: column;
+    /*flex-direction: column;*/
     align-items: center;
-    justify-content: space-between;
-    background-color: #ffffff;
-    border: 1px solid #d2d2d7;
-    border-radius: 1.25rem; /* Фирменное глубокое скругление Apple */
-    padding: 0.8rem;
+    /*justify-content: space-between;*/
+    /*background-color: #ffffff;*/
+    /*border: 1px solid #d2d2d7;*/
+    /*border-radius: 1.25rem; !* Фирменное глубокое скругление Apple *!*/
+    /*padding: 0.8rem;*/
     width: 100%;
-    min-height: 14rem; /* Высокий блок для удобного хвата на iPhone */
-    box-sizing: border-box;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+    /*min-height: 14rem; !* Высокий блок для удобного хвата на iPhone *!*/
+    /*box-sizing: border-box;*/
+    /*box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);*/
 }
 
 /* Кнопки Плюс и Минус — Крупные, на всю ширину, с огромной зоной клика */
@@ -649,4 +659,15 @@
     height: 1.15rem;
     stroke-width: 2px; /* Тонкие аккуратные линии, как в iOS */
     fill: none;
+}
+
+.printPortalOnly {
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    opacity: 0 !important;
 }

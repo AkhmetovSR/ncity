@@ -6,7 +6,7 @@ const WidgetWaterBalance = dynamic<{ isOpen: boolean }>(() => import('@/componen
 const AI = dynamic<{ isOpen: boolean }>(() => import('@/components/Home/AI/AI'));
 const A = dynamic<{ isOpen: boolean }>(() => import('@/components/Home/a/A'));
 const B = dynamic<{ isOpen: boolean }>(() => import('@/components/Home/b/B'));
-const WaterBalance = dynamic<{ isOpen: boolean }>(() => import('@/components/freeService/WaterBalance'));
+const WaterBalance = dynamic<{ isOpen: boolean }>(() => import('@/components/freeService/WaterBalance/WaterBalance'));
 
 export interface CardData {
     id: string;

@@ -1,39 +1,16 @@
 'use client';
 
-import { useState } from 'react';
-import { CARD_REGISTRY } from './cards';
-import { CardGrid } from '@/components/CardGrid';
-import { SpecialPromoCard } from '@/components/SpecialPromoCard';
-import { useCardHistory } from '@/hooks/useCardHistory';
-import Title from "@/components/Home/Title/Title";
-import s from './page.module.css';
+import React from "react";
+import Main from "@/components/Main/Main";
 
-// Выносим сюда. Теперь массив создается ровно ОДИН раз при загрузке приложения,
-// а не пересчитывается при каждом изменении стейта activeId.
-const CARDS_LIST = Object.values(CARD_REGISTRY);
-
+/**
+ * Next.js Page: Главный экран (Точка входа SPA без открытых модалок)
+ */
 export default function HomePage() {
-    const [activeId, setActiveId] = useState<string | null>(null);
-
-    useCardHistory(activeId, setActiveId);
-
     return (
-        <div className={s.storeContainer}>
-            {/*<main className={s.main}>*/}
-                <Title/>
-
-                <SpecialPromoCard
-                    activeId={activeId}
-                    setActiveId={setActiveId}
-                />
-
-                <CardGrid
-                    cards={CARDS_LIST} // Передаем оптимизированный список
-                    activeId={activeId}
-                    setActiveId={setActiveId}
-                />
-
-            {/*</main>*/}
-        </div>
+        <Main
+            initialActiveId={null}
+            initialVacancyId={null}
+        />
     );
 }

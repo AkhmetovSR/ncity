@@ -9,6 +9,14 @@
     overflow: hidden;
     background-color: #2b2d30;
 }
+.globalStackContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    /* Оптимизация GPU для исключения микро-дерганий при скруглении углов */
+    will-change: transform, border-radius;
+}
 .mainContent, .Menu{
     height: 100%;
     width: 100%;

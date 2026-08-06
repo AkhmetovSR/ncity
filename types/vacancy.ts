@@ -1,5 +1,5 @@
 // types/vacancy.ts
-// ✅ Добавляем VacancyApiItem обратно
+
 export interface VacancyApiItem {
     id: string;
     profession: string;

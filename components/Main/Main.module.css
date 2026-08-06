@@ -82,16 +82,13 @@
     line-height: 1.2;
 }
 
-.modalOverlay {
+/* СТИЛИ УНИВЕРСАЛЬНОГО ОКНА */
+.overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: red; /* Полупрозрачное затемнение */
-    backdrop-filter: blur(8px);           /* Размытие заднего плана Apple-style */
-    -webkit-backdrop-filter: blur(8px);   /* Поддержка размытия в Safari на iOS */
-    z-index: 49;                          /* На один слой ниже самого корпуса expandedCard */
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 90;
+    backdrop-filter: blur(10px);
 }
 
 .expandedCard {
@@ -108,9 +105,9 @@
     display: grid;
     position: fixed; /* Fixed надежнее для модалок, чем absolute */
     inset: 5vh 5vw;  /* Современная замена top/left/width/height */
-    z-index: 1000;
+    z-index: 100;
     /*will-change: transform; !* Не перегружаем оптимизациями то, что не меняется *!*/
-    border: 1px solid red;
+    /*border: 1px solid red;*/
 }
 
 

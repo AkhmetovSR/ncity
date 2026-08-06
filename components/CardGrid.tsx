@@ -1,3 +1,5 @@
+
+
 'use client';
 
 import React from 'react';
@@ -27,12 +29,18 @@ export function CardGrid({ cards, activeId, setActiveId }: CardGridProps) {
 
                 return (
                     <section key={card.id}>
-                        {/* 1. На экране в сетке рисуется твой чистый виджет в режиме свернутого окна */}
                         <GridCard id={card.id} setActiveId={setActiveId}>
-                            {!isOpen && <WidgetComponent isOpen={false} />}
+                            {/* 🌟 СЕНЬОР-ФИКС: Оставляем виджет в DOM, управляя видимостью через прозрачность */}
+                            <div style={{
+                                opacity: isOpen ? 0 : 1,
+                                transition: 'opacity 0.2s ease',
+                                width: '100%',
+                                height: '100%'
+                            }}>
+                                <WidgetComponent isOpen={false} />
+                            </div>
                         </GridCard>
 
-                        {/* 2. Её независимая модалка в режиме открытого окна */}
                         <StoreCard id={card.id} activeId={activeId} setActiveId={setActiveId}>
                             <ContentComponent isOpen={true} />
                         </StoreCard>

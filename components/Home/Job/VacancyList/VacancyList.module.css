@@ -1,467 +1,313 @@
-/* VacancyList.module.css - Apple Style "Glass" */
-/* Сохранены ВСЕ твои размеры, отступы и структура */
-/* Меняю только: цвета, фоны, тени, эффекты */
+/* ==========================================================================
+   1. ГЛАВНЫЕ КОНТЕЙНЕРЫ (АРХИТЕКТУРА И СКРОЛЛ)
+   ========================================================================== */
 
-/* ===== ГЛАВНЫЙ ФОН ===== */
-:local(.fullscreenOverlay) {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 100vh;
+/* Корневая обертка зажимает блок в жесткие рамки, активируя внутренний скролл */
+.contentWrapper {
     width: 100%;
-    display: grid;
-    justify-items: center;
-    align-items: center;
-    /*border: 1px solid red;*/
-    /* APPLE STYLE: чистый темный фон с легким градиентом */
-    /*background: rgba(0, 0, 0, 0);*/
-    /*backdrop-filter: blur(40px) saturate(1.4);*/
-    /*-webkit-backdrop-filter: blur(40px) saturate(1.4);*/
-    overflow: hidden;
-}
-
-/* ===== МОДАЛЬНОЕ ОКНО ===== */
-:local(.fullscreenContent) {
-    width: 90%;
-    max-width: 500px;
-    height: 95%;
-    border-radius: 25px;
-    background: var(--bg-modal);
-    overflow: hidden;
-    /* APPLE STYLE: стеклянный эффект */
-    background: rgba(28, 28, 30, 0.72);
-    backdrop-filter: blur(60px) saturate(1.8);
-    -webkit-backdrop-filter: blur(60px) saturate(1.8);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow:
-            0 30px 80px rgba(0, 0, 0, 0.6),
-            0 0 0 1px rgba(255, 255, 255, 0.02) inset;
-}
-
-:local(.contentWrapper) {
     height: 100%;
     display: flex;
     flex-direction: column;
-    position: relative;
+    overflow: hidden; /* Гарантирует, что при уменьшении масштаба края контента ровно скруглятся */
+    background-color: #000000;
+    will-change: transform, border-radius; /* Оптимизация видеокарты для плавной анимации */
+    border-radius: 25px;
 }
 
-/* ===== ХЕДЕР ===== */
-:local(.header) {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    /* APPLE STYLE: минималистичный хедер */
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-:local(.themeToggle) {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 40px;
-    padding: 6px 12px;
-    cursor: pointer;
-    display: flex;
-    gap: 8px;
-    transition: all 0.3s ease;
-}
-
-:local(.themeToggle):hover {
-    background: rgba(255, 255, 255, 0.08);
-}
-
-:local(.themeIcon) {
-    font-size: 1.2rem;
-    opacity: 0.6;
-    transition: opacity 0.2s;
-}
-
-/* ===== КНОПКА ЗАКРЫТИЯ (Apple Style) ===== */
-:local(.closeButton) {
-    width: 32px;
-    height: 32px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 18px;
-    font-weight: 300;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-decoration: none;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-:local(.closeButton):hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: scale(1.02);
-    color: rgba(255, 255, 255, 0.8);
-}
-
-:local(.closeButton):active {
-    transform: scale(0.92);
-}
-
-/* ===== ФИЛЬТРЫ ===== */
-:local(.filters) {
-    padding: 16px 24px;
-    background: rgba(0, 0, 0, 0.15);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    position: sticky;
-    top: 60px;
-    z-index: 9;
-}
-
-:local(.filterSelect) {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 40px;
-    padding: 8px 16px;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-}
-
-:local(.filterSelect):hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.12);
-}
-
-:local(.filterSelect):focus {
-    border-color: rgba(0, 122, 255, 0.3);
-    outline: none;
-}
-
-:local(.stats) {
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 0.85rem;
-    display: flex;
-    align-items: center;
-    font-weight: 400;
-    letter-spacing: -0.01em;
-}
-
-/* ===== СПИСОК ===== */
-:local(.vacancyList) {
+/* Унифицированный контейнер для списка вакансий и скелетонов */
+.vacancyList,
+.skeletonContainer {
     flex: 1;
     overflow-y: auto;
-    padding: 24px;
+    padding: 20px 16px 40px 16px; /* Фирменные отступы iOS */
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 12px; /* Компактное расстояние между карточками в стиле списков iOS */
+    -webkit-overflow-scrolling: touch; /* Плавная инерция прокрутки на iPhone */
 }
 
-:local(.vacancyList)::-webkit-scrollbar {
-    width: 4px;
+/* Кастомный ультра-тонкий скроллбар в стиле macOS/iOS */
+.vacancyList::-webkit-scrollbar,
+.skeletonContainer::-webkit-scrollbar {
+    width: 5px;
 }
 
-:local(.vacancyList)::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 2px;
+.vacancyList::-webkit-scrollbar-track,
+.skeletonContainer::-webkit-scrollbar-track {
+    background: transparent;
 }
 
-:local(.vacancyList)::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 2px;
+.vacancyList::-webkit-scrollbar-thumb,
+.skeletonContainer::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12); /* Едва заметный благородный глянец */
+    border-radius: 10px;
 }
 
-/* ===== СКЕЛЕТОНЫ ===== */
-:local(.skeletonContainer) {
-    flex: 1;
-    overflow-y: auto;
-    padding: 24px;
+.vacancyList::-webkit-scrollbar-thumb:hover,
+.skeletonContainer::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* ==========================================================================
+   2. КАРТОЧКА ВАКАНСИИ (APPLE DESIGN SYSTEM)
+   ========================================================================== */
+
+.vacancyCard {
+    background: #1C1C1E; /* Системный серый цвет Apple для карточек (System Background Secondary) [1] */
+    border-radius: 16px; /* Скругление углов по гайдлайнам iOS */
+    border: 1px solid rgba(255, 255, 255, 0.04); /* Тончайшая неоновая микро-граница */
+    cursor: pointer;
+    overflow: hidden;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Сеньорский интерактив при тапе/клике (акцентное подсвечивание вместо грубых теней) */
+.vacancyCard:active {
+    background: #2C2C2E; /* Слегка светлеет при физическом нажатии [1] */
+}
+
+.vacancyContent {
+    padding: 18px 20px;
+}
+
+.cardHeader {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-:local(.skeletonCard) {
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 24px;
-    padding: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    animation: skeletonPulse 1.5s ease-in-out infinite;
-}
-
-@keyframes skeletonPulse {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.4;
-    }
-}
-
-:local(.skeletonRow) {
-    height: 24px;
-    background: rgba(255, 255, 255, 0.04);
-    border-radius: 5px;
-    margin-bottom: 5px;
-}
-
-:local(.skeletonRowSmall) {
-    height: 16px;
-    width: 60%;
-    background: rgba(255, 255, 255, 0.04);
-    border-radius: 8px;
-}
-
-:local(.skeletonButton) {
-    height: 36px;
-    width: 120px;
-    background: rgba(255, 255, 255, 0.04);
-    border-radius: 40px;
-}
-
-/* ===== КАРТОЧКА ВАКАНСИИ (Apple Style) ===== */
-:local(.vacancyCard) {
-    display: grid;
-    justify-items: center;
-    border-radius: 30px;
-    padding: 1rem 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-    /* APPLE STYLE: минималистичный glass-эффект */
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    box-shadow: inset 0 0 15px 1px rgba(255, 255, 255, 0.01);
-}
-
-:local(.vacancyCard):hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.08);
-    transform: translateY(-2px);
-    box-shadow:
-            0 8px 30px rgba(0, 0, 0, 0.15),
-            inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-
-:local(.vacancyCard):active {
-    transform: scale(0.99);
-    transition-duration: 0.1s;
-}
-
-:local(.vacancyContent) {
-    position: relative;
-    width: 90%;
-}
-
-:local(.cardHeader) {
-    display: grid;
-    grid-template-columns: 1fr 10%;
+/* Главный ряд-контейнер для текстовых блоков */
+.Wrapper {
+    display: flex;
     flex-direction: column;
-    justify-content: center;
+    gap: 10px;
 }
 
-:local(.Wrapper) {
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-}
-
-:local(.Wrapper1),
-:local(.Wrapper2) {
-    display: grid;
-    grid-template-columns: 15% 85%;
-}
-
-:local(.Wrapper1) {}
-:local(.Wrapper2) {}
-
-/* ===== ИКОНКИ (Apple Style) ===== */
-:local(.divIcon1),
-:local(.divIcon2) {
-    height: 100%;
-    width: 100%;
-    display: grid;
+/* Подблоки информации (Профессия и Зарплата) */
+.Wrapper1,
+.Wrapper2 {
+    display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 14px;
 }
 
-:local(.Icon1),
-:local(.Icon2) {
-    width: 2rem;
-    height: 2rem;
-    padding: 0.3rem;
+/* Микро-круг под иконку локации/пина */
+.divIcon1 {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.1rem;
-    border-radius: 12px;
-    /* APPLE STYLE: SF Symbols-like */
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    color: rgba(255, 255, 255, 0.4);
-    transition: all 0.3s ease;
+    flex-shrink: 0;
 }
 
-:local(.vacancyCard):hover .Icon1,
-:local(.vacancyCard):hover .Icon2 {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.6);
+.Icon1 {
+    font-size: 15px;
 }
 
-/* ===== РУБЛЬ (Apple Style) ===== */
-.Ruble {
-    border-radius: 2rem;
-    height: 90%;
-    width: 90%;
-    display: grid;
+/* Круг под иконку валюты в акцентном цвете Apple */
+.divIcon2 {
+    width: 32px;
+    height: 32px;
+    background: rgba(52, 199, 89, 0.12); /* Размытый мягкий зеленый фон (System Green) [1] */
+    border-radius: 50%;
+    display: flex;
     align-items: center;
-    justify-items: center;
-    font-size: 0.8rem;
-    /* APPLE STYLE: нежный акцент */
-    background: rgba(255, 215, 0, 0.08);
-    color: #fbbf24;
-    border: 1px solid rgba(255, 215, 0, 0.04);
+    justify-content: center;
+    flex-shrink: 0;
 }
 
-/* ===== ТЕКСТ (Apple Style) ===== */
-:local(.profession) {
-    display: grid;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 1.1rem;
-    font-weight: 500;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-    padding-left: 5%;
-    border-left: 1px solid rgba(255, 255, 255, 0.04);
-    letter-spacing: -0.01em;
+.Icon2 .Ruble {
+    color: #34C759; /* Чистый системный зеленый Apple для денег [1] */
+    font-size: 14px;
+    font-weight: 600;
 }
 
-:local(.vacancyCard):hover .profession {
-    color: rgba(255, 255, 255, 1);
-}
-
-:local(.salary) {
-    display: grid;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    padding-left: 5%;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-    font-size: 1rem;
-    font-weight: 500;
+/* Типографика Apple (San Francisco) */
+.profession {
+    font-size: 17px; /* Стандартный размер Body текста в iOS */
+    font-weight: 600;
+    color: #FFFFFF; /* Максимальный контраст для заголовка */
     margin: 0;
-    border-left: 1px solid rgba(255, 255, 255, 0.04);
-    /* APPLE STYLE: системный синий акцент */
-    color: rgba(200, 140, 27, 0.8);
+    letter-spacing: -0.24px; /* Фирменный отрицательный трекинг Apple */
+    line-height: 1.3;
 }
 
-:local(.vacancyCard):hover .salary {
-    color: rgba(0, 122, 255, 1);
-}
-
-/* ===== ДЕТАЛИ ===== */
-:local(.details) {
-    display: grid;
-    height: 100%;
-    width: 90%;
-    align-items: center;
-    grid-template-columns: 1fr 1fr;
-}
-
-/* ===== КНОПКА ПРОСМОТРА (Apple Style) ===== */
-:local(.WatchVacancy) {
-    display: grid;
-    align-items: center;
-    justify-items: center;
-    border: none;
-    padding: 8px 10px;
-    border-radius: 0.8rem;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    /* APPLE STYLE: системный синий */
-    background: rgba(255, 255, 255, 0.07);
-    color: rgb(24, 198, 64);
+.salary {
+    font-size: 15px;
     font-weight: 500;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-    border: 1px solid rgba(0, 122, 255, 0.08);
+    color: #34C759; /* Деньги подсвечиваем зеленым [1] */
+    margin: 0;
+    letter-spacing: -0.16px;
 }
 
-:local(.WatchVacancy):hover {
-    background: rgba(0, 122, 255, 0.2);
-    color: rgba(0, 122, 255, 1);
-    transform: scale(1.02);
-    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.15);
+/* ==========================================================================
+   3. НИЖНЯЯ ПАНЕЛЬ КАРТОЧКИ (ДЕТАЛИ И КНОПКА ЗАПУСКА)
+   ========================================================================== */
+
+.details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04); /* Деликатный внутренний разделитель */
 }
 
-:local(.WatchVacancy):active {
-    transform: scale(0.95);
-}
-
-/* ===== ДАТА (Apple Style) ===== */
-:local(.dateWrapper) {
-    position: absolute;
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.2);
-    bottom: 0;
-    right: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-    letter-spacing: 0.01em;
-    font-weight: 400;
-}
-
-:local(.emptyContainer) {
-    height: 100%;
+/* Кнопка "Смотреть вакансию" в виде культовой круглой кнопки Apple Play */
+.WatchVacancy {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: #007AFF; /* Фирменный акцентный синий Apple (System Blue) [1] */
+    color: #FFFFFF;
+    font-size: 11px;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-indent: 2px; /* Центрирует треугольник ▶ визуально идеально по центру */
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
-:local(.empty) {
+.WatchVacancy:hover {
+    background: #0066D6;
+}
+
+.WatchVacancy:active {
+    transform: scale(0.92); /* Эффект упругого сжатия при тапе */
+}
+
+/* Мягкий второстепенный текст даты */
+.dateWrapper {
+    font-size: 13px;
+    font-weight: 400;
+    color: #8E8E93; /* Системный серый цвет для второстепенного контента (System Gray) [1] */
+    letter-spacing: -0.08px;
+}
+
+/* ==========================================================================
+   4. СОСТОЯНИЯ ЭКРАНА (ЛОАДЕР, ПУСТО, ОШИБКА)
+   ========================================================================== */
+
+/* Центрированный лоадер */
+.loaderContainer,
+.noVacancies {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 280px;
+    width: 100%;
+    color: #8E8E93;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: -0.2px;
+}
+
+/* Блок системной ошибки в стиле виджетов Apple */
+.errorBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    color: rgba(255, 255, 255, 0.3);
+    padding: 32px 24px;
+    min-height: 280px;
+    width: 100%;
+    background: #1C1C1E;
+    border-radius: 16px;
+    border: 1px dashed rgba(255, 69, 58, 0.25); /* Неоновый красный пунктир (System Red) [1] */
 }
 
-:local(.empty) p {
-    margin: 8px 0;
+.errorIcon {
+    font-size: 40px;
+    margin-bottom: 14px;
 }
 
-:local(.hint) {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.2);
+.errorTitle {
+    font-size: 17px;
+    font-weight: 600;
+    color: #FF453A; /* Текст системной ошибки Apple [1] */
+    margin: 0 0 6px 0;
+    letter-spacing: -0.24px;
 }
 
-/* ===== АДАПТИВ ===== */
-@media (max-width: 640px) {
-    :local(.fullscreenContent) {
-        width: 90%;
-        height: 95%;
-    }
+.errorText {
+    font-size: 14px;
+    color: #8E8E93;
+    max-width: 290px;
+    margin: 0 0 20px 0;
+    line-height: 1.4;
+    letter-spacing: -0.15px;
+}
 
-    :local(.vacancyList),
-    :local(.skeletonContainer) {
-        padding: 16px;
-    }
+/* Нативная закругленная кнопка Retry */
+.retryButton {
+    background: #2C2C2E;
+    color: #007AFF; /* Текст кнопки синий на сером фоне (стиль поп-апов iOS) [1] */
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 10px 24px;
+    border-radius: 20px; /* Каноничные круглые края кнопок меню */
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.15px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
 
-    :local(.vacancyCard) {}
+.retryButton:hover {
+    background: #3A3A3C;
+}
 
-    :local(.profession) {}
+.retryButton:active {
+    transform: scale(0.96);
+}
 
-    :local(.filters) {
-        padding: 12px 16px;
-    }
+/* Сеточный контейнер списка */
+.listGrid {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
-    :local(.filterSelect) {
-        font-size: 0.75rem;
-        padding: 6px 12px;
+/* ==========================================================================
+   5. АНИМАЦИЯ СКЕЛЕТОНОВ (ШЕЛКОВЫЙ ПУЛЬС)
+   ========================================================================== */
+
+.skeletonCard {
+    background: #1C1C1E;
+    border-radius: 16px;
+    height: 130px; /* Эквивалент высоты готовой карточки */
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.02);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Сеньорский скелетон: вместо банального мигания создаем эффект бегущего шелкового блика (Shimmer) */
+.skeletonCard::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.03) 20%,
+            rgba(255, 255, 255, 0.06) 60%,
+            rgba(255, 255, 255, 0) 100%
+    );
+    animation: shimmerSmooth 1.6s infinite ease-in-out;
+}
+
+@keyframes shimmerSmooth {
+    100% {
+        transform: translateX(100%);
     }
 }

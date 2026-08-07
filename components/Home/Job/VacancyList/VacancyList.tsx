@@ -38,17 +38,9 @@ export default function VacancyList({ activeVacancyId, setActiveVacancyId }: Vac
                 // Красивый эффект уменьшения контента списка, когда поверх открывается карточка VacancyInfo
                 scale: isVacancyOpen ? 0.95 : 1,
                 y: isVacancyOpen ? "-10px" : "0px",
-                borderRadius: isVacancyOpen ? "24px" : "0px",
+                // borderRadius: isVacancyOpen ? "24px" : "0px",
             }}
             transition={{ type: "spring", damping: 30, stiffness: 240 }}
-            style={{
-                transformOrigin: "top center",
-                width: '100%',
-                height: '100%',
-                backgroundColor: '#000000',
-                overflow: 'hidden',
-                willChange: "transform, border-radius"
-            }}
         >
             <div className={s.vacancyList}>
                 <AnimatePresence mode="wait">

@@ -95,7 +95,9 @@
   --bg-close: red;
   --text-close: red;
 }
-
+* {
+  -webkit-tap-highlight-color: transparent;
+}
 html {
   /*font-size: 58.75%; !* 9.4px *!*/
   /*overflow: hidden;*/

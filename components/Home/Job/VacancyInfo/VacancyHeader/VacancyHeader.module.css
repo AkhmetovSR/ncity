@@ -79,14 +79,15 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    border: 1px solid red;
 }
 
 :local(.headerContent) {
     display: grid;
-    height: 100%;
-    width: 85%;
-    gap: 0.5rem;
-    padding: 12px 0;
+    /*height: 100%;*/
+    /*width: 85%;*/
+    /*gap: 0.5rem;*/
+    /*padding: 12px 0;*/
 }
 
 :local(.divTitle) {
@@ -105,9 +106,9 @@
 
 /* ========== КНОПКА ЗАКРЫТИЯ (APPLE STYLE) ========== */
 :local(.closeButton) {
-    position: fixed;
-    top: 0.7rem;
-    right: 0.5rem;
+    /*position: fixed;*/
+    /*top: 0.7rem;*/
+    /*right: 0.5rem;*/
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.06);
     font-size: 1rem;

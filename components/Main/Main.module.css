@@ -16,6 +16,9 @@
     /*padding: 16px 0;*/
     /*box-sizing: border-box;*/
     gap: 0.3rem; /* Аккуратные отступы между блоками */
+    /* 🌟 СЕНЬОР-ФИКС: Наследуется всеми дочерними ссылками, кнопками и тегами div */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 /* Контейнер сетки*/

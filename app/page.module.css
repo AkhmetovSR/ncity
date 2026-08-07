@@ -104,7 +104,7 @@
     border-radius: 25px;
     will-change: transform, width, height; /* Оптимизация под мобильный GPU */
     -webkit-overflow-scrolling: touch;
-    /*background-color: grey;*/
+    background-color: grey;
     display: grid;
     position: fixed; /* Fixed надежнее для модалок, чем absolute */
     inset: 5vh 5vw;  /* Современная замена top/left/width/height */

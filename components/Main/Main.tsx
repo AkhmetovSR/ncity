@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { CARD_REGISTRY } from '@/app/cards';
 import { CardGrid } from '@/components/CardGrid';
 import { SpecialPromoCard } from '@/components/SpecialPromoCard';
-import { useCardHistory } from '@/hooks/useCardHistory';
+import { useAppHistory } from '@/hooks/useAppHistory'; // Новый хук
 import Title from "@/components/Home/Title/Title";
 import s from './Main.module.css';
 
@@ -16,21 +16,27 @@ interface MainProps {
 }
 
 export default function Main({ initialActiveId, initialVacancyId }: MainProps) {
-    // 🌟 СЕНЬОР-ФИКС 1: Стартуем с null. Это заставляет React в самый первый микро-миг
-    // отрендерить только нижнюю сетку карточек и зафиксировать их физические координаты в DOM.
     const [activeId, setActiveId] = useState<string | null>(null);
+    // Поднимаем стейт вакансии сюда для централизованного роутинга
+    const [activeVacancyId, setActiveVacancyId] = useState<string | null>(null);
 
-    // Эффект изоморфного восстановления состояния (Hydration Safe Switch)
+    // Hydration Safe Switch
     useEffect(() => {
         if (initialActiveId) {
-            // Включаем активную модалку сразу после того, как сетка карточек встала на экран.
-            // Зазор в 0 миллисекунд неощутим для глаза, но критичен для Framer Motion!
             setActiveId(initialActiveId);
         }
-    }, [initialActiveId]);
+        if (initialVacancyId) {
+            setActiveVacancyId(initialVacancyId);
+        }
+    }, [initialActiveId, initialVacancyId]);
 
-    // Синхронизация истории URL
-    useCardHistory(activeId, setActiveId);
+    // Один хук правит всей историей без конфликтов
+    useAppHistory({
+        activeId,
+        setActiveId,
+        activeVacancyId,
+        setActiveVacancyId
+    });
 
     return (
         <div className={s.storeContainer}>
@@ -40,7 +46,8 @@ export default function Main({ initialActiveId, initialVacancyId }: MainProps) {
             <SpecialPromoCard
                 activeId={activeId}
                 setActiveId={setActiveId}
-                initialVacancyId={initialVacancyId}
+                activeVacancyId={activeVacancyId} // Передаем стейт
+                setActiveVacancyId={setActiveVacancyId} // Передаем сеттер
             />
 
             {/* Сетка стандартных карточек */}

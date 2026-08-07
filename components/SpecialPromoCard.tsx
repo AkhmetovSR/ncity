@@ -10,10 +10,16 @@ import s from '@/app/page.module.css';
 interface SpecialPromoCardProps {
     activeId: string | null;
     setActiveId: (id: string | null) => void;
-    initialVacancyId?: string | null; // Новое поле
+    activeVacancyId: string | null; // Изменено
+    setActiveVacancyId: (id: string | null) => void; // Изменено
 }
 
-export function SpecialPromoCard({ activeId, setActiveId, initialVacancyId = null }: SpecialPromoCardProps) {
+export function SpecialPromoCard({
+                                     activeId,
+                                     setActiveId,
+                                     activeVacancyId,
+                                     setActiveVacancyId
+                                 }: SpecialPromoCardProps) {
     const id = "vacancy";
     const isOpen = activeId === id;
 
@@ -28,14 +34,18 @@ export function SpecialPromoCard({ activeId, setActiveId, initialVacancyId = nul
                     setActiveId(id);
                 }}
             >
+                {/* 🌟 Чтобы Framer Motion не сходил с ума, анимируем фон только когда карточка закрыта, либо убираем дубликат layoutId */}
                 <motion.div layoutId={`card-bg-${id}`} className={s.cardBase}>
                     {!isOpen && <Job />}
                 </motion.div>
             </Link>
 
             <StoreCard id={id} activeId={activeId} setActiveId={setActiveId}>
-                {/* 🌟 Передаем начальный ID вакансии внутрь списка */}
-                <VacancyList initialVacancyId={initialVacancyId} />
+                {/* Передаем стейты управления внутрь списка */}
+                <VacancyList
+                    activeVacancyId={activeVacancyId}
+                    setActiveVacancyId={setActiveVacancyId}
+                />
             </StoreCard>
         </div>
     );

@@ -112,10 +112,10 @@ export function useVacancies() {
         switch (sortBy) {
             case 'date':
                 return sorted.sort((a, b) => parseDate(b.date).getTime() - parseDate(a.date).getTime());
-            case 'salary-asc':
-                return sorted.sort((a, b) => parseSalary(a.salary) - parseSalary(b.salary));
-            case 'salary-desc':
-                return sorted.sort((a, b) => parseSalary(b.salary) - parseSalary(a.salary));
+            // case 'salary-asc':
+            //     return sorted.sort((a, b) => parseSalary(a.date) - parseSalary(b.salary));
+            // case 'salary-desc':
+            //     return sorted.sort((a, b) => parseSalary(b.salary) - parseSalary(a.salary));
             default:
                 return sorted;
         }

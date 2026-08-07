@@ -1,36 +1,29 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import s from '@/components/Home/Job/VacancyList/VacancyList.module.css';
 import { motion, AnimatePresence } from "framer-motion";
 import VacancyInfo from "@/components/Home/Job/VacancyInfo/VacancyInfo";
 import VacancyGrid from "./VacancyGrid";
 import { useVacancies } from "@/hooks/useVacancies";
-import { useVacancyHistory } from "@/hooks/useVacancyHistory";
-
 
 interface VacancyListProps {
-    initialVacancyId?: string | null;
+    // 🌟 СЕНЬОР-ФИКС: Больше никаких локальных стейтов и старых хуков.
+    // Данные роутинга приходят из единого источника правды (Main -> SpecialPromoCard -> VacancyList)
+    activeVacancyId: string | null;
+    setActiveVacancyId: (id: string | null) => void;
 }
 
-export default function VacancyList({ initialVacancyId = null }: VacancyListProps) {
+export default function VacancyList({ activeVacancyId, setActiveVacancyId }: VacancyListProps) {
     const { vacancies, loading, error, handleRetry } = useVacancies();
 
-    const [activeVacancyId, setActiveVacancyId] = useState<string | null>(null);
-
-    useVacancyHistory(activeVacancyId, setActiveVacancyId);
-
-    useEffect(() => {
-        if (initialVacancyId && vacancies.length > 0) {
-            setActiveVacancyId(initialVacancyId);
-        }
-    }, [initialVacancyId, vacancies]);
-
+    // Синхронизация темы оформления (ваша оригинальная логика)
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
     }, []);
 
+    // Поиск выбранной вакансии для передачи в шторку VacancyInfo
     const selectedVacancy = useMemo(() => {
         if (!activeVacancyId) return null;
         return vacancies.find(v => String(v.id) === activeVacancyId) || null;
@@ -42,6 +35,7 @@ export default function VacancyList({ initialVacancyId = null }: VacancyListProp
         <motion.div
             className={s.contentWrapper}
             animate={{
+                // Красивый эффект уменьшения контента списка, когда поверх открывается карточка VacancyInfo
                 scale: isVacancyOpen ? 0.95 : 1,
                 y: isVacancyOpen ? "-10px" : "0px",
                 borderRadius: isVacancyOpen ? "24px" : "0px",
@@ -87,6 +81,7 @@ export default function VacancyList({ initialVacancyId = null }: VacancyListProp
                     {!loading && !error && vacancies.length > 0 && (
                         <VacancyGrid
                             vacancies={vacancies}
+                            // При клике на карточку прокидываем ID в глобальный роутинг
                             onCardClick={(vacancy) => setActiveVacancyId(String(vacancy.id))}
                         />
                     )}
@@ -94,6 +89,7 @@ export default function VacancyList({ initialVacancyId = null }: VacancyListProp
                 </AnimatePresence>
             </div>
 
+            {/* Шторка детальной информации о вакансии (уровень 2) */}
             <AnimatePresence>
                 {isVacancyOpen && selectedVacancy && (
                     <VacancyInfo

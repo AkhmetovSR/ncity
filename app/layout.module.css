@@ -7,7 +7,18 @@
     grid-template-rows: 88% 12%;
     /*border: 2px solid blue;*/
     overflow: hidden;
-    background-color: #2b2d30;
+    /*background-color: #2b2d30;*/
+    background-color: #09090b; /* Цвет фона вашего приложения */
+    /*min-height: 100vh;*/
+    min-height: 100dvh; /* Использование динамической высоты экрана смартфона */
+
+    /* Автоматические безопасные отступы под челку сверху и системный индикатор снизу */
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+
+    /* Запрещаем выделение текста и серые вспышки при тапах на iOS */
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 .globalStackContainer {
     display: flex;

@@ -1,23 +1,27 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
+import { VacancyListProps } from '@/components/Home/Job/VacancyList/VacancyList';
 
-// 1. Динамические импорты компонентов (Code Splitting)
-const WidgetWaterBalance = dynamic<{ isOpen: boolean }>(() => import('@/components/Home/WidgetWaterBalance/WidgetWaterBalance'));
-const AI = dynamic<{ isOpen: boolean }>(() => import('@/components/Home/AI/AI'));
-const A = dynamic<{ isOpen: boolean }>(() => import('@/components/Home/a/A'));
-const B = dynamic<{ isOpen: boolean }>(() => import('@/components/Home/b/B'));
-const WaterBalance = dynamic<{ isOpen: boolean }>(() => import('@/components/freeService/WaterBalance/WaterBalance'));
+// 1. Обычные пропсы для стандартных карточек
+interface DefaultPageProps {
+    isOpen: boolean;
+}
 
-// 🌟 Важно: Наш список вакансий теперь импортируется так же динамически
-const VacancyList = dynamic<{ isOpen: boolean }>(() => import('@/components/Home/Job/VacancyList/VacancyList'));
+const WidgetWaterBalance = dynamic<DefaultPageProps>(() => import('@/components/Home/WidgetWaterBalance/WidgetWaterBalance'));
+const AI = dynamic<DefaultPageProps>(() => import('@/components/Home/AI/AI'));
+const A = dynamic<DefaultPageProps>(() => import('@/components/Home/a/A'));
+const B = dynamic<DefaultPageProps>(() => import('@/components/Home/b/B'));
+const WaterBalance = dynamic<DefaultPageProps>(() => import('@/components/freeService/WaterBalance/WaterBalance'));
+
+// Родные пропсы для списка вакансий
+const VacancyList = dynamic<VacancyListProps>(() => import('@/components/Home/Job/VacancyList/VacancyList'));
 
 export interface CardData {
     id: string;
-    widget: React.ComponentType<{ isOpen: boolean }>;
-    cardComponent: React.ComponentType<{ isOpen: boolean }>;
+    widget: React.ComponentType<DefaultPageProps>;
+    cardComponent: React.ComponentType<DefaultPageProps>;
 }
 
-// 2. РЕЕСТР ДЛЯ СЕТКИ (CardGrid использует ТОЛЬКО его, как и раньше)
 export const CARD_REGISTRY: Record<string, CardData> = {
     'travel': { id: 'travel', widget: WidgetWaterBalance, cardComponent: WaterBalance },
     'coding': { id: 'coding', widget: AI, cardComponent: AI },
@@ -25,16 +29,14 @@ export const CARD_REGISTRY: Record<string, CardData> = {
     'B': { id: 'B', widget: AI, cardComponent: B }
 };
 
-// 3. 🌟 СЕНЬОР-РЕШЕНИЕ: Глобальный реестр ВСЕХ страниц приложения.
-// Сюда входят и карточки из сетки, и любые независимые промо-карточки (vacancy).
-export const PAGE_REGISTRY: Record<string, React.ComponentType<{ isOpen: boolean }>> = {
-    // Автоматически копируем компоненты страниц из реестра сетки
+// 🌟 СЕНЬОР-РЕШЕНИЕ БЕЗ ANY:
+// Мы явно говорим, что компонент в реестре принимает ЛИБО DefaultPageProps, ЛИБО VacancyListProps
+type RegistryComponent = React.ComponentType<DefaultPageProps> | React.ComponentType<VacancyListProps>;
+
+export const PAGE_REGISTRY: Record<string, RegistryComponent> = {
     'travel': WaterBalance,
     'coding': AI,
     'A': A,
     'B': B,
-
-    // 🌟 Добавляем нашу независимую промо-карточку.
-    // TypeScript строго следит, чтобы пропсы VacancyList подходили под { isOpen: boolean }
-    'vacancy': VacancyList as React.ComponentType<{ isOpen: boolean }>
+    'vacancy': VacancyList // Теперь встает сюда идеально и безопасно!
 };

@@ -27,7 +27,7 @@
     /*padding: 20px 16px 40px 16px; !* Фирменные отступы iOS *!*/
     /*display: flex;*/
     /*flex-direction: column;*/
-    gap: 12px; /* Компактное расстояние между карточками в стиле списков iOS */
+    /*gap: 12px; !* Компактное расстояние между карточками в стиле списков iOS *!*/
     -webkit-overflow-scrolling: touch; /* Плавная инерция прокрутки на iPhone */
     /*border: 1px solid red;*/
     border-radius: 1rem;

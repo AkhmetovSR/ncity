@@ -1,591 +1,112 @@
-/* VacancyInfo.module.css - Apple Style "Glass" */
-/* Полностью соответствует стилю VacancyList */
-
-/* ========== ОВЕРЛЕЙ (ЗАТЕМНЁННЫЙ ФОН) ========== */
-:local(.overlay) {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    /* APPLE STYLE: мягкий затемненный фон */
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(30px) saturate(1.2);
-    -webkit-backdrop-filter: blur(30px) saturate(1.2);
-    z-index: 999;
-    overflow: hidden;
-    animation: fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+.header {
+    background: rgba(28, 28, 30, 0.75); /* Полупрозрачное стекло iOS */
+    backdrop-filter: blur(24px); /* Глубокое размытие заднего плана */
+    -webkit-backdrop-filter: blur(24px);
+    padding: 6px 16px 14px 16px; /* Филигранные отступы */
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", sans-serif;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+/* Изящный индикатор шторки */
+.dragHandle {
+    width: 4rem;
+    height: 0.2rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    margin: 0 auto 10px auto;
 }
 
-/* ========== ОСНОВНАЯ ПАНЕЛЬ ========== */
-:local(.vacancyInfo) {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: grid;
-    z-index: 1000;
-    height: 80vh;
+/* Общий контейнер: выстраивает информацию и управление в одну линию */
+.mainLayout {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Центрирование по вертикали */
+    gap: 16px;
+}
+
+/* Левый блок: Вертикальный компактный стек для текста */
+.metaStack {
+    display: flex;
     flex-direction: column;
+    gap: 4px;
+    min-width: 0; /* Чтобы длинные заголовки корректно обрезались */
+}
+
+.title {
+    font-size: 16px; /* Идеальный размер для мобильного экрана */
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.25;
+    margin: 0;
+    letter-spacing: -0.3px;
+    white-space: nowrap;
     overflow: hidden;
-    /* APPLE STYLE: стеклянный эффект как в списке */
-    background: rgba(28, 28, 30, 0.88);
-    backdrop-filter: blur(60px) saturate(1.8);
-    -webkit-backdrop-filter: blur(60px) saturate(1.8);
-    border-radius: 40px 40px 0 0;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-bottom: none;
-    box-shadow:
-            0 -30px 80px rgba(0, 0, 0, 0.5),
-            0 0 0 1px rgba(255, 255, 255, 0.02) inset;
-    animation: slideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    text-overflow: ellipsis; /* Аккуратное троеточие */
 }
 
-@keyframes slideUp {
-    from { transform: translateY(100%); }
-    to { transform: translateY(0); }
-}
-
-/* ========== ИНДИКАТОР СВАЙПА ========== */
-:local(.swipeIndicator) {
-    display: flex;
-    justify-content: center;
-    padding: 12px 0 4px;
-}
-
-:local(.swipeBar) {
-    width: 40px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 4px;
-}
-
-/* ========== ХЕДЕР ========== */
-:local(.header) {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    display: grid;
-    justify-items: center;
-    /* APPLE STYLE: прозрачный хедер */
-    background: rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    border: 1px solid red;
-}
-
-:local(.headerContent) {
-    display: grid;
-    /*height: 100%;*/
-    /*width: 85%;*/
-    /*gap: 0.5rem;*/
-    /*padding: 12px 0;*/
-}
-
-:local(.divTitle) {
-    display: grid;
-    grid-template-columns: 1fr 10%;
+/* 🟢 APPLE GREEN: Налитая цветом полупрозрачная зарплата */
+.salaryBadge {
+    display: inline-flex;
     align-items: center;
-}
-
-:local(.title) {
-    font-size: 1rem;
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: 500;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-    letter-spacing: -0.01em;
-}
-
-/* ========== КНОПКА ЗАКРЫТИЯ (APPLE STYLE) ========== */
-:local(.closeButton) {
-    /*position: fixed;*/
-    /*top: 0.7rem;*/
-    /*right: 0.5rem;*/
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    font-size: 1rem;
-    font-weight: 300;
-    cursor: pointer;
-    color: rgba(255, 255, 255, 0.5);
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-:local(.closeButton):hover {
-    background: rgba(255, 255, 255, 0.08);
-    transform: scale(1.02);
-    color: rgba(255, 255, 255, 0.8);
-}
-
-:local(.closeButton):active {
-    transform: scale(0.92);
-}
-
-/* ========== КОНТЕНТ ========== */
-.content {
-    padding: 2rem;
-    display: grid;
-    gap: 2rem;
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
-
-/* ========== СЕТКА ИНФОРМАЦИИ ========== */
-.infoGrid {
-    display: grid;
-    gap: 1rem;
-}
-
-.infoCard {
-    display: flex;
-    gap: 14px;
-    padding: 16px;
-    /* APPLE STYLE: карточки как в списке */
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.infoCard:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.08);
-    transform: translateY(-1px);
-}
-
-.infoIcon {
-    font-size: 1.5rem;
-    opacity: 0.7;
-}
-
-.infoContent {
-    flex: 1;
-}
-
-.infoLabel {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.3);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-    font-weight: 500;
-}
-
-.infoValue {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.85);
-    font-weight: 500;
-    line-height: 1.4;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-}
-
-/* ========== СЕКЦИЯ КОНТАКТОВ ========== */
-.contactsSection {
-    /* APPLE STYLE: секции */
-}
-
-.sectionTitle {
-    font-size: 16px;
+    background: rgba(48, 209, 88, 0.12); /* Нативный приглушенный зеленый iOS */
+    color: #30d158; /* Яркий, но мягкий системный цвет */
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 13px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.85);
-    margin: 0 0 16px 0;
+    letter-spacing: -0.1px;
+    width: fit-content;
+}
+
+/* Правый блок: Кнопка и крестик */
+.actionGroup {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-    letter-spacing: -0.01em;
+    gap: 4px;
+    flex-shrink: 0; /* Защита от сжатия */
 }
 
-.contactsGrid {
-    display: grid;
-    gap: 1rem;
-}
-
-.contactCard {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: pointer;
-}
-
-.contactCard:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.08);
-    transform: translateX(3px);
-}
-
-.contactCard:active {
-    transform: scale(0.98);
-}
-
-.contactIcon {
-    font-size: 24px;
-    opacity: 0.7;
-}
-
-.contactLabel {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.3);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-    font-weight: 500;
-}
-
-.contactValue {
-    font-size: 14px;
-    /* APPLE STYLE: системный синий */
-    color: rgba(0, 122, 255, 0.8);
-    font-weight: 500;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-}
-
-.contactCard:hover .contactValue {
-    color: rgba(0, 122, 255, 1);
-}
-
-/* ========== КНОПКА ОТПРАВИТЬ РЕЗЮМЕ ========== */
-:local(.sendResumeButton) {
+/* 🔵 APPLE BLUE: Та самая стеклянная, технологичная кнопка-капсула */
+.sendResumeButton {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    border: none;
+    border: 1px solid rgba(10, 132, 255, 0.15);
     border-radius: 2rem;
-    padding: 0.75rem 1.25rem;
-    font-weight: 500;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-    /* APPLE STYLE: системный синий */
-    background: rgba(0, 122, 255, 0.15);
-    color: rgba(0, 122, 255, 0.9);
-    border: 1px solid rgba(0, 122, 255, 0.08);
-    margin-top: 0.25rem;
-    width: 100%;
-}
-
-:local(.sendResumeButton):hover {
-    background: rgba(0, 122, 255, 0.2);
-    color: rgba(0, 122, 255, 1);
-    transform: scale(1.01);
-    box-shadow: 0 4px 20px rgba(0, 122, 255, 0.15);
-}
-
-:local(.sendResumeButton):active {
-    transform: scale(0.97);
-}
-
-/* ========== КОНТЕНТНЫЕ БЛОКИ ========== */
-.contentBox {
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 16px;
-    padding: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    overflow-x: hidden;
-}
-
-/* ========== ПАРАГРАФЫ ========== */
-.paragraph {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.8);
-    margin: 0 0 12px 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-}
-
-.paragraph:last-child {
-    margin-bottom: 0;
-}
-
-/* ========== ПОДЗАГОЛОВКИ ========== */
-.subHeader {
-    font-size: 1rem;
+    padding: 8px 16px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.85);
-    margin: 16px 0 12px 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-    letter-spacing: -0.01em;
+    font-size: 13px;
+    letter-spacing: -0.1px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+    background: rgba(10, 132, 255, 0.15); /* В темной теме iOS используется SystemBlue #0A84FF */
+    color: #0a84ff;
 }
 
-.subHeader:first-child {
-    margin-top: 0;
+/* Плавный отклик при нажатии на тач-экране */
+.sendResumeButton:active {
+    background: rgba(10, 132, 255, 0.25);
+    transform: scale(0.96);
 }
 
-/* ========== СПИСКИ ========== */
-.list {
-    margin: 12px 0;
-    padding-left: 0;
-    list-style: none;
+/* Минималистичная кнопка закрытия */
+.closeButton {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.25);
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease;
 }
 
-.list li {
-    position: relative;
-    padding-left: 24px;
-    margin-bottom: 10px;
-    font-size: 1rem;
-    line-height: 1.5;
-    color: rgba(255, 255, 255, 0.75);
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-}
-
-.list li:before {
-    content: "▹";
-    position: absolute;
-    left: 0;
-    /* APPLE STYLE: зеленый акцент как у зарплаты */
-    color: rgba(52, 211, 153, 0.7);
-    font-size: 14px;
-}
-
-/* ========== ОТСТУПЫ ========== */
-.spacer {
-    height: 8px;
-}
-
-/* ========== СЕКЦИИ ========== */
-.section {
-    margin-bottom: 28px;
-}
-
-.section:last-child {
-    margin-bottom: 0;
-}
-
-/* ========== СКРОЛЛБАР ========== */
-.VacancyInfo::-webkit-scrollbar {
-    width: 4px;
-}
-
-.VacancyInfo::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 2px;
-}
-
-.VacancyInfo::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 2px;
-}
-
-.VacancyInfo::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.12);
-}
-
-/* ========== АДАПТИВНОСТЬ ========== */
-@media (max-width: 640px) {
-    :local(.vacancyInfo) {
-        border-radius: 30px 30px 0 0;
-        height: 85vh;
-    }
-
-    .content {
-        padding: 1.5rem;
-        gap: 1.5rem;
-    }
-
-    :local(.headerContent) {
-        width: 90%;
-        padding: 10px 0;
-    }
-
-    :local(.title) {
-        font-size: 0.95rem;
-    }
-
-    .infoGrid {
-        gap: 0.75rem;
-    }
-
-    .infoCard {
-        padding: 14px;
-    }
-
-    .contactsGrid {
-        gap: 0.75rem;
-    }
-
-    .contactCard {
-        padding: 12px 14px;
-    }
-}
-
-@media (max-width: 374px) {
-    :local(.vacancyInfo) {
-        border-radius: 25px 25px 0 0;
-        height: 90vh;
-    }
-
-    .content {
-        padding: 1.2rem;
-        gap: 1.2rem;
-    }
-
-    :local(.headerContent) {
-        width: 92%;
-        gap: 0.3rem;
-    }
-
-    :local(.title) {
-        font-size: 0.85rem;
-    }
-
-    :local(.closeButton) {
-        width: 1.3rem;
-        height: 1.3rem;
-        font-size: 0.85rem;
-        top: 0.5rem;
-        right: 0.3rem;
-    }
-
-    .infoCard {
-        padding: 12px;
-        gap: 10px;
-    }
-
-    .infoValue {
-        font-size: 13px;
-    }
-
-    .paragraph {
-        font-size: 0.95rem;
-    }
-
-    .list li {
-        font-size: 0.95rem;
-    }
-}
-
-/* ========== ПОДДЕРЖКА СВЕТЛОЙ ТЕМЫ ========== */
-[data-theme="light"] :local(.vacancyInfo) {
-    background: rgba(255, 255, 255, 0.92);
-    border-color: rgba(0, 0, 0, 0.04);
-    box-shadow: 0 -30px 80px rgba(0, 0, 0, 0.08);
-}
-
-[data-theme="light"] :local(.overlay) {
-    background: rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="light"] :local(.header) {
-    background: rgba(255, 255, 255, 0.8);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-}
-
-[data-theme="light"] :local(.title) {
-    color: rgba(0, 0, 0, 0.85);
-}
-
-[data-theme="light"] :local(.closeButton) {
-    background: rgba(0, 0, 0, 0.03);
-    border-color: rgba(0, 0, 0, 0.04);
-    color: rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="light"] :local(.closeButton):hover {
-    background: rgba(0, 0, 0, 0.06);
-    color: rgba(0, 0, 0, 0.6);
-}
-
-[data-theme="light"] .infoCard {
-    background: rgba(0, 0, 0, 0.02);
-    border-color: rgba(0, 0, 0, 0.04);
-}
-
-[data-theme="light"] .infoCard:hover {
-    background: rgba(0, 0, 0, 0.04);
-}
-
-[data-theme="light"] .infoLabel {
-    color: rgba(0, 0, 0, 0.3);
-}
-
-[data-theme="light"] .infoValue {
-    color: rgba(0, 0, 0, 0.8);
-}
-
-[data-theme="light"] .sectionTitle {
-    color: rgba(0, 0, 0, 0.8);
-}
-
-[data-theme="light"] .contactCard {
-    background: rgba(0, 0, 0, 0.02);
-    border-color: rgba(0, 0, 0, 0.04);
-}
-
-[data-theme="light"] .contactCard:hover {
-    background: rgba(0, 0, 0, 0.04);
-}
-
-[data-theme="light"] .contactValue {
-    color: rgba(0, 122, 255, 0.7);
-}
-
-[data-theme="light"] .contentBox {
-    background: rgba(0, 0, 0, 0.02);
-    border-color: rgba(0, 0, 0, 0.03);
-}
-
-[data-theme="light"] .paragraph {
-    color: rgba(0, 0, 0, 0.7);
-}
-
-[data-theme="light"] .subHeader {
-    color: rgba(0, 0, 0, 0.8);
-}
-
-[data-theme="light"] .list li {
-    color: rgba(0, 0, 0, 0.7);
-}
-
-[data-theme="light"] .list li:before {
-    color: rgba(52, 211, 153, 0.8);
-}
-
-[data-theme="light"] .swipeBar {
-    background: rgba(0, 0, 0, 0.1);
-}
-
-[data-theme="light"] :local(.sendResumeButton) {
-    background: rgba(0, 122, 255, 0.08);
-    color: rgba(0, 122, 255, 0.8);
-    border-color: rgba(0, 122, 255, 0.06);
-}
-
-[data-theme="light"] :local(.sendResumeButton):hover {
-    background: rgba(0, 122, 255, 0.12);
-    color: rgba(0, 122, 255, 1);
-}
-
-[data-theme="light"] .VacancyInfo::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.02);
-}
-
-[data-theme="light"] .VacancyInfo::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.08);
-}
-
-[data-theme="light"] .VacancyInfo::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.12);
+.closeButton:active {
+    color: #ffffff;
 }

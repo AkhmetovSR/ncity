@@ -1,4 +1,5 @@
 'use client';
+
 import s from '@/components/Home/Job/VacancyInfo/VacancyHeader/VacancyHeader.module.css';
 import { motion } from "framer-motion";
 import { Vacancy } from "@/types/vacancy";
@@ -18,17 +19,7 @@ export default function VacancyHeader({ vacancy, onClose }: VacancyInfoProps) {
 Здравствуйте!
 
 Меня заинтересовала вакансия "${vacancy.profession}".
-
 Направляю Вам своё резюме на рассмотрение.
-
-Контактная информация для связи:
-• ФИО: [Ваше ФИО]
-• Телефон: [Ваш номер телефона]
-• Email: [Ваш email]
-
-Резюме прикрепляю к письму.
-
-Буду рад(а) возможности пройти собеседование.
 
 С уважением,
 [Ваше ФИО]
@@ -39,36 +30,36 @@ export default function VacancyHeader({ vacancy, onClose }: VacancyInfoProps) {
 
     return (
         <div className={s.header}>
-            <div className={s.swipeIndicator}>
-                <div className={s.swipeBar} />
-            </div>
-            <div className={s.headerContent}>
-                <div className={s.divTitle}>
-                    <div className={s.divProfession}><h2 className={s.title}>{vacancy?.profession}</h2></div>
-                    <button className={s.closeButton} onClick={onClose}>✕</button>
-                </div>
-                {vacancy?.salary && (
-                    <motion.div className={s.salaryBox}>
-                        <span className={s.salaryIcon}>🪙 </span>
-                        <span className={s.salaryValue}>{vacancy?.salary} ₽</span>
-                    </motion.div>
-                )}
-                {/* Кнопка отправки резюме */}
-                <motion.button
-                    className={s.sendResumeButton}
-                    onClick={handleSendResume}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                >
-                    <span className={s.sendIcon}>📎</span>
-                    Отправить резюме
-                    <span className={s.arrowIcon}>→</span>
-                </motion.button>
-            </div>
+            {/* Нативный аккуратный индикатор для шторки */}
+            <div className={s.dragHandle} />
 
+            <div className={s.mainLayout}>
+                {/* Информационный блок */}
+                <div className={s.metaStack}>
+                    <h2 className={s.title}>{vacancy?.profession || 'Вакансия'}</h2>
+
+                    {vacancy?.salary && (
+                        <div className={s.salaryBadge}>
+                            {Number(vacancy.salary).toLocaleString('ru-RU')} ₽
+                        </div>
+                    )}
+                </div>
+
+                {/* Блок интерактивных элементов */}
+                <div className={s.actionGroup}>
+                    <motion.button
+                        className={s.sendResumeButton}
+                        onClick={handleSendResume}
+                        whileTap={{ scale: 0.96 }}
+                    >
+                        Откликнуться
+                    </motion.button>
+
+                    <button className={s.closeButton} onClick={onClose} aria-label="Закрыть">
+                        ✕
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }

@@ -36,7 +36,7 @@ export default function RootLayout({
             {children}
         </div>
         <div className={s.Menu}>
-            <Menu />
+            <Menu/>
         </div>
 
         {/* 🌟 СЕНЬОР-ФИКС 3: Нативная и безопасная регистрация Сервис-Воркера */}
@@ -44,16 +44,23 @@ export default function RootLayout({
         <script
             dangerouslySetInnerHTML={{
                 __html: `
-                            if ('serviceWorker' in navigator && window.location.hostname !== 'localhost') {
-                                window.addEventListener('load', function() {
-                                    navigator.serviceWorker.register('/sw.js').then(function(reg) {
-                                        console.log('ServiceWorker успешно зарегистрирован. Скоуп:', reg.scope);
-                                    }).catch(function(err) {
-                                        console.error('Ошибка регистрации ServiceWorker:', err);
-                                    });
-                                });
-                            }
-                        `,
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                    // Очищаем старые воркеры перед регистрацией, чтобы избежать конфликтов на Vercel
+                    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                        for(let registration of registrations) {
+                            registration.unregister();
+                        }
+                    });
+
+                    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+                        console.log('ServiceWorker успешно зарегистрирован:', reg.scope);
+                    }).catch(function(err) {
+                        console.error('Ошибка ServiceWorker:', err);
+                    });
+                });
+            }
+        `,
             }}
         />
         </body>

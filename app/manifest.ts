@@ -6,21 +6,30 @@ export default function manifest(): MetadataRoute.Manifest {
         short_name: 'SmartJob',
         description: 'Прогрессивное мобильное приложение для поиска работы',
         start_url: '/',
-        display: 'standalone', // Полностью скрывает интерфейс браузера
-        orientation: 'portrait', // Блокирует переворот экрана
-        background_color: '#09090b', // Цвет подложки (совпадает с вашей темной темой)
-        theme_color: '#09090b', // Цвет статус-бара в Android
+        display: 'standalone',
+        orientation: 'portrait',
+        background_color: '#09090b',
+        theme_color: '#09090b',
         icons: [
             {
-                src: '/icons/icon-192x192.png',
+                // Нативный путь, по которому Next.js отдаст сгенерированную иконку 192x192
+                src: '/icon?size=192',
                 sizes: '192x192',
                 type: 'image/png',
-                purpose: 'maskable', // Иконка будет идеально круглой/квадратной на любом Android
+                purpose: 'any',
             },
             {
-                src: '/icons/icon-512x512.png',
+                src: '/icon?size=192',
+                sizes: '192x192',
+                type: 'image/png',
+                purpose: 'maskable', // Экран Android сможет безопасно обрезать её в круг
+            },
+            {
+                // Путь для большой иконки 512x512
+                src: '/icon?size=512',
                 sizes: '512x512',
                 type: 'image/png',
+                purpose: 'any',
             },
         ],
     };

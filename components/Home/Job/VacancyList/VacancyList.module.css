@@ -12,7 +12,7 @@
     position: fixed;
     /*flex-direction: column;*/
     overflow: hidden; /* Гарантирует, что при уменьшении масштаба края контента ровно скруглятся */
-    background-color: #000000;
+    background-color: #202020;
     will-change: transform, border-radius; /* Оптимизация видеокарты для плавной анимации */
     border-radius: 1.5rem;
     /*padding: 1rem;*/

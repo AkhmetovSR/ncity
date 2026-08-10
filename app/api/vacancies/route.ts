@@ -30,6 +30,7 @@
 //     }
 // }
 
+// --------------------- VERCEL-------------------------------------------------------
 import { NextResponse } from 'next/server';
 import { getActiveVacancies } from '@/lib/dal/vacancies';
 

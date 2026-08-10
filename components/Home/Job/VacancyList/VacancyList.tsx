@@ -7,7 +7,7 @@ import VacancyInfo from "@/components/Home/Job/VacancyInfo/VacancyInfo";
 import VacancyGrid from "./VacancyGrid";
 import { useVacancies } from "@/hooks/useVacancies";
 
-export  interface VacancyListProps {
+export interface VacancyListProps {
     // 🌟 СЕНЬОР-ФИКС: Больше никаких локальных стейтов и старых хуков.
     // Данные роутинга приходят из единого источника правды (Main -> SpecialPromoCard -> VacancyList)
     activeVacancyId: string | null;

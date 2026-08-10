@@ -132,7 +132,7 @@
 //     };
 // }
 
-
+// --------------------- VERCEL-------------------------------------------------------
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Vacancy } from '@/types/vacancy';
 

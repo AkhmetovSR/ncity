@@ -2,8 +2,8 @@ import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: 'Нягань',
-        short_name: 'Нягань',
+        name: 'Nyagan',
+        short_name: 'Nyagan',
         description: 'Прогрессивное мобильное приложение для поиска работы',
         start_url: '/',
         display: 'standalone',
@@ -12,21 +12,21 @@ export default function manifest(): MetadataRoute.Manifest {
         theme_color: '#09090b',
         icons: [
             {
-                // Путь к вашей статичной иконке в папке public
-                src: '/icon-192.png',
+                // Нативный путь, по которому Next.js отдаст сгенерированную иконку 192x192
+                src: '/icon?size=192',
                 sizes: '192x192',
                 type: 'image/png',
                 purpose: 'any',
             },
             {
-                src: '/icon-maskable.png',
-                sizes: '192x192 384x384 512x512', // Устройство само выберет нужный масштаб
+                src: '/icon?size=192',
+                sizes: '192x192',
                 type: 'image/png',
-                purpose: 'maskable',
+                purpose: 'maskable', // Экран Android сможет безопасно обрезать её в круг
             },
             {
-                // Путь к большой иконке
-                src: '/icon-512.png',
+                // Путь для большой иконки 512x512
+                src: '/icon?size=512',
                 sizes: '512x512',
                 type: 'image/png',
                 purpose: 'any',

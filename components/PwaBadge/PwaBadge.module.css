@@ -2,7 +2,7 @@
 .badgeContainer {
     position: absolute;
     /*top: calc(16px + env(safe-area-inset-top, 0px)); !* Учитываем челку iPhone *!*/
-    right: 1rem;
+    left: 1rem;
     top: 1rem;
     /*border: 1px solid red;*/
     z-index: 10000;

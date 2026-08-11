@@ -30,7 +30,7 @@
     border: 1px solid grey;
     overflow-y: scroll;
     overflow-x: hidden;
-    border-radius: 15px;
+    border-radius: 0.5rem;
     /*grid-template-areas:*/
     /*"WidgetWaterBalance WidgetWaterBalance WidgetWaterBalance"*/
     /*"AI";*/

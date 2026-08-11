@@ -29,6 +29,7 @@ export function usePWAInstall() {
             return;
         }
 
+        //
         // 2. Логика для Android / Chrome
         const handleBeforeInstallPrompt = (e: Event) => {
             e.preventDefault();

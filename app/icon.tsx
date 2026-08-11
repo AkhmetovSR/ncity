@@ -8,7 +8,7 @@ export const size = {
 };
 export const contentType = 'image/png';
 
-export default function Ico() {
+export default function Icon() {
     return new ImageResponse(
         (
             <div

@@ -2,8 +2,8 @@ import { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: 'Nyagan',
-        short_name: 'Nyagan',
+        name: 'Smart Job App',
+        short_name: 'SmartJob',
         description: 'Прогрессивное мобильное приложение для поиска работы',
         start_url: '/',
         display: 'standalone',

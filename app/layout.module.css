@@ -1,16 +1,18 @@
 .rootBody{
     position: fixed;
     margin: 0 auto;
-    height: 100%;
+    height: 99%;
     width: 100%;
     display: grid;
+    /*justify-items: center;*/
     grid-template-rows: 88% 12%;
-    /*border: 2px solid blue;*/
+    border: 1px solid red;
     overflow: hidden;
     /*background-color: #2b2d30;*/
     background-color: #09090b; /* Цвет фона вашего приложения */
     /*min-height: 100vh;*/
-    min-height: 100dvh; /* Использование динамической высоты экрана смартфона */
+    /*min-height: 100dvh; !* Использование динамической высоты экрана смартфона *!*/
+    /*min-width: 100dvw;*/
 
     /* Автоматические безопасные отступы под челку сверху и системный индикатор снизу */
     padding-top: env(safe-area-inset-top, 0px);
@@ -20,17 +22,19 @@
     -webkit-tap-highlight-color: transparent;
     user-select: none;
 }
-.globalStackContainer {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    /* Оптимизация GPU для исключения микро-дерганий при скруглении углов */
-    will-change: transform, border-radius;
-}
+/*.globalStackContainer {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    !* Оптимизация GPU для исключения микро-дерганий при скруглении углов *!*/
+/*    will-change: transform, border-radius;*/
+/*}*/
 .mainContent, .Menu{
     height: 100%;
     width: 100%;
     overflow: hidden;
-    /*border: 1px solid red;*/
+    display: grid;
+    justify-items: center;
+    border: 1px solid blue;
 }

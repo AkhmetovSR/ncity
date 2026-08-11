@@ -27,7 +27,7 @@
     align-content: start;
     /*flex-direction: column;*/
     gap: 0.3rem;
-    border: 1px solid grey;
+    border: 1px solid red;
     overflow-y: scroll;
     overflow-x: hidden;
     border-radius: 0.5rem;
@@ -96,19 +96,19 @@
 
 .expandedCard {
     width: 90%;
-    height: 95%;
+    height: 90%;
     color: #ffffff;
     overflow: hidden;
     /*overflow-x: hidden;*/
     /*overflow-y: scroll;*/
-    /*border-radius: 25px;*/
+    border-radius: 1.5rem;
     will-change: transform, width, height; /* Оптимизация под мобильный GPU */
     -webkit-overflow-scrolling: touch;
     /*background-color: t;*/
     display: grid;
     position: fixed; /* Fixed надежнее для модалок, чем absolute */
     inset: 2.5vh 5vw;  /* Современная замена top/left/width/height */
-    z-index: 1000;
+    z-index: 100;
     /*will-change: transform; !* Не перегружаем оптимизациями то, что не меняется *!*/
     /*border: 1px solid red;*/
 }

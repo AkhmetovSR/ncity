@@ -1,0 +1,64 @@
+.badgeContainer {
+    position: absolute;
+    /*top: calc(16px + env(safe-area-inset-top, 0px));*/
+    top: 2rem;
+    left: 1rem;
+    z-index: 10000;
+    /*border: 1px solid grey;*/
+}
+
+.badgeButton {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(24, 24, 27, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.51);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justifyContent: center;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* Компактный тултип для iOS под кнопкой */
+.iosTooltip {
+    position: fixed;
+    top: calc(66px + env(safe-area-inset-top, 0px));
+    right: 16px;
+    width: 260px;
+    background: #18181b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 12px 14px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+}
+
+.iosText {
+    font-size: 13px;
+    color: #e4e4e7;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.appleIcon {
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+/* Маленький стрелочка-указатель наверх, к кнопке */
+.tooltipArrow {
+    position: absolute;
+    top: -6px;
+    right: 14px;
+    width: 10px;
+    height: 10px;
+    background: #18181b;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    transform: rotate(45deg);
+}

@@ -2,6 +2,7 @@ import React from "react";
 import type { Metadata, Viewport } from "next";
 import Menu from "@/components/Menu/Menu";
 import s from "./layout.module.css";
+import PwaBadge from "@/components/PwaBadge/PwaBadge";
 
 // 🌟 СЕНЬОР-ФИКС 1: Жесткие настройки экрана для смартфонов (убираем зум и прыжки высоты)
 export const viewport: Viewport = {
@@ -10,17 +11,17 @@ export const viewport: Viewport = {
     initialScale: 1,
     maximumScale: 1,
     userScalable: false,   // Запрещает мобильный зум, интерфейс ощущается нативным
-    viewportFit: "cover",  // Разрешает контенту заходить под челку iPhone
+    // viewportFit: "cover",  // Разрешает контенту заходить под челку iPhone
 };
 
 // 🌟 СЕНЬОР-ФИКС 2: Метатеги PWA для iOS (Safari)
 export const metadata: Metadata = {
-    title: "Smart Job App",
+    title: "Нягань",
     description: "Мобильное приложение для поиска работы",
     appleWebApp: {
         capable: true,
         statusBarStyle: "black-translucent", // Контент элегантно заезжает под статус-бар
-        title: "SmartJob",
+        title: "Н",
     },
 };
 
@@ -38,6 +39,9 @@ export default function RootLayout({
         <div className={s.Menu}>
             <Menu/>
         </div>
+
+        {/* Рендерим кнопку установки в верхнем углу */}
+        <PwaBadge />
 
         {/* 🌟 СЕНЬОР-ФИКС 3: Нативная и безопасная регистрация Сервис-Воркера */}
         {/* Работает только на продакшене (Vercel), не мешает при разработке на localhost */}

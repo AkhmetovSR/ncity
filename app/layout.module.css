@@ -5,7 +5,8 @@
     width: 100%;
     display: grid;
     /*justify-items: center;*/
-    grid-template-rows: 88% 12%;
+    /*grid-template-rows: 88% 12%;*/
+    grid-template-rows: 90% 10%;
     border: 1px solid red;
     overflow: hidden;
     /*background-color: #2b2d30;*/

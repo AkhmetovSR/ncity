@@ -1,36 +1,37 @@
-.storeContainer {
-    /*background-color: #000000;*/
-    /*border: 2px solid red;*/
-    overflow: hidden;
-    /*align-items: start;*/
-    /* dvh гарантирует точную высоту на мобильных, игнорируя панели браузера */
-    width: 100%;
-    height: 100dvh;
-    /*background-color: #0f0f12; !* Современный глубокий темный фон *!*/
-    color: #ffffff;
-    display: grid;
-    /* Четко задаем пропорции: 15% титл, ~18% промо, остальное под сетку */
-    grid-template-rows: 10% 11% 1fr;
-    justify-items: center;
-    max-width: 480px; /* Ограничение под стандартный мобильный хэндсет */
-    /*padding: 16px 0;*/
-    /*box-sizing: border-box;*/
-    gap: 0.3rem; /* Аккуратные отступы между блоками */
-}
+/*.storeContainer {*/
+/*    !*background-color: #000000;*!*/
+/*    !*border: 2px solid red;*!*/
+/*    overflow: hidden;*/
+/*    !*align-items: start;*!*/
+/*    !* dvh гарантирует точную высоту на мобильных, игнорируя панели браузера *!*/
+/*    width: 100%;*/
+/*    height: 100dvh;*/
+/*    !*background-color: #0f0f12; !* Современный глубокий темный фон *!*!*/
+/*    color: #ffffff;*/
+/*    display: grid;*/
+/*    !* Четко задаем пропорции: 15% титл, ~18% промо, остальное под сетку *!*/
+/*    grid-template-rows: 10% 11% 1fr;*/
+/*    justify-items: center;*/
+/*    max-width: 480px; !* Ограничение под стандартный мобильный хэндсет *!*/
+/*    !*padding: 16px 0;*!*/
+/*    !*box-sizing: border-box;*!*/
+/*    gap: 0.3rem; !* Аккуратные отступы между блоками *!*/
+/*    !*border: 10px solid white;*!*/
+/*}*/
 
 /* Контейнер сетки*/
 .grid {
     display: grid;
-    height: 100%;
+    height: 95%;
     width: 85%;
     grid-template-columns: 1fr 1fr 1fr;
     align-content: start;
     /*flex-direction: column;*/
     gap: 0.3rem;
-    border: 1px solid red;
+    border: 1px solid white;
     overflow-y: scroll;
     overflow-x: hidden;
-    border-radius: 0.5rem;
+    border-radius: 1rem;
     /*grid-template-areas:*/
     /*"WidgetWaterBalance WidgetWaterBalance WidgetWaterBalance"*/
     /*"AI";*/
@@ -107,7 +108,7 @@
     /*background-color: t;*/
     display: grid;
     position: fixed; /* Fixed надежнее для модалок, чем absolute */
-    inset: 2.5vh 5vw;  /* Современная замена top/left/width/height */
+    inset: 5vh 5vw;  /* Современная замена top/left/width/height */
     z-index: 100;
     /*will-change: transform; !* Не перегружаем оптимизациями то, что не меняется *!*/
     /*border: 1px solid red;*/

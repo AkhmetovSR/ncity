@@ -14,3 +14,4 @@ export default function HomePage() {
         />
     );
 }
+// "dev": "next dev --experimental-https --hostname 192.168.0.100",

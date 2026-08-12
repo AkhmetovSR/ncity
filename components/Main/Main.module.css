@@ -11,15 +11,18 @@
     color: #ffffff;
     display: grid;
     /* Четко задаем пропорции: 15% титл, ~18% промо, остальное под сетку */
-    grid-template-rows: 10% 11% 79%;
+    grid-template-rows: auto 11% 77%;
     justify-items: center;
     max-width: 480px; /* Ограничение под стандартный мобильный хэндсет */
     /*padding: 16px 0;*/
     /*box-sizing: border-box;*/
-    gap: 0.3rem; /* Аккуратные отступы между блоками */
+    gap: 0.5rem; /* Аккуратные отступы между блоками */
     /* 🌟 СЕНЬОР-ФИКС: Наследуется всеми дочерними ссылками, кнопками и тегами div */
     -webkit-tap-highlight-color: transparent;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.storeContainer div{
+    /*border: 1px solid red;*/
 }
 
 /*!* Контейнер сетки*!*/

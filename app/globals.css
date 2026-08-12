@@ -20,7 +20,7 @@
 }
 @font-face {
   font-family: "BadScript";
-  src: url('/fonts/BadScript-Regular.ttf');
+  src: url('@/public/fonts/BadScript-Regular.ttf');
 }
 @font-face {
   font-family: "Klab";

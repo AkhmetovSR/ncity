@@ -7,7 +7,7 @@
     /*justify-items: center;*/
     /*grid-template-rows: 88% 12%;*/
     grid-template-rows: 90% 10%;
-    border: 1px solid red;
+    /*border: 1px solid red;*/
     overflow: hidden;
     /*background-color: #2b2d30;*/
     background-color: #09090b; /* Цвет фона вашего приложения */
@@ -37,5 +37,5 @@
     overflow: hidden;
     display: grid;
     justify-items: center;
-    border: 1px solid blue;
+    /*border: 1px solid blue;*/
 }

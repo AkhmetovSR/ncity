@@ -1,0 +1,65 @@
+/* ЯРКИЙ, СОЧНЫЙ ВИДЖЕТ В СТИЛЕ APPLE (Градиент «Морская волна») */
+.WidgetWaterBalance {
+    /*position: relative;*/
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*justify-content: space-between;*/
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Магическое свойство: делает высоту ВСЕГДА равной ширине */
+    padding: 16px;
+
+    /* Сочный градиент: от насыщенного синего к глубокому бирюзовому */
+    background: linear-gradient(135deg, #2f80ed 0%, #007aff 40%, #00c7be 100%);
+
+    border-radius: 1.5rem; /* Оригинальный суперэллипс Apple */
+    cursor: pointer;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+/* ЭФФЕКТ СТЕКЛЯННОЙ ОБЪЕМНОЙ ИКОНКИ (Glassmorphism) */
+.widgetIcon {
+    /*display: flex;*/
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    font-size: 24px; /* Размер эмодзи капли */
+
+    /* Белое полупрозрачное стекло, которое переливается на градиенте */
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    /*-webkit-backdrop-filter: blur(10px);*/
+
+    border-radius: 14px;
+}
+
+/* Текстовый контейнер */
+.widgetTextContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    /*z-index: 2;*/
+}
+
+/* Светлая аккуратная подпись (Caps) */
+.widgetLabel {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: rgba(255, 255, 255, 0.75); /* Белый с прозрачностью, чтобы не спорил с главным текстом */
+}
+
+/* Белоснежный контрастный заголовок */
+.widgetTitle {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #ffffff; /* Чистый белый для идеальной читаемости */
+    letter-spacing: -0.3px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Легкая читаемость на любом участке градиента */
+}

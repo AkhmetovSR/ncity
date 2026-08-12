@@ -1,0 +1,43 @@
+.lockOverlay {
+    display: none; /* По умолчанию экран скрыт */
+}
+
+/* 🌟 СЕНЬОР-ФИКС: Медиа-запрос срабатывает ТОЛЬКО при горизонтальном экране смартфона */
+@media (orientation: landscape) and (max-width: 1024px) {
+    .lockOverlay {
+        display: grid;
+        gap: 1rem;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #09090b; /* Темный фон вашего приложения */
+        z-index: 99999; /* Поверх всех меню и шторок BottomSheet */
+        /*flex-direction: column;*/
+        /*align-items: center;*/
+        justify-items: center;
+        color: #ffffff;
+        /*padding: 24px;*/
+        text-align: center;
+        /*border: 1px solid red;*/
+    }
+
+    .iconWrapper {
+        font-size: 48px;
+        display: grid;
+        align-items: end;
+    }
+    .icon{
+        animation: rotatePhone 2s ease-in-out infinite;
+    }
+    .title {
+        font-size: 22px;
+        font-weight: 600;
+    }
+}
+
+@keyframes rotatePhone {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(-90deg); }
+}

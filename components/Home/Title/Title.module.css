@@ -1,5 +1,5 @@
 .Title{
-    height: 100%;
+    /*height: auto;*/
     width: 80%;
     /*padding: 2% 5%;*/
     /*height: 5rem;*/
@@ -9,8 +9,8 @@
     /*padding-bottom: 0;*/
     /*padding: 2% 3%;*/
     /*border: 1px solid blue;*/
-    /*display: grid;*/
-    /*align-items: start;*/
+    display: grid;
+    align-items: end;
     /*justify-items: center;*/
     /*overflow: hidden;*/
     /*user-select: none;*/
@@ -19,20 +19,20 @@
     /*-ms-user-select: none; !* IE/Edge *!*/
     /*-webkit-user-drag: none;*/
     /*overflow: hidden;*/
-    /*border: 1px solid white;*/
+    /*border: 1px solid red;*/
 }
 .TitleContent{
     /*border: 1px solid red;*/
     /*width: 100%;*/
-    height: 100%;
+    /*height: 100%;*/
     /*margin-top: 2%;*/
     /*padding-left: 3%;*/
     display: grid;
-    align-content: center;
+    /*align-content: center;*/
     grid-template-columns: 1fr 1fr;
 }
 .Label{
-    height: 100%;
+    /*height: 100%;*/
     /*width: 100%;*/
     /*border: 1px solid blue;*/
     /*display: grid;*/
@@ -44,20 +44,20 @@
     height:  clamp(10.2px, 7vw, 78.4px);
     /*width: 2rem;*/
     /*overflow: hidden;*/
-    width: 60%;
+    /*width: 60%;*/
     /*height: 100%;*/
     /*padding-left: 20%;*/
     /*border: 1px solid red;*/
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /*grid-template-columns: 1fr 1fr;*/
     /*justify-items: end;*/
     /*align-items: start;*/
 }
 
 .Forest{
-    /*width: clamp(10.2px, 16vw, 78.4px);*/
+    width: clamp(10.2px, 16vw, 78.4px);
     /*height: 100%;*/
-
+    /*border: 1px solid red;*/
     background-image: url("/images/forest1.webp");
     /*background-position: right;*/
     background-size: contain;
@@ -70,17 +70,18 @@
     /*height: 100%;*/
     /*width: 100%;*/
     /*opacity: 40%;*/
+
 }
 
 .TitleCity {
     /*border: 1px solid blue;*/
-    height: 100%;
+    /*height: 100%;*/
     /*width: 60%;*/
     /*display: grid;*/
     /*align-items: center;*/
     font-family: var(--font-klab);
     font-size: clamp(10.2px, 8vw, 78.4px);
-    line-height: clamp(10.2px, 5vw, 78.4px);
+    line-height: 0.8;
     font-weight: bold;
     color: #b8b8b8;
     /*text-align: end;*/
@@ -90,13 +91,13 @@
 .Dobro{
     /*border: 1px solid red;*/
     font-family: var(--font-badScript);
-    font-size: clamp(10.2px, 4vw, 78.4px);
-    transform: rotate(-5deg);
+    font-size: clamp(10.2px, 3.7vw, 78.4px);
+    transform: rotate(-3deg);
     color: #FFFB7C;
     display: grid;
     align-content: center;
     text-align: center;
-    line-height: 1.2;
+    /*line-height: 1.2;*/
 }
 
 /*!* ==========================================*/

@@ -23,7 +23,7 @@ export interface CardData {
 }
 
 export const CARD_REGISTRY: Record<string, CardData> = {
-    'travel': { id: 'travel', widget: WidgetWaterBalance, cardComponent: WaterBalance },
+    'WidgetWaterBalance': { id: 'WidgetWaterBalance', widget: WidgetWaterBalance, cardComponent: WaterBalance },
     'coding': { id: 'coding', widget: AI, cardComponent: AI },
     'A': { id: 'A', widget: AI, cardComponent: A },
     'B': { id: 'B', widget: AI, cardComponent: B }

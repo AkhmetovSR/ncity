@@ -11,7 +11,7 @@ interface GridCardProps {
     children: React.ReactNode;
 }
 
-const TAP_ANIMATION = { scale: 0.96 };
+// const TAP_ANIMATION = { scale: 0.96 };
 // const CARD_TRANSITION = { type: 'spring', stiffness: 220, damping: 26 };
 
 export function GridCard({ id, gradient, setActiveId, children }: GridCardProps) {
@@ -30,7 +30,7 @@ export function GridCard({ id, gradient, setActiveId, children }: GridCardProps)
                 /* 🌟 Соединяем базовые стили карточки и класс квадратности */
                 className={`${s.cardBase} ${s.gridCard}`}
                 style={{ background: gradient }}
-                whileTap={TAP_ANIMATION}
+                // whileTap={TAP_ANIMATION}
                 // transition={CARD_TRANSITION}
             >
                 {children}

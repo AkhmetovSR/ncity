@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import Menu from "@/components/Menu/Menu";
 import s from "./layout.module.css";
 import PwaBadge from "@/components/PwaBadge/PwaBadge";
+import PlaceHolder from "@/components/UI/PlaceHolder/PlaceHolder";
 
 // 🌟 СЕНЬОР-ФИКС 1: Жесткие настройки экрана для смартфонов (убираем зум и прыжки высоты)
 export const viewport: Viewport = {
@@ -40,8 +41,11 @@ export default function RootLayout({
             <Menu/>
         </div>
 
+
+        {/* 🌟 Заглушка поворота для iOS Safari */}
+        <PlaceHolder />
         {/* Рендерим кнопку установки в верхнем углу */}
-        <PwaBadge />
+        {/*<PwaBadge />*/}
 
         {/* 🌟 СЕНЬОР-ФИКС 3: Нативная и безопасная регистрация Сервис-Воркера */}
         {/* Работает только на продакшене (Vercel), не мешает при разработке на localhost */}

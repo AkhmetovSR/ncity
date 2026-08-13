@@ -53,27 +53,19 @@ interface GridCardProps {
     children: React.ReactNode;
 }
 
-// Константы анимации вынесены за пределы компонента для производительности
 const TAP_ANIMATION = { scale: 0.96 };
-const CARD_TRANSITION = { type: 'spring', stiffness: 220, damping: 26 };
 
-/**
- * Интерактивный триггер сетки (GridCard)
- * Базируется на чистом SEO-компоненте <Link /> без перехвата кликов через preventDefault.
- */
-export function GridCard({ id, gradient, children }: GridCardProps) {
+export function GridCard({ id, children }: GridCardProps) {
     return (
         <Link
             href={`/card/${id}`}
             className={s.cardLink}
-            scroll={false} // КРИТИЧНО ДЛЯ PWA: Запрещаем прыгать по скроллу вверх при клике
+            scroll={false}
         >
             <motion.div
-                layoutId={`card-bg-${id}`}
                 className={`${s.cardBase} ${s.gridCard}`}
-                style={{ background: gradient }}
-                // whileTap={TAP_ANIMATION}
-                // transition={CARD_TRANSITION}
+                style={{ background: 'transparent', border: 'none', boxShadow: 'none' }} // Делаем прозрачным, так как фон теперь под ним
+                whileTap={TAP_ANIMATION}
             >
                 {children}
             </motion.div>

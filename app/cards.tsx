@@ -1,6 +1,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { VacancyListProps } from '@/components/Home/Job/VacancyList/VacancyList';
+import IA from "@/components/Home/AI/IA";
 
 // 1. Обычные пропсы для стандартных карточек
 interface DefaultPageProps {
@@ -24,9 +25,9 @@ export interface CardData {
 
 export const CARD_REGISTRY: Record<string, CardData> = {
     'WidgetWaterBalance': { id: 'WidgetWaterBalance', widget: WidgetWaterBalance, cardComponent: WaterBalance },
-    'coding': { id: 'coding', widget: AI, cardComponent: AI },
-    'A': { id: 'A', widget: AI, cardComponent: A },
-    'B': { id: 'B', widget: AI, cardComponent: B }
+    'coding': { id: 'coding', widget: AI, cardComponent: IA },
+    // 'A': { id: 'A', widget: AI, cardComponent: A },
+    // 'B': { id: 'B', widget: AI, cardComponent: B }
 };
 
 // 🌟 СЕНЬОР-РЕШЕНИЕ БЕЗ ANY:

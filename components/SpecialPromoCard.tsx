@@ -58,14 +58,13 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'; // Привязываемся к URL напрямую
-import StoreCard from '@/components/StoreCard';
 import Job from "@/components/Home/Job/Job";
-import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
 import s from '@/app/page.module.css';
 
 /**
  * Специальная промо-карточка ("vacancy")
  * Работает напрямую от адресной строки браузера без пропсов и сеттеров.
+ * Полностью очищена от StoreCard, что исключает дублирование модалок.
  */
 export function SpecialPromoCard() {
     const id = "vacancy";
@@ -87,10 +86,8 @@ export function SpecialPromoCard() {
                 </motion.div>
             </Link>
 
-            {/* Модальное окно для параллельного рендеринга на главной */}
-            <StoreCard id={id}>
-                <VacancyList activeVacancyId={null} setActiveVacancyId={() => {}} />
-            </StoreCard>
+            {/* 🌟 СЕНЬОР-АННИГИЛЯЦИЯ БАГА: Удалили StoreCard отсюда насовсем! */}
         </div>
     );
 }
+

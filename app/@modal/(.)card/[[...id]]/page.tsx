@@ -109,6 +109,7 @@
 import React, { use, useState } from 'react';
 import { motion } from 'framer-motion';
 import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
+import { PAGE_REGISTRY } from "@/app/cards"; // Импортируем ваш реестр страниц
 import s from '@/app/page.module.css'; // Используем ваши родные стили приложения
 
 interface Props {
@@ -117,16 +118,22 @@ interface Props {
 
 /**
  * Перехватчик маршрутов (Intercepting Route) для параллельного слота @modal.
- * Полностью нативный роутинг без ручного управления стейтами монтирования.
+ *
+ * Работает как единственная инстанция рендеринга модального окна на главной.
+ * Полностью исключает конфликт двойных монтирований и наложений фонов.
  */
 export default function ModalCardCatchAllPage({ params }: Props) {
+    // Безопасно разворачиваем асинхронные параметры роутера Next.js
     const resolvedParams = use(params);
     const pathSegments = resolvedParams.id || [];
+
+    // Сегмент 0 — ID карточки ('vacancy', 'travel', 'coding', 'A', 'B')
     const cardId = pathSegments[0] || null;
 
     // Локальный стейт для управления вложенной вакансией внутри модального списка
     const [activeVacancyId, setActiveVacancyId] = useState<string | null>(pathSegments[1] || null);
 
+    // Валидация разрешенных идентификаторов карточек для защиты от рендеринга мусора
     const validIds = ['vacancy', 'travel', 'coding', 'A', 'B'];
     if (cardId && !validIds.includes(cardId)) {
         return null; // Игнорируем рендер модалки для невалидных роутов
@@ -134,60 +141,69 @@ export default function ModalCardCatchAllPage({ params }: Props) {
 
     /**
      * Закрытие через нативную имитацию системной кнопки "Назад".
-     * Вызывает событие popstate, обеспечивая идентичное поведение с аппаратной кнопкой смартфона.
+     * Браузер стирает URL, Next.js убирает параллельный слот, а карточки возвращают видимость.
      */
     const handleClose = () => {
         if (typeof window !== 'undefined') {
-            window.history.back();
+            window.history.back(); // Имитируем системную кнопку "Назад"
         }
     };
+
+    // Динамически достаем нужный компонент страницы из вашего PAGE_REGISTRY
+    const ContentComponent = cardId ? PAGE_REGISTRY[cardId] : null;
 
     return (
         <>
             {/* Жестко блокируем жесты скролла подложки в iOS Safari, пока открыто окно */}
             <style dangerouslySetInnerHTML={{ __html: `body { overflow: hidden; touch-action: none; }` }} />
 
-            {/* Оверлей-бэкдроп на инлайн-стилях, чтобы не задеть ваш CSS */}
-            <motion.div
+            {/*
+              Прозрачный фиксированный контейнер для центрирования.
+              Клик по пустой области вокруг карточки нативно закроет модалку.
+            */}
+            <div
                 style={{
                     position: 'fixed',
                     inset: 0,
-                    backgroundColor: 'rgba(9, 9, 11, 0.4)',
-                    backdropFilter: 'blur(16px)',
-                    WebkitBackdropFilter: 'blur(16px)',
                     zIndex: 9999,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    padding: '1rem'
+                    padding: '1rem',
                 }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={handleClose} // Закрытие при клике по оверлею
+                onClick={handleClose}
             >
                 {/*
-                  Коробка окна.
-                  Использует ваш родной класс s.expandedCard и синхронизированный layoutId.
+                  Коробка модального окна.
+                  🌟 layoutId строго синхронизирован с `card-bg-${cardId}` из GridCard и SpecialPromoCard.
+                  Задаем коробке базовый цвет фона: для раздела 'coding' это глубокий зеленый #1A2F2A,
+                  а для вакансий или дефолтных страниц — черный #09090b.
+                  Framer Motion берет цвет/градиент исходного виджета и плавно переливает его в этот фон модалки.
                 */}
                 <motion.div
                     layoutId={`card-bg-${cardId}`}
                     className={s.expandedCard}
-                    onClick={(e) => e.stopPropagation()} // Защита от закрытия при клике на контент
+                    onClick={(e) => e.stopPropagation()} // Защита от закрытия при клике на контент внутри окна
                     transition={{ type: 'spring', stiffness: 220, damping: 26 }} // Родная пружина, как в GridCard
-                    style={{ position: 'relative', display: 'block' }}
+                    style={{
+                        position: 'relative',
+                        display: 'block',
+                        borderRadius: '24px', // Синхронизируем скругление с вашей cardBase
+                        overflow: 'hidden',   // Прячем острые края контента во время деформации пружины
+                        backgroundColor: cardId === 'coding' ? '#1A2F2A' : '#09090b'
+                    }}
                 >
-                    {/* Ваша кнопка закрытия */}
+                    {/* Ваша верхняя нативная кнопка-крестик для закрытия */}
                     <button className={s.closeButton} onClick={handleClose}>
                         ✕
                     </button>
 
                     {/* Ваш контейнер контента */}
                     <div className={s.contentWrapper}>
-                        {/* Контент плавно проявляется после раскрытия геометрии */}
+                        {/* Внутреннее содержимое плавно проявляется после раскрытия геометрии */}
                         <motion.div
                             initial={{ opacity: 0 }}
-                            animate={{ opacity: 1, transition: { delay: 0.12 } }}
+                            animate={{ opacity: 1, transition: { delay: 0.1 } }}
                             exit={{ opacity: 0 }}
                             style={{ height: '100%', width: '100%' }}
                         >
@@ -196,6 +212,9 @@ export default function ModalCardCatchAllPage({ params }: Props) {
                                     activeVacancyId={activeVacancyId}
                                     setActiveVacancyId={setActiveVacancyId}
                                 />
+                            ) : ContentComponent ? (
+                                /* Динамически рендерим ваш компонент IA / A / B, сохраняя его фон намертво */
+                                <ContentComponent isOpen={true} />
                             ) : (
                                 <div style={{ padding: '1rem', color: '#6b7280' }}>
                                     Раздел {cardId}
@@ -204,7 +223,7 @@ export default function ModalCardCatchAllPage({ params }: Props) {
                         </motion.div>
                     </div>
                 </motion.div>
-            </motion.div>
+            </div>
         </>
     );
 }

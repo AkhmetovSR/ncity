@@ -33,3 +33,5 @@ export interface Vacancy {
     education?: string;
     _id?: number;
 }
+
+//    "dev": "next dev --experimental-https --hostname 192.168.0.100",

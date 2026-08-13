@@ -114,7 +114,7 @@
     inset: 5vh 5vw;  /* Современная замена top/left/width/height */
     z-index: 100;
     /*will-change: transform; !* Не перегружаем оптимизациями то, что не меняется *!*/
-    /*border: 1px solid red;*/
+    border: 1px solid red;
 }
 
 
@@ -147,4 +147,101 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* components/modal.module.css */
+
+/* 1. Фиксированный бэкдроп на весь экран с размытием */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(9, 9, 11, 0.50); /* Темный полупрозрачный фон */
+    backdrop-filter: blur(20px);            /* Элегантное Apple размытие */
+    -webkit-backdrop-filter: blur(20px);    /* Поддержка размытия для iOS Safari */
+    z-index: 9999;                          /* Перекрывает весь интерфейс и меню */
+    display: flex;
+    align-items: center;                    /* Центрируем модалку по вертикали */
+    justify-content: center;                /* Центрируем модалку по горизонтали */
+    padding: 16px;                          /* Безопасный отступ на смартфонах */
+    box-sizing: border-box;
+}
+
+/* 2. Само модальное окно (коробка, которая вылетает из сетки) */
+.modal {
+    position: relative;                     /* Важно: не fixed и не absolute, чтобы пружина работала в контексте флекса */
+    width: 100%;
+    max-width: 480px;                       /* Идеальная PWA ширина для смартфонов и планшетов */
+    max-height: 85vh;                       /* Ограничиваем высоту, чтобы не вылезала за экран */
+    background: #09090b;                    /* Цвет фона карточки (темная тема) */
+    border-radius: 28px;                    /* Скругленные углы в стиле iOS */
+    border: 1px solid rgba(255, 255, 255, 0.08); /* Тонкая нативная обводка */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    overflow: hidden;                       /* Прячем контент, если он вылезает наружу при анимации */
+    display: flex;
+    flex-direction: column;
+}
+
+/* 3. Внутренний контейнер для разметки */
+.modalLayout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+/* 4. Шапка модального окна */
+.modalHeader {
+    padding: 24px 24px 12px 24px;
+}
+
+.modalTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.025em;
+    margin: 0;
+}
+
+/* 5. Область динамического контента со скроллом */
+.dynamicContent {
+    flex: 1;
+    overflow-y: auto;                       /* Разрешаем независимый скролл внутри списка вакансий */
+    padding: 0 24px 24px 24px;
+
+    /* Прячем дефолтный системный скроллбар для нативного PWA вида */
+    scrollbar-width: none;
+}
+
+.dynamicContent::-webkit-scrollbar {
+    display: none;                          /* Прячем скроллбар в Webkit (Safari/Chrome) */
+}
+
+/* 6. Нативная кнопка закрытия (крестик в углу) */
+.closeBtn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: #ffffff;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+    z-index: 10;
+}
+
+.closeBtn:active {
+    transform: scale(0.92);                 /* Тактильный отклик при нажатии на крестик */
+    background: rgba(255, 255, 255, 0.16);
 }

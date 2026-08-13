@@ -1,51 +1,95 @@
+// // app/components/SpecialPromoCard.tsx
+// 'use client';
+//
+// import { motion } from 'framer-motion';
+// import Link from 'next/link';
+// import StoreCard from '@/components/StoreCard';
+// import Job from "@/components/Home/Job/Job";
+// import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
+// import s from '@/app/page.module.css';
+//
+// interface SpecialPromoCardProps {
+//     activeId: string | null;
+//     setActiveId: (id: string | null) => void;
+//     activeVacancyId: string | null; // Изменено
+//     setActiveVacancyId: (id: string | null) => void; // Изменено
+// }
+//
+// export function SpecialPromoCard({
+//                                      activeId,
+//                                      setActiveId,
+//                                      activeVacancyId,
+//                                      setActiveVacancyId
+//                                  }: SpecialPromoCardProps) {
+//     const id = "vacancy";
+//     const isOpen = activeId === id;
+//
+//     return (
+//         <div className={s.VacancyCard}>
+//             <Link
+//                 href={`/card/${id}`}
+//                 className={s.cardLink}
+//                 onClick={(e) => {
+//                     if (e.metaKey || e.ctrlKey || e.button === 1) return;
+//                     e.preventDefault();
+//                     setActiveId(id);
+//                 }}
+//             >
+//                 {/* 🌟 Чтобы Framer Motion не сходил с ума, анимируем фон только когда карточка закрыта, либо убираем дубликат layoutId */}
+//                 <motion.div layoutId={`card-bg-${id}`} className={s.cardBase}>
+//                     {!isOpen && <Job />}
+//                 </motion.div>
+//             </Link>
+//
+//             <StoreCard id={id} activeId={activeId} setActiveId={setActiveId}>
+//                 {/* Передаем стейты управления внутрь списка */}
+//                 <VacancyList
+//                     activeVacancyId={activeVacancyId}
+//                     setActiveVacancyId={setActiveVacancyId}
+//                 />
+//             </StoreCard>
+//         </div>
+//     );
+// }
+
+// app/components/SpecialPromoCard.tsx
 'use client';
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation'; // Привязываемся к URL напрямую
 import StoreCard from '@/components/StoreCard';
 import Job from "@/components/Home/Job/Job";
 import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
 import s from '@/app/page.module.css';
 
-interface SpecialPromoCardProps {
-    activeId: string | null;
-    setActiveId: (id: string | null) => void;
-    activeVacancyId: string | null; // Изменено
-    setActiveVacancyId: (id: string | null) => void; // Изменено
-}
-
-export function SpecialPromoCard({
-                                     activeId,
-                                     setActiveId,
-                                     activeVacancyId,
-                                     setActiveVacancyId
-                                 }: SpecialPromoCardProps) {
+/**
+ * Специальная промо-карточка ("vacancy")
+ * Работает напрямую от адресной строки браузера без пропсов и сеттеров.
+ */
+export function SpecialPromoCard() {
     const id = "vacancy";
-    const isOpen = activeId === id;
+    const pathname = usePathname();
+
+    // Проверяем статус напрямую по URL. Если путь совпадает — карточка считается открытой.
+    const isOpen = pathname.startsWith(`/card/${id}`);
 
     return (
         <div className={s.VacancyCard}>
             <Link
                 href={`/card/${id}`}
                 className={s.cardLink}
-                onClick={(e) => {
-                    if (e.metaKey || e.ctrlKey || e.button === 1) return;
-                    e.preventDefault();
-                    setActiveId(id);
-                }}
+                scroll={false} // КРИТИЧНО ДЛЯ PWA: Запрещаем прыгать по скроллу вверх при клике
             >
-                {/* 🌟 Чтобы Framer Motion не сходил с ума, анимируем фон только когда карточка закрыта, либо убираем дубликат layoutId */}
                 <motion.div layoutId={`card-bg-${id}`} className={s.cardBase}>
+                    {/* Виджет плавно исчезает, когда URL меняется на /card/vacancy */}
                     {!isOpen && <Job />}
                 </motion.div>
             </Link>
 
-            <StoreCard id={id} activeId={activeId} setActiveId={setActiveId}>
-                {/* Передаем стейты управления внутрь списка */}
-                <VacancyList
-                    activeVacancyId={activeVacancyId}
-                    setActiveVacancyId={setActiveVacancyId}
-                />
+            {/* Модальное окно для параллельного рендеринга на главной */}
+            <StoreCard id={id}>
+                <VacancyList activeVacancyId={null} setActiveVacancyId={() => {}} />
             </StoreCard>
         </div>
     );

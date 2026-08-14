@@ -201,26 +201,26 @@ export default function ModalCardCatchAllPage({ params }: Props) {
                     {/* Ваш контейнер контента */}
                     <div className={s.contentWrapper}>
                         {/* Внутреннее содержимое плавно проявляется после раскрытия геометрии */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1, transition: { delay: 0.1 } }}
-                            exit={{ opacity: 0 }}
-                            style={{ height: '100%', width: '100%' }}
-                        >
-                            {cardId === 'vacancy' ? (
-                                <VacancyList
-                                    activeVacancyId={activeVacancyId}
-                                    setActiveVacancyId={setActiveVacancyId}
-                                />
-                            ) : ContentComponent ? (
-                                /* Динамически рендерим ваш компонент IA / A / B, сохраняя его фон намертво */
-                                <ContentComponent isOpen={true} />
-                            ) : (
-                                <div style={{ padding: '1rem', color: '#6b7280' }}>
-                                    Раздел {cardId}
-                                </div>
-                            )}
-                        </motion.div>
+                        {/*<motion.div*/}
+                        {/*    initial={{ opacity: 0 }}*/}
+                        {/*    animate={{ opacity: 1, transition: { delay: 0.1 } }}*/}
+                        {/*    exit={{ opacity: 0 }}*/}
+                        {/*    style={{ height: '100%', width: '100%' }}*/}
+                        {/*>*/}
+                        {/*    {cardId === 'vacancy' ? (*/}
+                        {/*        <VacancyList*/}
+                        {/*            activeVacancyId={activeVacancyId}*/}
+                        {/*            setActiveVacancyId={setActiveVacancyId}*/}
+                        {/*        />*/}
+                        {/*    ) : ContentComponent ? (*/}
+
+                        {/*        <ContentComponent isOpen={true} />*/}
+                        {/*    ) : (*/}
+                        {/*        <div style={{ padding: '1rem', color: '#6b7280' }}>*/}
+                        {/*            Раздел {cardId}*/}
+                        {/*        </div>*/}
+                        {/*    )}*/}
+                        {/*</motion.div>*/}
                     </div>
                 </motion.div>
             </div>

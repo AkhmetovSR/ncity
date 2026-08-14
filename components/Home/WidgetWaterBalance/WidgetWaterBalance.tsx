@@ -20,16 +20,16 @@ export default function WidgetWaterBalance() {
             whileTap={{ scale: 0.97 }}
             onClick={handleClick}
         >
-            {/* Маленькая аккуратная картинка-иконка */}
-            <div className={s.widgetIcon}>
-                💧
-            </div>
+            {/*/!* Маленькая аккуратная картинка-иконка *!/*/}
+            {/*<div className={s.widgetIcon}>*/}
+            {/*    💧*/}
+            {/*</div>*/}
 
-            {/* Текстовая группа внизу виджета */}
-            <div className={s.widgetTextContainer}>
-                <span className={s.widgetLabel}>Расчет ИЖС</span>
-                <h3 className={s.widgetTitle}>Баланс ВВ</h3>
-            </div>
+            {/*/!* Текстовая группа внизу виджета *!/*/}
+            {/*<div className={s.widgetTextContainer}>*/}
+            {/*    <span className={s.widgetLabel}>Расчет ИЖС</span>*/}
+            {/*    <h3 className={s.widgetTitle}>Баланс ВВ</h3>*/}
+            {/*</div>*/}
         </motion.div>
     );
 }

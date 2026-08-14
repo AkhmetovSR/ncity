@@ -97,7 +97,7 @@ export const viewport: Viewport = {
 
 // 🌟 СЕНЬОР-ФИКС 2: Метатеги PWA для iOS (Safari)
 export const metadata: Metadata = {
-    title: "Нягань",
+    title: "фыв",
     description: "Мобильное приложение для поиска работы",
     appleWebApp: {
         capable: true,

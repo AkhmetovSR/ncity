@@ -52,7 +52,8 @@ export default function VacancyGrid({ vacancies, loading = false }: VacancyGridP
                    Компонент VacancyList поймает этот URL декларативно и откроет нужную шторку.
                 */
                 <Link
-                    href={`?v=${vacancy.id}`} // 🌟 СЕНЬОР-ФИКС: Меняем query-параметр вместо сегмента пути
+                    key={vacancy.id || index} // 🌟 KEY ПЕРЕНОСИТСЯ СЮДА
+                    href={`/vacancy/${vacancy.id}`}
                     scroll={false}
                     className={s.vacancyCardLink}
                 >

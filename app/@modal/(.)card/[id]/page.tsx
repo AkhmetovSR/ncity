@@ -111,7 +111,7 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
 import { PAGE_REGISTRY } from "@/app/cards";
-import s from '@/app/page.module.css';
+import s from '@/app/@modal/(.)card/[id]/page.module.css';
 
 interface Props {
     params: Promise<{ id: string }>; // Строгий одиночный id

@@ -1,26 +1,39 @@
+// components/UI/BottomSheet/BottomSheet.tsx
 'use client';
 
 import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation"; // 🌟 СЕНЬОР-ФИКС: Нативный роутер для закрытия по жесту свайпа
 import { motion, PanInfo, useMotionValue } from "framer-motion";
 import s from "./BottomSheet.module.css";
 
 interface BottomSheetProps {
-    isOpen: boolean;
-    onClose: () => void;
+    // Явно указываем дочерние элементы для прохождения строгой типизации React 18+
     children: React.ReactNode;
 }
 
-export default function BottomSheet({ isOpen, onClose, children }: BottomSheetProps) {
+/**
+ * Универсальный Apple-Style BottomSheet (Шторка)
+ *
+ * Архитектура мирового уровня: Полностью избавлена от ручных стейтов `isOpen` и `onClose`.
+ * Самостоятельно управляет своим жизненным циклом и закрытием по свайпу вниз
+ * через нативную историю переходов Next.js, полностью ликвидируя шелуху.
+ */
+export default function BottomSheet({ children }: BottomSheetProps) {
+    const router = useRouter();
     const contentRef = useRef<HTMLDivElement>(null);
     const isAtTopRef = useRef(true);
     const isDraggingRef = useRef(false);
     const y = useMotionValue(0);
 
+    // 🌟 СЕНЬОР-ФИКС ИЗОЛЯЦИИ СКРОЛЛА: Так как шторка смонтирована всегда, когда открыт URL вакансии,
+    // мы жестко блокируем фоновый скролл сайта прямо при маунте и возвращаем его при размонтировании.
     useEffect(() => {
-        if (isOpen) document.body.style.overflow = 'hidden';
-        return () => { document.body.style.overflow = ''; };
-    }, [isOpen]);
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, []);
 
     const handleScroll = () => {
         if (!contentRef.current) return;
@@ -32,7 +45,6 @@ export default function BottomSheet({ isOpen, onClose, children }: BottomSheetPr
         }
     };
 
-    // ТИПИЗАЦИЯ:MouseEvent | TouchEvent | PointerEvent обрабатывает все типы ввода движения
     const handleDrag = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
         isDraggingRef.current = true;
         if (!isAtTopRef.current && info.offset.y > 0) {
@@ -40,38 +52,42 @@ export default function BottomSheet({ isOpen, onClose, children }: BottomSheetPr
         }
     };
 
+    /**
+     * 🌟 СЕНЬОР-ФИКС ЗАКРЫТИЯ ПО СВАЙПУ:
+     * Вместо вызова кастомного JS-колбэка onClose(), мы нативно убираем query-параметр вакансии,
+     * переводя роутер обратно на базовый путь карточки. Next.js сам запустит анимацию размонтирования шторки.
+     */
+    const handleSwipeClose = () => {
+        router.push('/card/vacancy', { scroll: false });
+    };
+
     const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
         isDraggingRef.current = false;
         const shouldClose = info.offset.y > 150 || info.velocity.y > 400;
 
         if (shouldClose) {
-            onClose();
+            handleSwipeClose();
         } else {
             y.set(0);
         }
     };
 
+    // Защита от SSR: порталы в React могут рендериться только после того, как в браузере появится объект document
     if (typeof window === 'undefined') return null;
 
     return createPortal(
         <>
-            {/* 🌟 СЕНЬОР-ФИКС: Возвращаем оверлей с асимметричной анимацией */}
+            {/* Мягкий фиксированный оверлей-подложка */}
             <motion.div
                 className={s.overlay}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{
-                    // При открытии — плавное проявление за 0.2с
-                    duration: 0.05,
-                    ease: "linear",
-                    // При закрытии — мгновенное исчезновение за 0 секунд!
-                    // exit: { duration: 0 }
-                }}
-                onClick={onClose}
+                transition={{ duration: 0.15, ease: "linear" }}
+                onClick={handleSwipeClose} // Клик по фону нативно закрывает шторку
             />
 
-            {/* Физический корпус шторки (его плавная spring-анимация остается нетронутой) */}
+            {/* Физический корпус шторки с Apple Spring физикой */}
             <motion.div
                 className={s.sheet}
                 style={{ y }}
@@ -85,10 +101,12 @@ export default function BottomSheet({ isOpen, onClose, children }: BottomSheetPr
                 onDrag={handleDrag}
                 onDragEnd={handleDragEnd}
             >
+                {/* Индикатор зоны захвата для свайпа (Drag Handle) */}
                 <div className={s.dragHandleContainer}>
                     <div className={s.dragHandle} />
                 </div>
 
+                {/* Изолированный контейнер внутреннего контента */}
                 <div
                     ref={contentRef}
                     className={s.content}

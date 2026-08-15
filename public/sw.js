@@ -1,18 +1,23 @@
-const CACHE_NAME = 'smart-job-cache-v1';
+// public/sw.js
+const CACHE_NAME = 'smart-job-cache-v2'; // 🌟 Повышаем версию при обновлении структуры кэша
 const ASSETS_TO_CACHE = [
     '/',
     '/favicon.ico',
-    // Сюда можно добавить статичные локальные шрифты или критичные иконки
 ];
 
 // Установка воркера и кэширование базовой статики
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-            return cache.addAll(ASSETS_TO_CACHE);
+            // Используем { Изменение: игнорируем ошибки отдельных файлов }, чтобы из-за одной пропавшей иконки не падал весь воркер
+            return Promise.allSettled(
+                ASSETS_TO_CACHE.map(url =>
+                    cache.add(url).catch(err => console.warn(`Не удалось закэшировать: ${url}`, err))
+                )
+            );
         })
     );
-    self.skipWaiting();
+    self.skipWaiting(); // Мгновенно активируем новый воркер, заменяя старый
 });
 
 // Активация и удаление старых версий кэша
@@ -21,18 +26,22 @@ self.addEventListener('activate', (event) => {
         caches.keys().then((keys) => {
             return Promise.all(
                 keys.map((key) => {
-                    if (key !== CACHE_NAME) return caches.delete(key);
+                    if (key !== CACHE_NAME) {
+                        console.log('Удален старый кэш:', key);
+                        return caches.delete(key);
+                    }
                 })
             );
         })
     );
-    self.clients.claim();
+    self.clients.claim(); // Мгновенно берем под контроль все открытые вкладки приложения
 });
 
-// Стратегия: Stale-While-Revalidate (Идеально для мобильного UI)
+// Стратегия: Stale-While-Revalidate с защитой от сбоев Next.js роутинга
 self.addEventListener('fetch', (event) => {
-    // Не кэшируем запросы к API, внешние метрики и POST-запросы
+    // 🌟 СЕНЬОР-ФИКС: Исключаем запросы Next.js сборщика (_next/webpack-hmr), API, метрики и POST-методы
     if (
+        event.request.url.includes('/_next/webpack-hmr') ||
         event.request.url.includes('/api/') ||
         !event.request.url.startsWith(self.location.origin) ||
         event.request.method !== 'GET'
@@ -43,17 +52,23 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.open(CACHE_NAME).then((cache) => {
             return cache.match(event.request).then((cachedResponse) => {
-                const fetchedResponse = fetch(event.request).then((networkResponse) => {
-                    // Обновляем кэш свежим ответом из сети
-                    if (networkResponse.status === 200) {
-                        cache.put(event.request, networkResponse.clone());
-                    }
-                    return networkResponse;
-                }).catch(() => {
-                    // Офлайн: если сеть упала, а в кэше ничего нет, можно вернуть дефолтную заглушку
-                });
+                const fetchedResponse = fetch(event.request)
+                    .then((networkResponse) => {
+                        // Обновляем кэш только валидными ответами (статус 200, тип 'basic' — наш домен)
+                        if (networkResponse.status === 200 && networkResponse.type === 'basic') {
+                            cache.put(event.request, networkResponse.clone());
+                        }
+                        return networkResponse;
+                    })
+                    .catch((err) => {
+                        // Офлайн-заглушка: если сеть недоступна, возвращаем закэшированный корень для SPA-навигации
+                        if (event.request.mode === 'navigate') {
+                            return cache.match('/');
+                        }
+                        throw err;
+                    });
 
-                // Возвращаем кэш мгновенно, если он есть, иначе ждем сеть
+                // Возвращаем кэш мгновенно, если он есть, иначе берем из сети
                 return cachedResponse || fetchedResponse;
             });
         })

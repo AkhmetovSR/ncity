@@ -55,20 +55,28 @@
 // app/components/SpecialPromoCard.tsx
 'use client';
 
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation'; // Привязываемся к URL напрямую
+import { usePathname } from 'next/navigation';
 import Job from "@/components/Home/Job/Job";
-import s from '@/app/page.module.css';
+import s from '@/components/SpecialPromoCard.module.css';
 
 /**
  * Специальная промо-карточка ("vacancy")
- * Работает напрямую от адресной строки браузера без пропсов и сеттеров.
- * Полностью очищена от StoreCard, что исключает дублирование модалок.
+ * Работает напрямую от адресной строки браузера без пропсов и локального стейта видимости.
  */
 export function SpecialPromoCard() {
     const id = "vacancy";
     const pathname = usePathname();
+
+    // 🌟 СЕНЬОР-ФИКС ГИДРАТАЦИИ: Флаг, указывающий, что компонент успешно смонтировался на клиенте.
+    // На сервере (SSR) он всегда равен false. Это предотвращает расхождения HTML между сервером и клиентом.
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     // Проверяем статус напрямую по URL. Если путь совпадает — карточка считается открытой.
     const isOpen = pathname.startsWith(`/card/${id}`);
@@ -81,13 +89,20 @@ export function SpecialPromoCard() {
                 scroll={false} // КРИТИЧНО ДЛЯ PWA: Запрещаем прыгать по скроллу вверх при клике
             >
                 <motion.div layoutId={`card-bg-${id}`} className={s.cardBase}>
-                    {/* Виджет плавно исчезает, когда URL меняется на /card/vacancy */}
-                    {!isOpen && <Job />}
+                    {/*
+                      🌟 СЕНЬОР-ФИКС: Управляем видимостью виджета на основе гидратации.
+                      1. До маунта (на сервере и при первой отрисовке) всегда рендерим <Job />,
+                         чтобы поисковые роботы (SEO) и первый кадр рендеринга видели валидный HTML.
+                      2. После маунта (isMounted === true) скрываем виджет только если роут совпадает (isOpen === true).
+                      3. Перенесли условное скрытие на CSS-класс (s.widgetHidden), чтобы DOM-структура
+                         (количество тегов и их порядок) оставалась неизменной. Это гарантирует 100% стабильность гидратации Next.js
+                         и бесконфликтную работу анимаций `layoutId` во Framer Motion.
+                    */}
+                    <div className={(isMounted && isOpen) ? s.widgetHidden : s.widgetVisible}>
+                        <Job />
+                    </div>
                 </motion.div>
             </Link>
-
-            {/* 🌟 СЕНЬОР-АННИГИЛЯЦИЯ БАГА: Удалили StoreCard отсюда насовсем! */}
         </div>
     );
 }
-

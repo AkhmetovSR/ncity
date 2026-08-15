@@ -80,9 +80,9 @@
 // app/layout.tsx
 import React from "react";
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import Menu from "@/components/Menu/Menu";
 import s from "./layout.module.css";
-import PwaBadge from "@/components/PwaBadge/PwaBadge";
 import PlaceHolder from "@/components/UI/PlaceHolder/PlaceHolder";
 
 // 🌟 СЕНЬОР-ФИКС 1: Жесткие настройки экрана для смартфонов (убираем зум и прыжки высоты)
@@ -126,33 +126,25 @@ export default function RootLayout({
 
         {/* 🌟 Заглушка поворота для iOS Safari */}
         <PlaceHolder />
-        {/* Рендерим кнопку установки в верхнем углу */}
-        {/*<PwaBadge />*/}
 
-        {/* 🌟 СЕНЬОР-ФИКС 3: Нативная и безопасная регистрация Сервис-Воркера */}
-        {/* Работает только на продакшене (Vercel), не мешает при разработке на localhost */}
-        <script
-            dangerouslySetInnerHTML={{
-                __html: `
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                    // Очищаем старые воркеры перед регистрацией, чтобы избежать конфликтов на Vercel
-                    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                        for(let registration of registrations) {
-                            registration.unregister();
-                        }
+        {/* 🌟 СЕНЬОР-ФИКС 3: Оптимизированная регистрация Сервис-Воркера через Next.js Script */}
+        {/* Не блокирует основной поток рендеринга интерфейса (strategy="afterInteractive") */}
+        {/* Удален деструктивный сброс кэша unregister(), убивавший оффлайн-режим */}
+        <Script id="register-pwa-sw" strategy="afterInteractive">
+            {`
+                if ('serviceWorker' in navigator) {
+                    window.addEventListener('load', function() {
+                        navigator.serviceWorker.register('/sw.js')
+                            .then(function(reg) {
+                                console.log('ServiceWorker успешно зарегистрирован:', reg.scope);
+                            })
+                            .catch(function(err) {
+                                console.error('Ошибка ServiceWorker:', err);
+                            });
                     });
-
-                    navigator.serviceWorker.register('/sw.js').then(function(reg) {
-                        console.log('ServiceWorker успешно зарегистрирован:', reg.scope);
-                    }).catch(function(err) {
-                        console.error('Ошибка ServiceWorker:', err);
-                    });
-                });
-            }
-        `,
-            }}
-        />
+                }
+            `}
+        </Script>
         </body>
         </html>
     );

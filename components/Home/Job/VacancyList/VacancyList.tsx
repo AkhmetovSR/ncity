@@ -1,29 +1,28 @@
+// components/Home/Job/VacancyList/VacancyList.tsx
 'use client';
 
 import React, { useEffect, useMemo } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation"; // 🌟 СЕНЬОР-ФИКС: Нативное чтение query-параметров
 import s from '@/components/Home/Job/VacancyList/VacancyList.module.css';
 import { motion, AnimatePresence } from "framer-motion";
 import VacancyInfo from "@/components/Home/Job/VacancyInfo/VacancyInfo";
 import VacancyGrid from "./VacancyGrid";
 import { useVacancies } from "@/hooks/useVacancies";
 
-export interface VacancyListProps {
-    // 🌟 СЕНЬОР-ФИКС: Больше никаких локальных стейтов и старых хуков.
-    // Данные роутинга приходят из единого источника правды (Main -> SpecialPromoCard -> VacancyList)
-    activeVacancyId: string | null;
-    setActiveVacancyId: (id: string | null) => void;
-}
-
-export default function VacancyList({ activeVacancyId, setActiveVacancyId }: VacancyListProps) {
+export default function VacancyList() { // 🌟 Больше никаких пропсов сверху! Компонент полностью автономен.
     const { vacancies, loading, error, handleRetry } = useVacancies();
 
-    // Синхронизация темы оформления (ваша оригинальная логика)
+    // 🌟 Нативно достаем ID вакансии из URL (?v=123)
+    const searchParams = useSearchParams();
+    const activeVacancyId = searchParams.get('v');
+
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' || 'dark';
         document.documentElement.setAttribute('data-theme', savedTheme);
     }, []);
 
-    // Поиск выбранной вакансии для передачи в шторку VacancyInfo
+    // Поиск выбранной вакансии
     const selectedVacancy = useMemo(() => {
         if (!activeVacancyId) return null;
         return vacancies.find(v => String(v.id) === activeVacancyId) || null;
@@ -35,59 +34,44 @@ export default function VacancyList({ activeVacancyId, setActiveVacancyId }: Vac
         <motion.div
             className={s.contentWrapper}
             animate={{
-                // Красивый эффект уменьшения контента списка, когда поверх открывается карточка VacancyInfo
                 scale: isVacancyOpen ? 0.95 : 1,
                 y: isVacancyOpen ? "-10px" : "0px",
-                // borderRadius: isVacancyOpen ? "24px" : "0px",
             }}
             transition={{ type: "spring", damping: 30, stiffness: 240 }}
         >
             <div className={s.vacancyList}>
                 <AnimatePresence mode="wait">
-
-                    {loading && (
-                        <VacancyGrid vacancies={[]} onCardClick={() => {}} loading={true} />
-                    )}
+                    {loading && <VacancyGrid vacancies={[]} loading={true} />}
 
                     {!loading && error && (
-                        <motion.div
-                            key="error"
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0 }}
-                            className={s.errorBlock}
-                        >
-                            <div className={s.errorIcon}>{error.type === 'network' ? '🌐' : '⚠️'}</div>
-                            <h4 className={s.errorTitle}>{error.type === 'network' ? 'Проблема с соединением' : 'Ошибка сервера'}</h4>
-                            <p className={s.errorText}>{error.message}</p>
-                            <button className={s.retryButton} onClick={handleRetry}>Повторить попытку</button>
-                        </motion.div>
-                    )}
-
-                    {!loading && !error && vacancies.length === 0 && (
-                        <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={s.noVacancies}>
-                            Список вакансий пуст
-                        </motion.div>
+                        <div className={s.errorBlock}>
+                            <button className={s.retryButton} onClick={handleRetry}>Повторить</button>
+                        </div>
                     )}
 
                     {!loading && !error && vacancies.length > 0 && (
-                        <VacancyGrid
-                            vacancies={vacancies}
-                            // При клике на карточку прокидываем ID в глобальный роутинг
-                            onCardClick={(vacancy) => setActiveVacancyId(String(vacancy.id))}
-                        />
+                        <VacancyGrid vacancies={vacancies} />
                     )}
-
                 </AnimatePresence>
             </div>
 
             {/* Шторка детальной информации о вакансии (уровень 2) */}
             <AnimatePresence>
                 {isVacancyOpen && selectedVacancy && (
-                    <VacancyInfo
-                        vacancy={selectedVacancy}
-                        onClose={() => setActiveVacancyId(null)}
-                    />
+                    /*
+                       🌟 СЕНЬОР-ФИКС ЗАКРЫТИЯ ШТОРКИ:
+                       Просто убираем query-параметр из адресной строки, ведя ссылку на базовый роут модалки.
+                       Next.js мгновенно и без перезагрузок уберет шторку, запустив плавный exit-эффект.
+                    */
+                    <VacancyInfo vacancy={selectedVacancy}>
+                        <Link
+                            href="/card/vacancy"
+                            className={s.closeVacancyLink}
+                            scroll={false}
+                        >
+                            ✕
+                        </Link>
+                    </VacancyInfo>
                 )}
             </AnimatePresence>
         </motion.div>

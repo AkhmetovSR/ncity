@@ -1,0 +1,34 @@
+.VacancyCard{
+    height: 100%;
+    width: 85%;
+    /*border: 1px solid white;*/
+    display: grid;
+    /*grid-template-rows: 1fr;*/
+    /*border: 1px solid red;*/
+}.cardLink {
+    height: 100%;
+    width: 100%;
+    text-decoration: none;
+    /*border: 3px solid red;*/
+    display: grid;
+}
+/* app/page.module.css */
+
+/* Контент виджета в обычном (открытом) состоянии */
+.widgetVisible {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    width: 100%;
+    height: 100%;
+}
+
+/* Контент плавно исчезает, когда карточка разворачивается, освобождая место модалке */
+.widgetHidden {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease-in-out, visibility 0.15s ease-in-out;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Исключаем случайные клики по скрытым элементам */
+}

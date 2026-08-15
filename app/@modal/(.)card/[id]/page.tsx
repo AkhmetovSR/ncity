@@ -1,0 +1,158 @@
+// // app/@modal/(.)card/{{...id]]/page.tsx
+// 'use client';
+//
+// import React, { use, useState } from 'react';
+// import { useRouter } from 'next/navigation';
+// import { motion, AnimatePresence } from 'framer-motion';
+// import s from '@/components/modal.module.css'; // Путь к твоим CSS Modules модалки
+//
+// interface Props {
+//     params: Promise<{ id?: string[] }>;
+// }
+//
+// export default function ModalCardCatchAllPage({ params }: Props) {
+//     // Разворачиваем асинхронные параметры роутера Next.js
+//     const resolvedParams = use(params);
+//     const pathSegments = resolvedParams.id || [];
+//
+//     // Вытаскиваем сегменты роута в точности по твоей логике (id — это массив строк)
+//     const cardId = pathSegments[0] || null;
+//     const vacancyId = pathSegments[1] || null;
+//
+//     const router = useRouter();
+//
+//     // Локальный стейт для управления плавным закрытием во Framer Motion
+//     const [mounted, setMounted] = useState(true);
+//
+//     // Полная копия твоей валидации ID
+//     const validIds = ['vacancy', 'travel', 'coding', 'A', 'B'];
+//     if (cardId && !validIds.includes(cardId)) {
+//         return null; // Если ID невалидный, модалка не перехватывает роут
+//     }
+//
+//     const handleClose = () => {
+//         setMounted(false); // Запускаем exit-анимацию сжатия карточки
+//     };
+//
+//     const onAnimationComplete = () => {
+//         if (!mounted) {
+//             // Очищаем адресную строку роутера, возвращая на главную '/'
+//             // replace предотвращает бесконечные дубли в истории браузера
+//             router.replace('/', { scroll: false });
+//         }
+//     };
+//
+//     return (
+//         <AnimatePresence onExitComplete={onAnimationComplete}>
+//             {mounted && (
+//                 <>
+//                     {/* Сеньор-фикс: Блокируем жесты скролла подложки в iOS Safari, пока открыто окно */}
+//                     <style dangerouslySetInnerHTML={{ __html: `body { overflow: hidden; touch-action: none; }` }} />
+//
+//                     {/* Задний размытый фон (Оверлей) */}
+//                     <motion.div
+//                         className={s.overlay}
+//                         initial={{ opacity: 0 }}
+//                         animate={{ opacity: 1 }}
+//                         exit={{ opacity: 0 }}
+//                         onClick={handleClose}
+//                     >
+//                         {/*
+//                           Коробка модального окна.
+//                           layoutId связывает ее с id нажатой карточки для эффекта расширения.
+//                         */}
+//                         <motion.div
+//                             layoutId={`card-${cardId}`}
+//                             className={s.modal}
+//                             onClick={(e) => e.stopPropagation()}
+//                             transition={{ type: 'spring', stiffness: 300, damping: 30 }} // Apple-style пружина
+//                         >
+//                             <div className={s.modalLayout}>
+//                                 <div className={s.modalHeader}>
+//                                     <h2 className={s.modalTitle}>
+//                                         {cardId === 'vacancy' ? 'Детали вакансии' : `Карточка: ${cardId}`}
+//                                     </h2>
+//                                     <p className={s.modalDesc}>Идентификатор: {vacancyId || 'Общий раздел'}</p>
+//                                 </div>
+//
+//                                 {/* Внутреннее содержимое плавно проявляется после раскрытия геометрии */}
+//                                 <motion.div
+//                                     initial={{ opacity: 0 }}
+//                                     animate={{ opacity: 1, transition: { delay: 0.12 } }}
+//                                     exit={{ opacity: 0 }}
+//                                     className={s.dynamicContent}
+//                                 >
+//                                     <div style={{ padding: '1.5rem', background: '#f3f4f6', borderRadius: '1.5rem', color: '#1f2937' }}>
+//                                         <h4>💼 Интеграция с базой данных успешна</h4>
+//                                         <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', lineHeight: 1.5 }}>
+//                                             Здесь ты отрендеришь контент для типа карточки <b>{cardId}</b>.
+//                                             Если передан ID вакансии (<b>{vacancyId}</b>), сюда можно вставить компонент детального просмотра вакансии с откликом.
+//                                         </p>
+//                                     </div>
+//                                 </motion.div>
+//                             </div>
+//
+//                             <button onClick={handleClose} className={s.closeBtn}>
+//                                 Закрыть окно
+//                             </button>
+//                         </motion.div>
+//                     </motion.div>
+//                 </>
+//             )}
+//         </AnimatePresence>
+//     );
+// }
+
+// app/@modal/(.)card/[id]/page.tsx
+'use client';
+
+import React, { use } from 'react';
+import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
+import { PAGE_REGISTRY } from "@/app/cards";
+import s from '@/app/page.module.css';
+
+interface Props {
+    params: Promise<{ id: string }>; // Строгий одиночный id
+}
+
+const VALID_CARD_IDS = new Set(['vacancy', 'travel', 'coding', 'A', 'B']);
+
+export default function ModalCardPage({ params }: Props) {
+    const router = useRouter();
+    const resolvedParams = use(params);
+    const cardId = resolvedParams.id;
+
+    if (!cardId || !VALID_CARD_IDS.has(cardId)) return null;
+
+    const ContentComponent = PAGE_REGISTRY[cardId] || null;
+
+    return (
+        <>
+            <style dangerouslySetInnerHTML={{ __html: `body { overflow: hidden !important; touch-action: none !important; }` }} />
+
+            <motion.div className={s.modalOverlay} onClick={() => router.back()}>
+                <motion.div
+                    layoutId={`card-bg-${cardId}`}
+                    className={s.expandedCard}
+                    onClick={(e) => e.stopPropagation()}
+                    transition={{ type: 'spring', stiffness: 220, damping: 26 }}
+                    style={{ backgroundColor: cardId === 'coding' ? '#1A2F2A' : '#09090b' }}
+                >
+                    <button className={s.closeButton} onClick={() => router.back()}>✕</button>
+
+                    <div className={s.contentWrapper}>
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { delay: 0.12 } }}>
+                            {cardId === 'vacancy' ? (
+                                <VacancyList /> // 🌟 Больше не передаем никаких пропсов вниз!
+                            ) : ContentComponent ? (
+                                <ContentComponent isOpen={true} />
+                            ) : null}
+                        </motion.div>
+                    </div>
+                </motion.div>
+            </motion.div>
+        </>
+    );
+}

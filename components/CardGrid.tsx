@@ -63,14 +63,14 @@
 //     );
 // }
 
-// // app/components/CardGrid.tsx
+// app/components/CardGrid.tsx
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
-import s from '@/app/page.module.css'; // Используем ваш единый модуль стилей
+import s from '@/components/CardGrid.module.css';
 
 interface CardItem {
     id: string;
@@ -84,12 +84,20 @@ interface CardGridProps {
 export function CardGrid({ cards }: CardGridProps) {
     const pathname = usePathname();
 
+    // 🌟 СЕНЬОР-ФИКС ГИДРАТАЦИИ: Флаг для синхронизации состояния сервера и клиента.
+    // Предотвращает падение React из-за несовпадения HTML при первом рендере динамического пути.
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
     return (
         <div className={s.grid}>
             {cards.map((card) => {
                 const WidgetComponent = card.widget;
 
-                // Безопасная проверка: строгое совпадение сегмента, а не просто startsWith
+                // Строгая проверка пути для предотвращения ложных срабатываний на схожих ID карточек
                 const isOpen = pathname === `/card/${card.id}` || pathname.startsWith(`/card/${card.id}/`);
 
                 return (
@@ -97,20 +105,27 @@ export function CardGrid({ cards }: CardGridProps) {
                         <Link
                             href={`/card/${card.id}`}
                             className={s.cardLink}
-                            scroll={false} // КРИТИЧНО ДЛЯ PWA: предотвращает прыжки экрана
+                            scroll={false} // КРИТИЧНО ДЛЯ PWA: предотвращает прыжки экрана и сброс скролла на мобильных устройствах
                         >
-                            {/* motion.div теперь является реальным контейнером карточки, как в SpecialPromoCard */}
+                            {/*
+                              🌟 СЕНЬОР-ФИКС СЛОЕВ: Контейнер motion.div имеет стабильные размеры и геометрию,
+                              что позволяет Framer Motion корректно интерполировать координаты при закрытии шторки обратно в сетку.
+                            */}
                             <motion.div
                                 layoutId={`card-bg-${card.id}`}
                                 className={s.cardBase}
                                 transition={{ type: 'spring', stiffness: 220, damping: 26 }}
                             >
-                                {/* Контент плавно скрывается только при открытии, освобождая место под анимацию */}
-                                {!isOpen && (
-                                    <div className={s.widgetFadeContainer}>
-                                        <WidgetComponent isOpen={false} />
-                                    </div>
-                                )}
+                                {/*
+                                  🌟 СЕНЬОР-АННИГИЛЯЦИЯ БАГА ГИДРАТАЦИИ И АНИМАЦИИ ЗАКРЫТИЯ:
+                                  1. Вместо жесткого удаления `{!isOpen && ...}` мы сохраняем узел в DOM-дереве всегда.
+                                     Если удалить узел из DOM во время смены URL, Framer Motion не сможет построить обратную анимацию
+                                     к уменьшенному виджету, из-за чего карточка при закрытии будет мгновенно исчезать с белым мерцанием.
+                                  2. Переключаем видимость через CSS-классы на основе гидратации (isMounted). До маунта виджет всегда видим.
+                                */}
+                                <div className={(isMounted && isOpen) ? s.widgetHidden : s.widgetVisible}>
+                                    <WidgetComponent isOpen={false} />
+                                </div>
                             </motion.div>
                         </Link>
                     </div>

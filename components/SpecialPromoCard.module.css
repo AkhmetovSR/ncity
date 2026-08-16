@@ -4,8 +4,12 @@
     /*border: 1px solid white;*/
     display: grid;
     /*grid-template-rows: 1fr;*/
+    /*border: 1px solid red;*/
+}
+.cardBase{
     border: 1px solid red;
-}.cardLink {
+}
+.cardLink {
     height: 100%;
     width: 100%;
     text-decoration: none;
@@ -21,6 +25,8 @@
     transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
     width: 100%;
     height: 100%;
+    background-color: #0a84ff;
+    border-radius: 1.5rem;
 }
 
 /* Контент плавно исчезает, когда карточка разворачивается, освобождая место модалке */
@@ -29,6 +35,8 @@
     visibility: hidden;
     transition: opacity 0.15s ease-in-out, visibility 0.15s ease-in-out;
     width: 100%;
-    height: 100%;
+    /*height: 100%;*/
     pointer-events: none; /* Исключаем случайные клики по скрытым элементам */
+    border-radius: 2rem;
+    height: 50%;
 }

@@ -25,7 +25,7 @@
     inset: 5vh 5vw;  /* Современная замена top/left/width/height */
     z-index: 100;
     /*will-change: transform; !* Не перегружаем оптимизациями то, что не меняется *!*/
-    border: 1px solid red;
+    /*border: 1px solid red;*/
 }
 @media (min-width: 768px) {
     .expandedCard {

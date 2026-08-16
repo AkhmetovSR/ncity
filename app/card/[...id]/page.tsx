@@ -4,6 +4,9 @@ import Main from "@/components/Main/Main"; // Наше интерактивно�
 
 export default function CardCatchAllPage() {
     return (
-        <Main/>
+        <Main
+            initialActiveId={null}
+            initialVacancyId={null}
+        />
     );
 }

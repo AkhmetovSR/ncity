@@ -1,47 +1,45 @@
 // hooks/useAppHistory.ts
 'use client';
 
-import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import { useLayoutEffect, useRef } from 'react';
 
 interface HistoryStates {
     setActiveId: (id: string | null) => void;
     setActiveVacancyId: (id: string | null) => void;
 }
 
-/**
- * 🌟 КАНОНИЧЕСКИЙ ХУК НАВИГАЦИИ (ПОЛНЫЙ СЕНЬОР-ФИКС):
- * Работает СТРОГО на чтение нативного URL от Next.js [INDEX].
- * Никаких костыльных pushState и popstate [INDEX].
- * Роутер изменил URL -> хук синхронно обновил стейт для запуска Framer Motion [INDEX].
- */
 export function useAppHistory({ setActiveId, setActiveVacancyId }: HistoryStates) {
     const params = useParams();
+    const prevParamsRef = useRef<string | null>(null);
 
-    useEffect(() => {
-        // Канонично забираем сегменты динамического пути Next.js [INDEX]
-        const pathSegments = (params?.id as string[]) || [];
+    // --- ИСПОЛЬЗУЕМ useLayoutEffect ВМЕСТО useEffect ---
+    // useLayoutEffect срабатывает СИНХРОННО после всех DOM-мутаций,
+    // но ДО того, как браузер отрисует кадр
+    useLayoutEffect(() => {
+        const segments = Array.isArray(params?.id) ? params.id : params?.id ? [params.id] : [];
+        const cardId = segments[0] || null;
+        const vacancyId = segments[1] || null;
 
-        // segments[0] — это ID карточки, segments[1] — это ID вакансии
-        const cardId = pathSegments[0] || null;
-        const vacancyId = pathSegments[1] || null;
+        // Сравниваем с предыдущим значением, чтобы избежать лишних обновлений
+        const currentKey = `${cardId}-${vacancyId}`;
+        if (prevParamsRef.current === currentKey) return;
+        prevParamsRef.current = currentKey;
 
-        // Синхронно прокидываем их в стейт презентационного ядра Main [INDEX]
+        // СИНХРОННО обновляем стейты
         setActiveId(cardId);
         setActiveVacancyId(vacancyId);
 
-        // Декларативно блокируем скролл body при любой открытой шторке
-        if (cardId) {
-            document.body.classList.add('no-scroll');
-        } else {
-            document.body.classList.remove('no-scroll');
-        }
+        // Блокировка скролла
+        document.body.style.overflow = cardId ? 'hidden' : '';
 
-        return () => document.body.classList.remove('no-scroll');
+        return () => {
+            document.body.style.overflow = '';
+        };
     }, [params, setActiveId, setActiveVacancyId]);
 
-    // Отключение деструктивного кэша скролла Next.js для SPA-эффекта
-    useEffect(() => {
+    // Отключаем скролл-рестор
+    useLayoutEffect(() => {
         if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';
         }

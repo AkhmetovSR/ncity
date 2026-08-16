@@ -4,7 +4,7 @@
     /*border: 1px solid white;*/
     display: grid;
     /*grid-template-rows: 1fr;*/
-    /*border: 1px solid red;*/
+    border: 1px solid red;
 }.cardLink {
     height: 100%;
     width: 100%;

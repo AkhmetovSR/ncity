@@ -183,7 +183,7 @@
 //     );
 // }
 
-// components/StoreCard.tsx
+// /components/StoreCard.tsx
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';

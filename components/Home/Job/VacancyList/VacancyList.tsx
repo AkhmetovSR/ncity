@@ -1,12 +1,16 @@
 // components/Home/Job/VacancyList/VacancyList.tsx
 'use client';
 
-import React, { useEffect } from "react";
-import s from './VacancyList.module.css';
+import s from '@/components/Home/Job/VacancyList/VacancyList.module.css';
 import { motion, AnimatePresence } from "framer-motion";
 import VacancyGrid from "./VacancyGrid";
 import { useVacancies } from "@/hooks/useVacancies";
 
+// 🔥 ДОБАВЛЯЕМ ЭКСПОРТ ИНТЕРФЕЙСА
+export interface VacancyListProps {
+    onVacancyClick?: (id: string) => void;
+    // другие пропсы если нужны
+}
 /**
  * Автономный компонент списка вакансий (VacancyList)
  * 100% декларативный, легкий и полностью очищенный от дублирующих стейтов.
@@ -14,11 +18,11 @@ import { useVacancies } from "@/hooks/useVacancies";
 export default function VacancyList() {
     const { vacancies, loading, error, handleRetry } = useVacancies();
 
-    // Синхронизация темы оформления (ваша оригинальная логика)
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-    }, []);
+    // // Синхронизация темы оформления (ваша оригинальная логика)
+    // useEffect(() => {
+    //     const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' || 'dark';
+    //     document.documentElement.setAttribute('data-theme', savedTheme);
+    // }, []);
 
     return (
         <motion.div className={s.contentWrapper}>

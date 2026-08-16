@@ -62,6 +62,37 @@
 // }
 
 
+// // app/components/Main/Main.tsx
+// 'use client';
+//
+// import React from 'react';
+// import { CARD_REGISTRY } from '@/app/cards';
+// import { CardGrid } from '@/components/CardGrid';
+// import { SpecialPromoCard } from '@/components/SpecialPromoCard';
+// import Title from "@/components/Home/Title/Title";
+// import s from './Main.module.css';
+//
+// const CARDS_LIST = Object.values(CARD_REGISTRY);
+//
+// /**
+//  * SPA-Ядро интерфейса (Главный экран)
+//  * Идеальная декларативность. Ноль стейтов, ноль эффектов, ноль парсинга URL.
+//  */
+// export default function Main() {
+//     return (
+//         <div className={s.storeContainer}>
+//             {/* Логотип и приветствие города Нягань */}
+//             <Title />
+//
+//             {/* Специальная промо-карточка (блок "Все вакансии") */}
+//             <SpecialPromoCard />
+//
+//             {/* Сетка стандартных контентных карточек компаний/категорий */}
+//             <CardGrid cards={CARDS_LIST} />
+//         </div>
+//     );
+// }
+
 // app/components/Main/Main.tsx
 'use client';
 
@@ -74,20 +105,11 @@ import s from './Main.module.css';
 
 const CARDS_LIST = Object.values(CARD_REGISTRY);
 
-/**
- * SPA-Ядро интерфейса (Главный экран)
- * Идеальная декларативность. Ноль стейтов, ноль эффектов, ноль парсинга URL.
- */
 export default function Main() {
     return (
         <div className={s.storeContainer}>
-            {/* Логотип и приветствие города Нягань */}
             <Title />
-
-            {/* Специальная промо-карточка (блок "Все вакансии") */}
             <SpecialPromoCard />
-
-            {/* Сетка стандартных контентных карточек компаний/категорий */}
             <CardGrid cards={CARDS_LIST} />
         </div>
     );

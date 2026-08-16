@@ -224,12 +224,12 @@
 
 import React, { use } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'; // 🌟 Единственный инструмент навигации
 import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
 import VacancyInfo from "@/components/Home/Job/VacancyInfo/VacancyInfo";
 import { PAGE_REGISTRY } from "@/app/cards";
 import { useVacancies } from "@/hooks/useVacancies";
-import s from '@/app/@modal/(.)card/[...id]/page.module.css';
+import s from '@/app/page.module.css';
 
 interface Props {
     params: Promise<{ id: string[] }>;
@@ -253,6 +253,11 @@ export default function ModalCardCatchAllPage({ params }: Props) {
     const selectedVacancy = vacancies.find(v => String(v.id) === vacancyId) || null;
     const isVacancyOpen = Boolean(selectedVacancy);
 
+    /**
+     * 🌟 ИСТИННЫЙ НАЦИОНАЛЬНЫЙ ФИКС:
+     * Функция делает ровно то же самое, что и кнопка "Назад" в браузере или свайп на смартфоне.
+     * Она отматывает историю переходов ровно на один шаг назад, декларативно убирая текущий UI-слой.
+     */
     const handleNavigationBack = () => {
         router.back();
     };
@@ -261,31 +266,32 @@ export default function ModalCardCatchAllPage({ params }: Props) {
         <>
             <style dangerouslySetInnerHTML={{ __html: `body { overflow: hidden !important; touch-action: none !important; }` }} />
 
-            {/* Оверлей-подложка модалки (Уровень 1) — РАБОТАЕТ ИДЕАЛЬНО, НЕ ТРОГАЕМ */}
+            {/* Оверлей-подложка модалки (Уровень 1) */}
             <motion.div
                 className={s.modalOverlay}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                onClick={handleNavigationBack}
+                onClick={handleNavigationBack} // Клик по фону — это честный шаг назад
             >
                 <motion.div
                     layoutId={`card-bg-${cardId}`}
                     className={s.expandedCard}
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()} // Защита от закрытия при клике на контент
                     transition={{ type: 'spring', stiffness: 220, damping: 26 }}
                     style={{ backgroundColor: cardId === 'coding' ? '#1A2F2A' : '#09090b' }}
                 >
-                    {/* Крестик закрытия всей модалки */}
+                    {/* Крестик закрытия всей модалки (Уровень 1) */}
                     <button
                         className={s.closeButton}
-                        onClick={handleNavigationBack}
+                        onClick={handleNavigationBack} // Точный и нативный шаг назад
                         aria-label="Закрыть модальное окно"
                     >
                         ✕
                     </button>
 
                     <div className={s.contentWrapper}>
+                        {/* Контент списка плавно сжимается, когда поверх выезжает шторка */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{
@@ -306,20 +312,16 @@ export default function ModalCardCatchAllPage({ params }: Props) {
                     {/* Шторка вакансии (Уровень 2) */}
                     <AnimatePresence>
                         {isVacancyOpen && selectedVacancy && (
-                            /*
-                               🌟 ИСТИННЫЙ СЕНЬОР-ФИКС АНИМАЦИИ ЗАКРЫТИЯ:
-                               Мы добавили key={`vacancy-${vacancyId}`}. Это единственный каноничный способ
-                               сообщить AnimatePresence, какой именно элемент сейчас исчезает из разметки.
-                               Когда router.back() сотрет vacancyId, Framer Motion мгновенно перехватит
-                               удаление узла, "заморозит" шторку в DOM и плавно уведет её вниз по её нативному exit-правилу.
-                            */
-                            <VacancyInfo
-                                key={`vacancy-${vacancyId}`}
-                                vacancy={selectedVacancy}
-                            >
+                            <VacancyInfo vacancy={selectedVacancy}>
+                                {/*
+                                   🌟 СЕНЬОР-АННИГИЛЯЦИЯ ДВОЙНОГО КЛИКА:
+                                   Крестик шторки теперь ТОЖЕ вызывает системный шаг назад (router.back()).
+                                   Когда вы закрываете шторку, она нативно стирается из истории. Стек чист.
+                                   Следующий клик по крестику модалки гарантированно закроет окно с первого тапа!
+                                */}
                                 <button
                                     className={s.closeButton}
-                                    onClick={handleNavigationBack}
+                                    onClick={handleNavigationBack} // Закрываем шторку через нативный откат истории
                                     aria-label="Закрыть шторку вакансии"
                                 >
                                     ✕

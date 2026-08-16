@@ -1,14 +1,14 @@
-.modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    /*background-color: red; !* Полупрозрачное затемнение *!*/
-    backdrop-filter: blur(8px);           /* Размытие заднего плана Apple-style */
-    -webkit-backdrop-filter: blur(8px);   /* Поддержка размытия в Safari на iOS */
-    z-index: 49;                          /* На один слой ниже самого корпуса expandedCard */
-}
+/*.modalOverlay {*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    right: 0;*/
+/*    bottom: 0;*/
+/*    !*background-color: red; !* Полупрозрачное затемнение *!*!*/
+/*    backdrop-filter: blur(8px);           !* Размытие заднего плана Apple-style *!*/
+/*    -webkit-backdrop-filter: blur(8px);   !* Поддержка размытия в Safari на iOS *!*/
+/*    z-index: 49;                          !* На один слой ниже самого корпуса expandedCard *!*/
+/*}*/
 .expandedCard {
     width: 90%;
     height: 90%;

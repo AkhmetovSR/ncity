@@ -98,11 +98,11 @@ export function SpecialPromoCard() {
                 <motion.div
                     layoutId={`card-bg-${id}`}
                     className={s.cardBase}
-                    transition={{ type: 'spring', stiffness: 200, damping: 24, mass: 1.1 }}
+                    // transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 >
-                    <div className={s.widgetVisible}>
+                    {/*<div className={s.widgetVisible}>*/}
                         <Job />
-                    </div>
+                    {/*</div>*/}
                 </motion.div>
             </Link>
 

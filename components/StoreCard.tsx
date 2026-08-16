@@ -213,7 +213,7 @@ export default function StoreCard({ id, children }: StoreCardProps) {
                 <motion.div
                     layoutId={`card-bg-${id}`}
                     className={s.expandedCard}
-                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                    // transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 >
                     <button
                         className={s.closeButton}

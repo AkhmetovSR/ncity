@@ -1,74 +1,76 @@
-// app/card/[...id]/page.tsx
-import React from 'react';
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import VacancyHeader from "@/components/Home/Job/VacancyInfo/VacancyHeader/VacancyHeader";
-import VacancyContent from "@/components/Home/Job/VacancyInfo/VacancyContent/VacancyContent";
-import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
-import { PAGE_REGISTRY } from "@/app/cards";
-import { HistoryInterceptor } from "./HistoryInterceptor"; // Импортируем наш легкий перехватчик
-import s from '@/app/page.module.css';
+// app/card/[[...id]]/page.tsx
+import React, { use } from 'react';
+import { notFound } from 'next/navigation'; // Каноническая функция Next.js для вызова 404 ошибки
+import Main from "@/components/Main/Main"; // Наше интерактивное клиентское SPA-ядро интерфейса
 
+// Описываем форму динамических параметров, которые Next.js поставляет в серверный роут
 interface Props {
-    params: Promise<{ id: string[] }>;
+    params: Promise<{ id?: string[] }>; // В Next.js params по канону является Промисом
 }
 
+// Список строго разрешенных ID карточек, которые физически существуют в нашем приложении
 const VALID_CARD_IDS = new Set(['vacancy', 'travel', 'coding', 'A', 'B']);
 
+/**
+ * 1. 🌟 КАНОНИЧЕСКАЯ ГЕНЕРАЦИЯ МЕТАТЕГОВ (SEO):
+ * Next.js автоматически вызывает эту функцию на сервере до рендеринга страницы.
+ * Поисковые роботы Яндекса и Google получат красивый заголовок и описание карточки.
+ */
 export async function generateMetadata({ params }: Props) {
-    const resolvedParams = await params;
+    const resolvedParams = await params; // Разворачиваем асинхронный объект параметров
     const pathSegments = resolvedParams.id || [];
-    const cardId = pathSegments[0] || 'vacancy';
-    const vacancyId = pathSegments[1] || null;
 
-    const mockTitle = vacancyId ? `Вакансия №${vacancyId} в Нягани` : `Раздел ${cardId}`;
+    const cardId = pathSegments[0] || 'vacancy'; // Первый сегмент — ID шторки
+    const vacancyId = pathSegments[1] || null;    // Второй сегмент — ID конкретной вакансии
+
+    // Простой словарь для формирования SEO-тайтлов на сервере
+    const titles: Record<string, string> = {
+        'vacancy': 'Работа и свежие вакансии в Нягани',
+        'travel': 'Путешествия по Ханты-Мансийскому округу',
+        'coding': 'Блог: Как верстают архитекторы интерфейсов'
+    };
+
+    // Если открыта конкретная вакансия в шторке, делаем глубокий тайтл
+    const baseTitle = titles[cardId] || 'Информационная карточка';
+    const pageTitle = vacancyId ? `Вакансия №${vacancyId} | ${baseTitle}` : baseTitle;
 
     return {
-        title: `${mockTitle} — Работа и свежие объявления`,
-        description: `Детальные условия, обязанности и требования на информационном портале города Нягань.`,
+        title: `${pageTitle} — Городской Портал`,
+        description: `Актуальная информация, детальные условия и требования в разделе ${cardId} на официальном портале города Нягань.`,
     };
 }
 
 /**
- * Жесткий серверный роут (Server Component).
+ * 2. 🌟 ГЛАВНЫЙ СЕРВЕРНЫЙ КОМПОНЕНТ РОУТА (SSR Fallback):
  */
-export default async function HardRouteCardPage({ params }: Props) {
-    const resolvedParams = await params;
-    const pathSegments = resolvedParams?.id || [];
+export default function CardCatchAllPage({ params }: Props) {
+    // 🌟 Разворачиваем Промис параметров с помощью нативной React-функции "use"
+    const resolvedParams = use(params);
+    const pathSegments = resolvedParams.id || [];
 
+    // Раскладываем сегменты пути в переменные для валидации
     const cardId = pathSegments[0] || null;
     const vacancyId = pathSegments[1] || null;
 
-    if (!cardId || !VALID_CARD_IDS.has(cardId)) {
+    // 🌟 СЕНЬОР-ЗАЩИТА (Безопасность):
+    // Если пользователь вручную вбил в адресную строку несуществующий ID (например, /card/hello-world),
+    // мы не имеем права инициализировать SPA-ядро. Мы декларативно прерываем выполнение
+    // и отдаем каноническую страницу 404 (NotFound), чтобы поисковики не индексировали мусорные ссылки [INDEX].
+    if (cardId && !VALID_CARD_IDS.has(cardId)) {
         notFound();
     }
 
-    const ContentComponent = PAGE_REGISTRY[cardId] || null;
-
     return (
-        <div className={s.fullPageFallbackContent}>
-            {/* 🌟 Внедряем слушатель кнопки "Назад" для прямого захода */}
-            <HistoryInterceptor />
-
-            {/* Нативная ссылка, поведение которой мы дублируем при перехвате */}
-            <Link href="/" className={s.backToMainButton} scroll={false}>
-                ← На главную
-            </Link>
-
-            <div className={s.fallbackWrapper}>
-                {vacancyId ? (
-                    <div style={{ maxWidth: '600px', margin: '0 auto', width: '100%' }}>
-                        <VacancyHeader />
-                        <VacancyContent />
-                    </div>
-                ) : (
-                    cardId === 'vacancy' ? (
-                        <VacancyList />
-                    ) : ContentComponent ? (
-                        <ContentComponent isOpen={true} />
-                    ) : null
-                )}
-            </div>
-        </div>
+        /*
+           🌟 ИНИЦИАЛИЗАЦИЯ И ГИДРАТАЦИЯ SPA:
+           Мы пробрасываем считанные сервером ID прямо в пропсы компонента Main [INDEX].
+           Когда страница загрузится в браузере, клиентский React сразу увидит эти initial-значения,
+           хук useAppHistory подхватит их, и нужная модалка (StoreCard) откроется в первый же кадр
+           загрузки сайта, обеспечивая бесшовное поведение без моргания экрана [INDEX].
+        */
+        <Main
+            initialActiveId={cardId}
+            initialVacancyId={vacancyId}
+        />
     );
 }

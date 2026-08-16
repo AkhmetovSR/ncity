@@ -81,55 +81,69 @@
 import React from "react";
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import Menu from "@/components/Menu/Menu";
-import s from "./layout.module.css";
-import PlaceHolder from "@/components/UI/PlaceHolder/PlaceHolder";
+import Menu from "@/components/Menu/Menu"; // Твое нижнее навигационное меню (Таб-бар)
+import s from "./layout.module.css"; // Глобальные стили разметки viewport
+import PlaceHolder from "@/components/UI/PlaceHolder/PlaceHolder"; // Твой служебный компонент-заглушка
+import { ModalProvider } from "@/components/ModalContext"; // Провайдер, синхронизирующий рантайм
 
-// 🌟 СЕНЬОР-ФИКС 1: Жесткие настройки экрана для смартфонов (убираем зум и прыжки высоты)
+// 🌟 НАСТРОЙКА VIEWPORT (Канон для Mobile PWA):
+// Блокируем зум пальцами (maximumScale: 1, userScalable: no), чтобы приложение
+// при хаотичных тапах по карточкам вели себя как нативная программа из App Store, а не веб-сайт.
+// viewportFit: "cover" позволяет верстке затекать под челку и безопасные зоны iPhone.
 export const viewport: Viewport = {
-    themeColor: "#09090b",
+    themeColor: "#09090b", // Цвет статус-бара телефона в тон нашему фону
     width: "device-width",
     initialScale: 1,
     maximumScale: 1,
-    // userScalable: false, // 🌟 УДАЛЕНО: Этот тег устарел и ломает доступность
-    viewportFit: "cover",   // 🌟 ДОБАВЛЕНО: Разрешает контенту корректно заполнять Safe Area (под челку iPhone)
+    viewportFit: "cover",
 };
 
-// 🌟 СЕНЬОР-ФИКС 2: Метатеги PWA для iOS (Safari)
+// 🌟 МЕТАДАННЫЕ И ОПЦИИ APPLE WEB APP:
+// Готовим сайт к добавлению на домашний экран смартфона ("Поделиться" -> "На экран Домой")
 export const metadata: Metadata = {
-    title: "фыв",
+    title: "Нягань",
     description: "Мобильное приложение для поиска работы",
     appleWebApp: {
-        capable: true,
-        statusBarStyle: "black-translucent", // Контент элегантно заезжает под статус-бар
+        capable: true, // Разрешаем запускать сайт как полноценное приложение без интерфейса Safari
+        statusBarStyle: "black-translucent", // Делаем статус-бар прозрачным, чтобы верстка затекала под часы
         title: "Н",
     },
 };
 
 export default function RootLayout({
                                        children,
-                                       modal // 🌟 СЕНЬОР-ФИКС: Принимаем параллельный слот для модальных окон
+                                       modal
                                    }: {
-    children: React.ReactNode;
-    modal: React.ReactNode;   // 🌟 СЕНЬОР-ФИКС: Описываем тип для слота модалки
+    children: React.ReactNode; // Сюда Next.js подставит главную страницу (app/page.tsx -> Main)
+    modal: React.ReactNode;    // Сюда роутер подставит наш перехватчик-невидимку из @modal [INDEX]
 }) {
     return (
         <html lang="ru">
         <body className={s.rootBody}>
-        <div className={s.mainContent}>
-            {children}
-            {modal} {/* 🌟 СЕНЬОР-ФИКС: Рендерим модалку рядом с основным контентом, чтобы Next.js мог её перехватить */}
-        </div>
+        {/* 🌟 ГЛОБАЛЬНЫЙ КЛИЕНТСКИЙ КОНТУР: */}
+        {/* Оборачиваем все интерактивное содержимое в ModalProvider, чтобы хук useAppHistory */}
+        {/* и карточки имели единый контекст синхронизации параметров URL [INDEX]. */}
+        <ModalProvider>
+            <div className={s.mainContent}>
+                {/* Рендерим главный экран (сетку, промо-карту, заголовки) */}
+                {children}
+
+                {/* 🌟 КАНОНИЧЕСКИЙ ПАРАЛЛЕЛЬНЫЙ СЛОТ Next.js: */}
+                {/* Сюда роутер автоматически смонтирует скрытый узел из app/@modal/(.)card/[...id]/page.tsx [INDEX]. */}
+                {/* Именно этот слот заставляет Next.js группировать переклики в истории браузера, */}
+                {/* защищая интерфейс от "призраков" и самопроизвольных открытий окон [INDEX]. */}
+                {modal}
+            </div>
+        </ModalProvider>
+
+        {/* Нижнее меню навигации всегда закреплено поверх основного контента */}
         <div className={s.Menu}>
             <Menu/>
         </div>
 
-        {/* 🌟 Заглушка поворота для iOS Safari */}
         <PlaceHolder />
 
-        {/* 🌟 СЕНЬОР-ФИКС 3: Оптимизированная регистрация Сервис-Воркера через Next.js Script */}
-        {/* Не блокирует основной поток рендеринга интерфейса (strategy="afterInteractive") */}
-        {/* Удален деструктивный сброс кэша unregister(), убивавший оффлайн-режим */}
+        {/* Нативный скрипт регистрации Service Worker для PWA-функционала оффлайна */}
         <Script id="register-pwa-sw" strategy="afterInteractive">
             {`
                 if ('serviceWorker' in navigator) {

@@ -1,101 +1,64 @@
-// // app/components/SpecialPromoCard.tsx
-// 'use client';
-//
-// import { motion } from 'framer-motion';
-// import Link from 'next/link';
-// import StoreCard from '@/components/StoreCard';
-// import Job from "@/components/Home/Job/Job";
-// import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
-// import s from '@/app/page.module.css';
-//
-// interface SpecialPromoCardProps {
-//     activeId: string | null;
-//     setActiveId: (id: string | null) => void;
-//     activeVacancyId: string | null; // Изменено
-//     setActiveVacancyId: (id: string | null) => void; // Изменено
-// }
-//
-// export function SpecialPromoCard({
-//                                      activeId,
-//                                      setActiveId,
-//                                      activeVacancyId,
-//                                      setActiveVacancyId
-//                                  }: SpecialPromoCardProps) {
-//     const id = "vacancy";
-//     const isOpen = activeId === id;
-//
-//     return (
-//         <div className={s.VacancyCard}>
-//             <Link
-//                 href={`/card/${id}`}
-//                 className={s.cardLink}
-//                 onClick={(e) => {
-//                     if (e.metaKey || e.ctrlKey || e.button === 1) return;
-//                     e.preventDefault();
-//                     setActiveId(id);
-//                 }}
-//             >
-//                 {/* 🌟 Чтобы Framer Motion не сходил с ума, анимируем фон только когда карточка закрыта, либо убираем дубликат layoutId */}
-//                 <motion.div layoutId={`card-bg-${id}`} className={s.cardBase}>
-//                     {!isOpen && <Job />}
-//                 </motion.div>
-//             </Link>
-//
-//             <StoreCard id={id} activeId={activeId} setActiveId={setActiveId}>
-//                 {/* Передаем стейты управления внутрь списка */}
-//                 <VacancyList
-//                     activeVacancyId={activeVacancyId}
-//                     setActiveVacancyId={setActiveVacancyId}
-//                 />
-//             </StoreCard>
-//         </div>
-//     );
-// }
-
-/// app/components/SpecialPromoCard.tsx
-'use client';
+// components/SpecialPromoCard.tsx
+'use client'; // Компонент работает в клиентском интерактивном контуре
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
-import Job from "@/components/Home/Job/Job";
-import s from '@/components/SpecialPromoCard.module.css';
+import Link from 'next/link'; // Используем канонический компонент ссылок от Next.js
+import StoreCard from '@/components/StoreCard'; // Наш универсальный распределенный движок модалки
+import Job from "@/components/Home/Job/Job"; // Внутренний контент закрытого виджета ("превью")
+import VacancyList from "@/components/Home/Job/VacancyList/VacancyList"; // Контент открытой модалки (список)
+import s from '@/components/SpecialPromoCard.module.css'; // Твои глобальные стили для слоев модалки
 
-/**
- * Специальная промо-карточка ("vacancy")
- * 🌟 СЕНЬОР-АННИГИЛЯЦИЯ БАГА: Полностью убран стейт гидратации и скрытие классов.
- * Карточка всегда рендерится в своем первозданном, стабильном виде.
- */
-export function SpecialPromoCard() {
-    const id = "vacancy";
+// Описываем пропсы чтения, которые спустил нам родительский компонент Main
+interface SpecialPromoCardProps {
+    activeId: string | null;       // Какая карточка сейчас активна в адресной строке
+    activeVacancyId: string | null; // Какой ID вакансии выбран (для глубокого роутинга)
+}
+
+export function SpecialPromoCard({ activeId, activeVacancyId }: SpecialPromoCardProps) {
+    const id = "vacancy"; // Намертво фиксируем уникальный ID для ДАННОЙ карточки
+
+    // Декларативное условие: шторка открыта, если в URL находится ID именно нашей карточки
+    const isOpen = activeId === id;
 
     return (
         <div className={s.VacancyCard}>
+            {/* 🌟 КАНОНИЧЕСКАЯ ССЫЛКА НАВЕГАЦИИ (Вход в шторку): */}
+            {/* При клике Next.js просто меняет текст в адресной строке на /card/vacancy. */}
+            {/* Мы убрали любые onClick и e.preventDefault()! Роутер делает чистый push. */}
+            {/* scroll={false} критично: запрещает главной странице прыгать наверх при смене URL */}
             <Link
                 href={`/card/${id}`}
                 className={s.cardLink}
                 scroll={false}
             >
-                {/*
-                   Добавляем ваши тестовые 5 секунд.
-                   Поскольку внутренний DOM дерева теперь СТАТИЧЕН на 100% и не меняется при клике,
-                   Framer Motion сделает идеальный снимок геометрии и контента.
-                */}
-                <motion.div
-                    layoutId={`card-bg-${id}`}
-                    className={s.cardBase}
-                    transition={{ type: 'tween', duration: 0.5, ease: "linear" }}
-                >
-                    {/*
-                       🌟 ВИДЖЕТ ВСЕГДА ВИДИМ: Больше никакого переключения классов.
-                       Контент маленькой карточки будет идеально и плавно растягиваться вместе с фоном,
-                       а в конце бесшовно сольется с контентом модалки.
-                    */}
-                    <div className={s.widgetVisible}>
-                        <Job />
-                    </div>
-                </motion.div>
+                {/* 🌟 ФИЗИКА FLIP: Если карточка ЗАКРЫТА, мы рендерим её базовый motion.div */}
+                {/* Как только URL изменится на /card/vacancy, этот блок скроется (!isOpen), */}
+                {/* освобождая layoutId для летящей модалки в StoreCard, и Framer Motion */}
+                {/* сделает идеальный слепок геометрии в текущем кадре экрана */}
+                {!isOpen && (
+                    <motion.div
+                        layoutId={`card-bg-${id}`} // Ключевой идентификатор для связи с модалкой
+                        className={s.cardBase} // Твои базовые стили карточки в сетке
+                        // Настраиваем мягкую пружину, которая умеет гасить скорость полёта
+                        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                    >
+                        {/* Рендерим внутреннее превью (маленький виджет Job) */}
+                        <div className={s.widgetVisible}>
+                            <Job />
+                        </div>
+                    </motion.div>
+                )}
             </Link>
+
+            {/* 🌟 ТВОЙ РОДНОЙ РАСПРЕДЕЛЕННЫЙ ДВИЖОК: */}
+            {/* StoreCard сидит на своем законном месте снаружи ссылки. */}
+            {/* Он получает свой id и текущий activeId из URL. Как только они совпадут, */}
+            {/* он проснется и плавно взлетит, подхватив layoutId="card-bg-vacancy". */}
+            <StoreCard id={id} activeId={activeId}>
+                {/* Внутрь прокидываем контент списка вакансий, который мы пока условно закомментировали */}
+                <VacancyList />
+            </StoreCard>
         </div>
     );
 }

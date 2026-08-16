@@ -1,0 +1,58 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /*background-color: red; !* Полупрозрачное затемнение *!*/
+    backdrop-filter: blur(8px);           /* Размытие заднего плана Apple-style */
+    -webkit-backdrop-filter: blur(8px);   /* Поддержка размытия в Safari на iOS */
+    z-index: 49;                          /* На один слой ниже самого корпуса expandedCard */
+}
+.expandedCard {
+    width: 90%;
+    height: 90%;
+    color: #ffffff;
+    overflow: hidden;
+    /*overflow-x: hidden;*/
+    /*overflow-y: scroll;*/
+    border-radius: 1.5rem;
+    will-change: transform, width, height; /* Оптимизация под мобильный GPU */
+    -webkit-overflow-scrolling: touch;
+    /*background-color: t;*/
+    display: grid;
+    position: fixed; /* Fixed надежнее для модалок, чем absolute */
+    inset: 5vh 5vw;  /* Современная замена top/left/width/height */
+    z-index: 100;
+    /*will-change: transform; !* Не перегружаем оптимизациями то, что не меняется *!*/
+    border: 1px solid red;
+}
+@media (min-width: 768px) {
+    .expandedCard {
+        inset: 3rem auto;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 600px;
+        border-radius: 32px;
+        height: calc(100vh - 6rem);
+        /*background-color: white;*/
+    }
+}
+.closeButton {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: dodgerblue;
+    border: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 110;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

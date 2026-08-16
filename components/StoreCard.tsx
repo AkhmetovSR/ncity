@@ -1,105 +1,84 @@
-// // app/components/StoreCard.tsx
-// 'use client';
-//
-// import { motion, AnimatePresence } from 'framer-motion';
-// import s from '@/app/page.module.css';
-//
-// interface StoreCardProps {
-//     id: string;
-//     gradient?: string;
-//     activeId: string | null;
-//     setActiveId: (id: string | null) => void;
-//     children?: React.ReactNode;
-// }
-//
-// // const EXPANDED_TRANSITION = { type: 'spring', stiffness: 150, damping: 24 };
-//
-// export default function StoreCard({
-//                                       id,
-//                                       gradient = 'transparent',
-//                                       activeId,
-//                                       setActiveId,
-//                                       children
-//                                   }: StoreCardProps) {
-//     const isOpen = activeId === id;
-//
-//     return (
-//         <AnimatePresence>
-//             {isOpen && (
-//                 <motion.div
-//                     layoutId={`card-bg-${id}`}
-//                     className={s.expandedCard}
-//                     // onClick={(e) => e.stopPropagation()} // Защита от закрытия при клике на контент
-//                 >
-//                     <button className={s.closeButton} onClick={() => setActiveId(null)}>
-//                         ✕
-//                     </button>
-//                     <div className={s.contentWrapper}>
-//                         {children}
-//                     </div>
-//                 </motion.div>
-//             )}
-//         </AnimatePresence>
-//     );
-// }
-
-// app/components/StoreCard.tsx
-'use client';
+// components/StoreCard.tsx
+'use client'; // Директива клиентского контура для работы AnimatePresence и motion.div
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePathname } from 'next/navigation'; // Привязываемся к URL напрямую
-import s from '@/app/page.module.css';
+import Link from 'next/link'; // 🌟 ИМПОРТИРУЕМ КАНОНИЧЕСКИЙ ЛИНК: Главный элемент канонического закрытия [INDEX]
+import s from '@/components/StoreCard.module.css';
+import { useRouter } from 'next/navigation';
 
+// Описываем пропсы, которые принимает наш универсальный движок шторки
 interface StoreCardProps {
-    id: string;
-    gradient?: string;
-    children?: React.ReactNode;
+    id: string;              // Уникальный ID карточки, к которой привязан этот движок (например, "vacancy")
+    activeId: string | null; // Текущий активный ID, пришедший из URL через хук синхронизации [INDEX]
+    children?: React.ReactNode; // Сюда декларативно подсовывается абсолютно любой контент модалки [INDEX]
 }
 
-/**
- * Компонент модального окна Apple-style (StoreCard)
- * Вычисляет состояние открытости из URL, закрывается нативной имитацией кнопки "Назад".
- */
-export default function StoreCard({
-                                      id,
-                                      gradient = 'transparent',
-                                      children
-                                  }: StoreCardProps) {
-    const pathname = usePathname();
-
-    // Самостоятельно вычисляем открытость модалки из текущего URL
-    const isOpen = pathname.startsWith(`/card/${id}`);
-
-    /**
-     * Закрытие крестиком через идеальную имитацию системной кнопки "Назад".
-     * Браузер стирает URL, Next.js убирает параллельный слот, а карточки возвращают видимость.
-     */
-    const handleClose = () => {
-        if (typeof window !== 'undefined') {
-            window.history.back(); // Имитируем системную кнопку "Назад"
-        }
-    };
+export default function StoreCard({ id, activeId, children }: StoreCardProps) {
+    const router = useRouter();
+    // 🌟 ДЕКЛАРАТИВНОЕ УСЛОВИЕ ОТКРЫТИЯ:
+    // Модалка открывается ТОЛЬКО в том случае, если ID этой карточки совпал с ID в адресной строке [INDEX]
+    const isOpen = activeId === id;
 
     return (
+        /*
+           🌟 КАТАЛИЗАТОР ОБРАТНОЙ АНИМАЦИИ (AnimatePresence):
+           Этот компонент от Framer Motion следит за своим содержимым.
+           Как только isOpen становится false (например, при клике на крестик), AnimatePresence
+           НЕ ДАЕТ React мгновенно удалить узел из DOM. Он замораживает его на экране и заставляет
+           выполнить плавную анимацию закрытия (схлопывание в сетку) до самого последнего кадра! [INDEX]
+        */
         <AnimatePresence>
             {isOpen && (
-                <motion.div
-                    layoutId={`card-bg-${id}`}
-                    className={s.expandedCard}
-                    style={{ background: gradient }}
-                >
-                    {/* Кнопка закрытия жестко связана с историей браузера */}
-                    <button
-                        className={s.closeButton}
-                        onClick={handleClose}
-                        aria-label="Закрыть окно"
-                    >
-                        ✕
-                    </button>
+                /* Внешний фиксированный контейнер, который растянут на весь экран, */
+                /* но благодаря pointer-events: none из CSS полностью пропускает клики на задний план */
+                <motion.div className={s.expandedCard}
+                            layoutId={`card-bg-${id}`} // Должен строго совпадать с layoutId закрытой карты! [INDEX]
+                            // className={s.contentWrapper} // Твоя аккуратная карточка по центру экрана
 
-                    <div className={s.contentWrapper}>
+                    // 🌟 СЕНЬОР-ЗАЩИТА ОТ МИГАНИЯ КОНТЕНТА (exit):
+                    // При закрытии мы плавно гасим прозрачность (opacity) внутреннего содержимого,
+                    // чтобы текст и кнопки вакансий красиво растворялись, пока внешняя коробка
+                    // карточки сжимается и летит обратно в свою ячейку сетки.
+                            exit={{ opacity: 0 }}
+
+                    // Настраиваем физическую пружину. stiffness (жесткость) и damping (затухание)
+                    // подобраны так, чтобы полёт был упругим, без резких отскоков и желеобразного дёргания.
+                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                >
+
+                    {/*/!* 🌟 ЯДРО FLIP-АНИМАЦИИ: *!/*/}
+                    {/*/!* Этот блок имеет точно такой же layoutId, что и маленькая закрытая карточка в сетке. *!/*/}
+                    {/*/!* Именно этот общий ID заставляет Framer Motion связать их геометрию [INDEX]. *!/*/}
+                    {/*<motion.div*/}
+                    {/*    layoutId={`card-bg-${id}`} // Должен строго совпадать с layoutId закрытой карты! [INDEX]*/}
+                    {/*    className={s.contentWrapper} // Твоя аккуратная карточка по центру экрана*/}
+
+                    {/*    // 🌟 СЕНЬОР-ЗАЩИТА ОТ МИГАНИЯ КОНТЕНТА (exit):*/}
+                    {/*    // При закрытии мы плавно гасим прозрачность (opacity) внутреннего содержимого,*/}
+                    {/*    // чтобы текст и кнопки вакансий красиво растворялись, пока внешняя коробка*/}
+                    {/*    // карточки сжимается и летит обратно в свою ячейку сетки.*/}
+                    {/*    exit={{ opacity: 0 }}*/}
+
+                    {/*    // Настраиваем физическую пружину. stiffness (жесткость) и damping (затухание)*/}
+                    {/*    // подобраны так, чтобы полёт был упругим, без резких отскоков и желеобразного дёргания.*/}
+                    {/*    transition={{ type: 'spring', stiffness: 300, damping: 30 }}*/}
+                    {/*>*/}
+                    {/*    /!* 🌟 КАНОНИЧЕСКИЙ КРЕСТИК ЗАКРЫТИЯ: *!/*/}
+                    {/*    /!* Мы убрали отсюда router.back() и router.push()! Закрытие шторки по канону — *!/*/}
+                    {/*    /!* это обычная нативная ссылка Next.js, которая возвращает URL на корень "/" [INDEX]. *!/*/}
+                    {/*    /!* scroll={false} критично: запрещает главной странице прыгать наверх при закрытии. *!/*/}
+                        <button
+                            className={s.closeButton}
+                            onClick={() => router.back()}
+                        >
+                            ✕
+                        </button>
+
+                        {/* Изолированный контейнер с внутренним инерционным скроллом для твоего кастомного контента */}
+                        <div className={s.innerScrollableContent}>
                         {children}
-                    </div>
+                        </div>
+                    {/*</motion.div>*/}
                 </motion.div>
             )}
         </AnimatePresence>

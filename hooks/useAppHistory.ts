@@ -1,77 +1,46 @@
+// hooks/useAppHistory.ts
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+import { useParams } from 'next/navigation';
 
 interface HistoryStates {
-    activeId: string | null;
     setActiveId: (id: string | null) => void;
-    activeVacancyId: string | null;
     setActiveVacancyId: (id: string | null) => void;
 }
 
-export function useAppHistory({
-                                  activeId,
-                                  setActiveId,
-                                  activeVacancyId,
-                                  setActiveVacancyId
-                              }: HistoryStates) {
-    const isInternalChange = useRef(false);
+/**
+ * 🌟 КАНОНИЧЕСКИЙ ХУК НАВИГАЦИИ (ПОЛНЫЙ СЕНЬОР-ФИКС):
+ * Работает СТРОГО на чтение нативного URL от Next.js [INDEX].
+ * Никаких костыльных pushState и popstate [INDEX].
+ * Роутер изменил URL -> хук синхронно обновил стейт для запуска Framer Motion [INDEX].
+ */
+export function useAppHistory({ setActiveId, setActiveVacancyId }: HistoryStates) {
+    const params = useParams();
 
-    // 1. СИНХРОНИЗАЦИЯ: Из стейта React в URL браузера
     useEffect(() => {
-        if (isInternalChange.current) {
-            isInternalChange.current = false;
-            return;
-        }
+        // Канонично забираем сегменты динамического пути Next.js [INDEX]
+        const pathSegments = (params?.id as string[]) || [];
 
-        const currentPath = window.location.pathname;
-        let targetPath = '/';
+        // segments[0] — это ID карточки, segments[1] — это ID вакансии
+        const cardId = pathSegments[0] || null;
+        const vacancyId = pathSegments[1] || null;
 
-        if (activeId) {
-            targetPath = `/card/${activeId}`;
-            // Если это карточка вакансий и открыта конкретная вакансия
-            if (activeId === 'vacancy' && activeVacancyId) {
-                targetPath += `/${activeVacancyId}`;
-            }
-        }
+        // Синхронно прокидываем их в стейт презентационного ядра Main [INDEX]
+        setActiveId(cardId);
+        setActiveVacancyId(vacancyId);
 
-        if (currentPath !== targetPath) {
-            window.history.pushState(null, '', targetPath);
-        }
-
-        // Блокировка скролла body при любой открытой модалке
-        if (activeId) {
+        // Декларативно блокируем скролл body при любой открытой шторке
+        if (cardId) {
             document.body.classList.add('no-scroll');
         } else {
             document.body.classList.remove('no-scroll');
         }
 
         return () => document.body.classList.remove('no-scroll');
-    }, [activeId, activeVacancyId]);
+    }, [params, setActiveId, setActiveVacancyId]);
 
-    // 2. ОБРАБОТКА КНОПКИ "НАЗАД" (POPSTATE): Из URL браузера в стейт React
-    useEffect(() => {
-        const handlePopState = () => {
-            const segments = window.location.pathname.split('/').filter(Boolean);
-            // Структура URL: segments[0] === 'card', segments[1] === activeId, segments[2] === vacancyId
-
-            isInternalChange.current = true;
-
-            if (segments[0] === 'card' && segments[1]) {
-                setActiveId(segments[1]);
-                setActiveVacancyId(segments[2] || null);
-            } else {
-                // Если вернулись на главную (/)
-                setActiveId(null);
-                setActiveVacancyId(null);
-            }
-        };
-
-        window.addEventListener('popstate', handlePopState);
-        return () => window.removeEventListener('popstate', handlePopState);
-    }, [setActiveId, setActiveVacancyId]);
-
-    // 3. ОТКЛЮЧЕНИЕ КЭША СКРОЛЛА
+    // Отключение деструктивного кэша скролла Next.js для SPA-эффекта
     useEffect(() => {
         if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';

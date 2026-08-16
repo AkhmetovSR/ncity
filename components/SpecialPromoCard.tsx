@@ -52,53 +52,46 @@
 //     );
 // }
 
-// app/components/SpecialPromoCard.tsx
+/// app/components/SpecialPromoCard.tsx
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import Job from "@/components/Home/Job/Job";
 import s from '@/components/SpecialPromoCard.module.css';
 
 /**
  * Специальная промо-карточка ("vacancy")
- * Работает напрямую от адресной строки браузера без пропсов и локального стейта видимости.
+ * 🌟 СЕНЬОР-АННИГИЛЯЦИЯ БАГА: Полностью убран стейт гидратации и скрытие классов.
+ * Карточка всегда рендерится в своем первозданном, стабильном виде.
  */
 export function SpecialPromoCard() {
     const id = "vacancy";
-    const pathname = usePathname();
-
-    // 🌟 СЕНЬОР-ФИКС ГИДРАТАЦИИ: Флаг, указывающий, что компонент успешно смонтировался на клиенте.
-    // На сервере (SSR) он всегда равен false. Это предотвращает расхождения HTML между сервером и клиентом.
-    const [isMounted, setIsMounted] = useState(false);
-
-    useEffect(() => {
-        setIsMounted(true);
-    }, []);
-
-    // Проверяем статус напрямую по URL. Если путь совпадает — карточка считается открытой.
-    const isOpen = pathname.startsWith(`/card/${id}`);
 
     return (
         <div className={s.VacancyCard}>
             <Link
                 href={`/card/${id}`}
                 className={s.cardLink}
-                scroll={false} // КРИТИЧНО ДЛЯ PWA: Запрещаем прыгать по скроллу вверх при клике
+                scroll={false}
             >
-                <motion.div layoutId={`card-bg-${id}`} className={s.cardBase}>
+                {/*
+                   Добавляем ваши тестовые 5 секунд.
+                   Поскольку внутренний DOM дерева теперь СТАТИЧЕН на 100% и не меняется при клике,
+                   Framer Motion сделает идеальный снимок геометрии и контента.
+                */}
+                <motion.div
+                    layoutId={`card-bg-${id}`}
+                    className={s.cardBase}
+                    transition={{ type: 'tween', duration: 0.5, ease: "linear" }}
+                >
                     {/*
-                      🌟 СЕНЬОР-ФИКС: Управляем видимостью виджета на основе гидратации.
-                      1. До маунта (на сервере и при первой отрисовке) всегда рендерим <Job />,
-                         чтобы поисковые роботы (SEO) и первый кадр рендеринга видели валидный HTML.
-                      2. После маунта (isMounted === true) скрываем виджет только если роут совпадает (isOpen === true).
-                      3. Перенесли условное скрытие на CSS-класс (s.widgetHidden), чтобы DOM-структура
-                         (количество тегов и их порядок) оставалась неизменной. Это гарантирует 100% стабильность гидратации Next.js
-                         и бесконфликтную работу анимаций `layoutId` во Framer Motion.
+                       🌟 ВИДЖЕТ ВСЕГДА ВИДИМ: Больше никакого переключения классов.
+                       Контент маленькой карточки будет идеально и плавно растягиваться вместе с фоном,
+                       а в конце бесшовно сольется с контентом модалки.
                     */}
-                    <div className={(isMounted && isOpen) ? s.widgetHidden : s.widgetVisible}>
+                    <div className={s.widgetVisible}>
                         <Job />
                     </div>
                 </motion.div>

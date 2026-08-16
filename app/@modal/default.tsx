@@ -1,14 +1,19 @@
 // app/@modal/default.tsx
+'use client';
+
+import React from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { SharedModalContainer } from '@/app/@modal/SharedModalContainer';
 
 /**
- * Глобальная корневая техническая заглушка для параллельного слота @modal.
- *
- * Возвращает null, когда в приложении открыта обычная страница без активного
- * перехваченного маршрута (например, на главной странице при первом заходе или по F5).
- * Позволяет Next.js корректно рендерить интерфейс без генерации 404 ошибок.
+ * 🌟 СЕНЬОР-ФИКС: Этот компонент рендерится, когда мы находимся на Главной ('/').
+ * Мы возвращаем контейнер модалки, но передаем в него isOpen={false}.
+ * Благодаря этому узел модалки ВСЕГДА присутствует в DOM-дереве приложения.
  */
-export default function GlobalDefaultModalSlot() {
-    // Возвращаем null, чтобы параллельный слот ничего не отображал в DOM,
-    // пока пользователь просто просматривает главную страницу.
-    return null;
+export default function DefaultModalSlot() {
+    return (
+        <AnimatePresence mode="wait">
+            <SharedModalContainer isOpen={false} cardId={null} vacancyId={null} />
+        </AnimatePresence>
+    );
 }

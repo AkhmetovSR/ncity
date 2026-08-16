@@ -222,3 +222,12 @@ a, a:link, a:visited, a:active, a:focus {
 a:focus, button:focus {
   outline: none;
 }
+/* app/globals.css или ваш корневой файл стилей layout.module.css */
+
+@media (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important; /* 🌟 Жесткое вето на автозум в iOS Safari */
+  }
+}

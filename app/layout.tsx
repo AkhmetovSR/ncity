@@ -87,12 +87,12 @@ import PlaceHolder from "@/components/UI/PlaceHolder/PlaceHolder";
 
 // 🌟 СЕНЬОР-ФИКС 1: Жесткие настройки экрана для смартфонов (убираем зум и прыжки высоты)
 export const viewport: Viewport = {
-    themeColor: "#09090b", // Цвет фона приложения (hex)
+    themeColor: "#09090b",
     width: "device-width",
     initialScale: 1,
     maximumScale: 1,
-    userScalable: false,   // Запрещает мобильный зум, интерфейс ощущается нативным
-    // viewportFit: "cover",  // Разрешает контенту заходить под челку iPhone
+    // userScalable: false, // 🌟 УДАЛЕНО: Этот тег устарел и ломает доступность
+    viewportFit: "cover",   // 🌟 ДОБАВЛЕНО: Разрешает контенту корректно заполнять Safe Area (под челку iPhone)
 };
 
 // 🌟 СЕНЬОР-ФИКС 2: Метатеги PWA для iOS (Safari)

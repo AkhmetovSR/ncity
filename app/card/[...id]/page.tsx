@@ -6,6 +6,7 @@ import VacancyHeader from "@/components/Home/Job/VacancyInfo/VacancyHeader/Vacan
 import VacancyContent from "@/components/Home/Job/VacancyInfo/VacancyContent/VacancyContent";
 import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
 import { PAGE_REGISTRY } from "@/app/cards";
+import { HistoryInterceptor } from "./HistoryInterceptor"; // Импортируем наш легкий перехватчик
 import s from '@/app/page.module.css';
 
 interface Props {
@@ -28,6 +29,9 @@ export async function generateMetadata({ params }: Props) {
     };
 }
 
+/**
+ * Жесткий серверный роут (Server Component).
+ */
 export default async function HardRouteCardPage({ params }: Props) {
     const resolvedParams = await params;
     const pathSegments = resolvedParams?.id || [];
@@ -40,23 +44,24 @@ export default async function HardRouteCardPage({ params }: Props) {
     }
 
     const ContentComponent = PAGE_REGISTRY[cardId] || null;
-    const vacancyData = null; // Здесь будет ваш await db.getVacancy(vacancyId) при необходимости
 
     return (
         <div className={s.fullPageFallbackContent}>
+            {/* 🌟 Внедряем слушатель кнопки "Назад" для прямого захода */}
+            <HistoryInterceptor />
+
+            {/* Нативная ссылка, поведение которой мы дублируем при перехвате */}
             <Link href="/" className={s.backToMainButton} scroll={false}>
                 ← На главную
             </Link>
 
             <div className={s.fallbackWrapper}>
-                {/* Если открыта глубокая ссылка на вакансию (Уровень 2) при F5 — рендерим её изолированно для ИИ */}
                 {vacancyId ? (
                     <div style={{ maxWidth: '600px', margin: '0 auto', width: '100%' }}>
                         <VacancyHeader />
                         <VacancyContent />
                     </div>
                 ) : (
-                    /* Если просто перезагрузили список (Уровень 1) */
                     cardId === 'vacancy' ? (
                         <VacancyList />
                     ) : ContentComponent ? (

@@ -219,118 +219,173 @@
 //     );
 // }
 
+// // app/@modal/(.)card/[...id]/page.tsx
+// 'use client';
+//
+// import React, {use, useEffect} from 'react';
+// import { motion, AnimatePresence } from 'framer-motion';
+// import { useRouter } from 'next/navigation'; // 🌟 Единственный инструмент навигации
+// import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
+// import VacancyInfo from "@/components/Home/Job/VacancyInfo/VacancyInfo";
+// import { PAGE_REGISTRY } from "@/app/cards";
+// import { useVacancies } from "@/hooks/useVacancies";
+// import s from '@/app/@modal/(.)card/[...id]/page.module.css';
+//
+// interface Props {
+//     params: Promise<{ id: string[] }>;
+// }
+//
+// const VALID_CARD_IDS = new Set(['vacancy', 'travel', 'coding', 'A', 'B']);
+//
+// export default function ModalCardCatchAllPage({ params }: Props) {
+//     const router = useRouter();
+//     const resolvedParams = use(params);
+//     const pathSegments = resolvedParams?.id || [];
+//
+//     const cardId = pathSegments[0] || null;
+//     const vacancyId = pathSegments[1] || null;
+//
+//     const { vacancies } = useVacancies();
+//
+//     if (!cardId || !VALID_CARD_IDS.has(cardId)) return null;
+//
+//     const ContentComponent = PAGE_REGISTRY[cardId] || null;
+//     const selectedVacancy = vacancies.find(v => String(v.id) === vacancyId) || null;
+//     const isVacancyOpen = Boolean(selectedVacancy);
+//
+//     /**
+//      * 🌟 ИСТИННЫЙ НАЦИОНАЛЬНЫЙ ФИКС:
+//      * Функция делает ровно то же самое, что и кнопка "Назад" в браузере или свайп на смартфоне.
+//      * Она отматывает историю переходов ровно на один шаг назад, декларативно убирая текущий UI-слой.
+//      */
+//     const handleNavigationBack = () => {
+//         router.back();
+//     };
+//
+//     // app/@modal/(.)card/[...id]/page.tsx
+//
+//     // Добавьте этот эффект внутрь компонента ModalCardCatchAllPage
+//     useEffect(() => {
+//         // Сохраняем исходные стили body, чтобы вернуть их в первозданном виде
+//         const originalOverflow = document.body.style.overflow;
+//         const originalTouchAction = document.body.style.touchAction;
+//
+//         // Жестко блокируем скролл и системные жесты при открытии модалки
+//         document.body.style.setProperty('overflow', 'hidden', 'important');
+//         document.body.style.setProperty('touch-action', 'none', 'important');
+//
+//         // Функция-очистка (Cleanup). Вызовется React-ом ГАРАНТИРОВАННО
+//         // в момент закрытия модалки, убирая любые следы блокировки
+//         return () => {
+//             document.body.style.overflow = originalOverflow;
+//             document.body.style.touchAction = originalTouchAction;
+//         };
+//     }, []); // Пустой массив зависимостей: эффект выполнится 1 раз при старте и 1 раз при уничтожении
+//
+//
+//     return (
+//         <>
+//             {/*<style dangerouslySetInnerHTML={{ __html: `body { overflow: hidden !important; touch-action: none !important; }` }} />*/}
+//
+//             {/* Оверлей-подложка модалки (Уровень 1) */}
+//             <motion.div
+//                 className={s.modalOverlay}
+//                 initial={{ opacity: 0 }}
+//                 animate={{ opacity: 1 }}
+//                 exit={{ opacity: 0 }}
+//                 onClick={handleNavigationBack} // Клик по фону — это честный шаг назад
+//             >
+//                 <motion.div
+//                     layoutId={`card-bg-${cardId}`}
+//                     className={s.expandedCard}
+//                     onClick={(e) => e.stopPropagation()} // Защита от закрытия при клике на контент
+//                     transition={{ type: 'spring', stiffness: 220, damping: 26 }}
+//                     style={{ backgroundColor: cardId === 'coding' ? '#1A2F2A' : '#09090b' }}
+//                 >
+//                     {/* Крестик закрытия всей модалки (Уровень 1) */}
+//                     <button
+//                         className={s.closeButton}
+//                         onClick={handleNavigationBack} // Точный и нативный шаг назад
+//                         aria-label="Закрыть модальное окно"
+//                     >
+//                         ✕
+//                     </button>
+//
+//                     <div className={s.contentWrapper}>
+//                         {/* Контент списка плавно сжимается, когда поверх выезжает шторка */}
+//                         <motion.div
+//                             initial={{ opacity: 0 }}
+//                             animate={{
+//                                 opacity: 1,
+//                                 scale: isVacancyOpen ? 0.96 : 1,
+//                                 y: isVacancyOpen ? "-8px" : "0px",
+//                                 transition: { type: 'spring', damping: 25, stiffness: 200 }
+//                             }}
+//                         >
+//                             {cardId === 'vacancy' ? (
+//                                 <VacancyList />
+//                             ) : ContentComponent ? (
+//                                 <ContentComponent isOpen={true} />
+//                             ) : null}
+//                         </motion.div>
+//                     </div>
+//
+//                     {/* Шторка вакансии (Уровень 2) */}
+//                     <AnimatePresence>
+//                         {isVacancyOpen && selectedVacancy && (
+//                             <VacancyInfo vacancy={selectedVacancy}>
+//                                 {/*
+//                                    🌟 СЕНЬОР-АННИГИЛЯЦИЯ ДВОЙНОГО КЛИКА:
+//                                    Крестик шторки теперь ТОЖЕ вызывает системный шаг назад (router.back()).
+//                                    Когда вы закрываете шторку, она нативно стирается из истории. Стек чист.
+//                                    Следующий клик по крестику модалки гарантированно закроет окно с первого тапа!
+//                                 */}
+//                                 <button
+//                                     className={s.closeButton}
+//                                     onClick={handleNavigationBack} // Закрываем шторку через нативный откат истории
+//                                     aria-label="Закрыть шторку вакансии"
+//                                 >
+//                                     ✕
+//                                 </button>
+//                             </VacancyInfo>
+//                         )}
+//                     </AnimatePresence>
+//                 </motion.div>
+//             </motion.div>
+//         </>
+//     );
+// }
+
 // app/@modal/(.)card/[...id]/page.tsx
 'use client';
 
-import React, { use } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/navigation'; // 🌟 Единственный инструмент навигации
-import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
-import VacancyInfo from "@/components/Home/Job/VacancyInfo/VacancyInfo";
-import { PAGE_REGISTRY } from "@/app/cards";
-import { useVacancies } from "@/hooks/useVacancies";
-import s from '@/app/@modal/(.)card/[...id]/page.module.css';
-
-interface Props {
-    params: Promise<{ id: string[] }>;
-}
+import React from 'react';
+import { useParams } from 'next/navigation';
+import { SharedModalContainer } from '@/app/@modal/SharedModalContainer';
 
 const VALID_CARD_IDS = new Set(['vacancy', 'travel', 'coding', 'A', 'B']);
 
-export default function ModalCardCatchAllPage({ params }: Props) {
-    const router = useRouter();
-    const resolvedParams = use(params);
-    const pathSegments = resolvedParams?.id || [];
+/**
+ * 🌟 СЕНЬОР-ПЕРЕХВАТЧИК: Больше не содержит тяжелой верстки и анимаций.
+ * Он просто синхронно считывает URL через useParams и переключает состояние
+ * глобального контейнера SharedModalContainer, который уже сидит в DOM-дереве!
+ */
+export default function ModalCardCatchAllPage() {
+    const params = useParams();
+    const pathSegments = (params?.id as string[]) || [];
 
     const cardId = pathSegments[0] || null;
     const vacancyId = pathSegments[1] || null;
 
-    const { vacancies } = useVacancies();
-
-    if (!cardId || !VALID_CARD_IDS.has(cardId)) return null;
-
-    const ContentComponent = PAGE_REGISTRY[cardId] || null;
-    const selectedVacancy = vacancies.find(v => String(v.id) === vacancyId) || null;
-    const isVacancyOpen = Boolean(selectedVacancy);
-
-    /**
-     * 🌟 ИСТИННЫЙ НАЦИОНАЛЬНЫЙ ФИКС:
-     * Функция делает ровно то же самое, что и кнопка "Назад" в браузере или свайп на смартфоне.
-     * Она отматывает историю переходов ровно на один шаг назад, декларативно убирая текущий UI-слой.
-     */
-    const handleNavigationBack = () => {
-        router.back();
-    };
+    if (!cardId || !VALID_CARD_IDS.has(cardId)) {
+        return <SharedModalContainer isOpen={false} cardId={null} vacancyId={null} />;
+    }
 
     return (
-        <>
-            <style dangerouslySetInnerHTML={{ __html: `body { overflow: hidden !important; touch-action: none !important; }` }} />
-
-            {/* Оверлей-подложка модалки (Уровень 1) */}
-            <motion.div
-                className={s.modalOverlay}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={handleNavigationBack} // Клик по фону — это честный шаг назад
-            >
-                <motion.div
-                    layoutId={`card-bg-${cardId}`}
-                    className={s.expandedCard}
-                    onClick={(e) => e.stopPropagation()} // Защита от закрытия при клике на контент
-                    transition={{ type: 'spring', stiffness: 220, damping: 26 }}
-                    style={{ backgroundColor: cardId === 'coding' ? '#1A2F2A' : '#09090b' }}
-                >
-                    {/* Крестик закрытия всей модалки (Уровень 1) */}
-                    <button
-                        className={s.closeButton}
-                        onClick={handleNavigationBack} // Точный и нативный шаг назад
-                        aria-label="Закрыть модальное окно"
-                    >
-                        ✕
-                    </button>
-
-                    <div className={s.contentWrapper}>
-                        {/* Контент списка плавно сжимается, когда поверх выезжает шторка */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{
-                                opacity: 1,
-                                scale: isVacancyOpen ? 0.96 : 1,
-                                y: isVacancyOpen ? "-8px" : "0px",
-                                transition: { type: 'spring', damping: 25, stiffness: 200 }
-                            }}
-                        >
-                            {cardId === 'vacancy' ? (
-                                <VacancyList />
-                            ) : ContentComponent ? (
-                                <ContentComponent isOpen={true} />
-                            ) : null}
-                        </motion.div>
-                    </div>
-
-                    {/* Шторка вакансии (Уровень 2) */}
-                    <AnimatePresence>
-                        {isVacancyOpen && selectedVacancy && (
-                            <VacancyInfo vacancy={selectedVacancy}>
-                                {/*
-                                   🌟 СЕНЬОР-АННИГИЛЯЦИЯ ДВОЙНОГО КЛИКА:
-                                   Крестик шторки теперь ТОЖЕ вызывает системный шаг назад (router.back()).
-                                   Когда вы закрываете шторку, она нативно стирается из истории. Стек чист.
-                                   Следующий клик по крестику модалки гарантированно закроет окно с первого тапа!
-                                */}
-                                <button
-                                    className={s.closeButton}
-                                    onClick={handleNavigationBack} // Закрываем шторку через нативный откат истории
-                                    aria-label="Закрыть шторку вакансии"
-                                >
-                                    ✕
-                                </button>
-                            </VacancyInfo>
-                        )}
-                    </AnimatePresence>
-                </motion.div>
-            </motion.div>
-        </>
+        <SharedModalContainer
+            isOpen={true}
+            cardId={cardId}
+            vacancyId={vacancyId}
+        />
     );
 }

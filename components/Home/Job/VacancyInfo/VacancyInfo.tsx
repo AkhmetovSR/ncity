@@ -8,33 +8,25 @@ import VacancyContent from "@/components/Home/Job/VacancyInfo/VacancyContent/Vac
 import { Vacancy } from "@/types/vacancy";
 
 interface VacancyInfoProps {
-    // Используем строгий типизированный интерфейс вместо any, допускаем null для безопасности
     vacancy: Vacancy | null;
-
-    // 🌟 СЕНЬОР-ФИКС ТИПИЗАЦИИ: Явно указываем, что шторка принимает кнопку-крестик закрытия
-    children: React.ReactNode;
+    children: React.ReactNode; // Принимаем нативную кнопку-крестик из файла-контроллера
 }
 
 /**
- * Идеологически чистая бизнес-обертка над кастомным движком шторки.
- * Полностью декларативный компонент мирового уровня. Не хранит локальных стейтов закрытия.
+ * Идеально чистая бизнес-обертка над кастомным движком шторки
  */
 export default function VacancyInfo({ vacancy, children }: VacancyInfoProps) {
-    // Ранний возврат (Guard Clause) — если вакансия пуста, в DOM ничего не рендерится
     if (!vacancy) return null;
 
     return (
         /*
-           🌟 СЕНЬОР-ФИКС: Передаем весь контент шторки как чистый children внутрь BottomSheet.
-           Из вызова удалена лишняя шелуха в виде невалидных пропсов vacancy={Boolean(vacancy)} и onClose.
+           🌟 СЕНЬОР-ФИКС: Контент передается как чистый children.
+           BottomSheet автономен, он заблокирует body.style.overflow на клиенте.
         */
         <BottomSheet>
             <div style={{ position: 'relative', width: '100%', height: '100%' }}>
 
-                {/*
-                   🌟 СЕНЬОР-ФИКС КРЕСТИКА: Рендерим переданную кнопку закрытия (handleNavigationBack)
-                   прямо на верхнем слое шторки. Клик по ней нативно сделает шаг назад в истории.
-                */}
+                {/* Рендерим нативную кнопку закрытия (router.back()) на верхнем слое шторки */}
                 <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 100 }}>
                     {children}
                 </div>

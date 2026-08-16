@@ -229,7 +229,7 @@ import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
 import VacancyInfo from "@/components/Home/Job/VacancyInfo/VacancyInfo";
 import { PAGE_REGISTRY } from "@/app/cards";
 import { useVacancies } from "@/hooks/useVacancies";
-import s from '@/app/page.module.css';
+import s from '@/app/@modal/(.)card/[...id]/page.module.css';
 
 interface Props {
     params: Promise<{ id: string[] }>;

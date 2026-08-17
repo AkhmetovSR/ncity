@@ -80,8 +80,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import StoreCard from '@/components/StoreCard';
 import Job from "@/components/Home/Job/Job";
+import StoreCard from '@/components/StoreCard';
 import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
 import s from '@/components/SpecialPromoCard.module.css';
 
@@ -90,28 +90,22 @@ export function SpecialPromoCard() {
 
     return (
         <div className={s.VacancyCard}>
-            <Link
-                href={`/card/${id}`}
-                className={s.cardLink}
-                scroll={false}
-            >
-                <motion.div
-                    layoutId={`card-bg-${id}`}
-                    className={s.cardBase}
-                    // transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                >
-                    {/*<div className={s.widgetVisible}>*/}
-                        <Job />
-                    {/*</div>*/}
+            {/* Каноничная ссылка Next.js */}
+            <Link href={`/card/${id}`} className={s.cardLink} scroll={false}>
+                <motion.div layoutId={`card-bg-${id}`} className={s.cardBase}>
+                    <Job />
                 </motion.div>
             </Link>
 
+            {/* Модалка лежит ТУТ ЖЕ, на главной странице.
+                Она услышит изменение URL мгновенно! */}
             <StoreCard id={id}>
-                <VacancyList />
+                {/*<VacancyList />*/}
             </StoreCard>
         </div>
     );
 }
+
 
 // // components/SpecialPromoCard.tsx
 // 'use client';

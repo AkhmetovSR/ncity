@@ -1,39 +1,24 @@
 // app/@modal/(.)card/[...id]/page.tsx
-'use client'; // Директива клиентского контура — роут работает внутри браузера
+'use client';
 
 import React from 'react';
+import { useParams } from 'next/navigation'; // Импортируем клиентский хук
+import StoreCard from '@/components/StoreCard';
+import VacancyList from '@/components/Home/Job/VacancyList/VacancyList';
 
-/**
- * 🌟 КАНОНИЧЕСКИЙ ПЕРЕХВАТЧИК NEXT.JS (СПАСИТЕЛЬ ИСТОРИИ):
- * Этот компонент перехватывает клики по ссылкам вида /card/[id], если пользователь
- * уже находится на главной странице портала Нягани.
- *
- * ВАЖНО: Мы убрали отсюда всю верстку и тяжелые клиентские стейты.
- * Он возвращает минимальный невидимый узел <div>, но этот узел критически важен!
- */
-export default function InterceptorModalTriggerPage() {
+export default function InterceptorModalPage() {
+    const params = useParams();
+
+    // Перехватчик [...id] возвращает массив. Достаем первый элемент.
+    // Если id нет в URL, params.id будет undefined
+    const idArray = params?.id;
+    const id = Array.isArray(idArray) ? idArray[0] : idArray;
+
+    if (!id) return null;
+
     return (
-        /*
-           🌟 ФИЗИКА МЯГКОЙ НАВИГАЦИИ (Soft Navigation):
-           Когда Next.js видит, что перехваченный роут возвращает РЕАЛЬНЫЙ узел в DOM
-           (пусть даже невидимый), он активирует встроенный механизм Soft Navigation [INDEX].
-
-           Что это дает нашему универсальному движку:
-           1. Когда ты хаотично кликаешь по сетке "А" → "Б" → "В", Next.js понимает,
-              что мы топчемся внутри одного и того же параллельного слота @modal.
-           2. Вместо того чтобы забивать стек истории браузера бесконечной очередью из страниц
-              и дубликатов, роутер просто мягко обновляет параметры текущего шага в истории [INDEX].
-           3. Для истории браузера все твои пулеметные переклики сквозь сетку превращаются
-              в ОДИН ЕДИНСТВЕННЫЙ ШАГ навигации!
-        */
-        <div
-            style={{
-                position: 'fixed',    // Фиксируем, чтобы узел не ломал сетку главной страницы
-                width: 0,             // Делаем нулевой размер, чтобы не занимать место в разметке
-                height: 0,
-                pointerEvents: 'none', // Отключаем перехват кликов мыши (клики летят сквозь него на сетку)
-                visibility: 'hidden'  // Полностью скрываем от глаз пользователя и скринридеров
-            }}
-        />
+        <StoreCard id={id}>
+            {/*{id === 'vacancy' && <VacancyList />}*/}
+        </StoreCard>
     );
 }

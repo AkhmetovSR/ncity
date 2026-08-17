@@ -26,6 +26,7 @@
     z-index: 100;
     /*will-change: transform; !* Не перегружаем оптимизациями то, что не меняется *!*/
     /*border: 1px solid red;*/
+    background-color: #4c4c4c;
 }
 @media (min-width: 768px) {
     .expandedCard {

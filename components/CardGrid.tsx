@@ -144,7 +144,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import StoreCard from '@/components/StoreCard';
 import s from '@/components/CardGrid.module.css';
 
 interface CardItem {
@@ -164,13 +163,13 @@ export function CardGrid({ cards }: CardGridProps) {
 
                 return (
                     <div key={card.id} className={s.cardWrapper}>
-                        {/* 🔥 КАНОНИЧЕСКАЯ ССЫЛКА ДЛЯ ОТКРЫТИЯ */}
+                        {/* КАНОНИЧЕСКАЯ ССЫЛКА ДЛЯ ОТКРЫТИЯ */}
                         <Link
                             href={`/card/${card.id}`}
                             className={s.cardLink}
                             scroll={false}
                         >
-                            {/* Превью показываем всегда, StoreCard сам решит открыт он или нет */}
+                            {/* Превью карточки в сетке */}
                             <motion.div
                                 layoutId={`card-bg-${card.id}`}
                                 className={s.cardBase}
@@ -185,11 +184,6 @@ export function CardGrid({ cards }: CardGridProps) {
                                 </div>
                             </motion.div>
                         </Link>
-
-                        {/* 🔥 STORE CARD ЧИТАЕТ URL САМ */}
-                        <StoreCard id={card.id}>
-                            <WidgetComponent isOpen={true} />
-                        </StoreCard>
                     </div>
                 );
             })}

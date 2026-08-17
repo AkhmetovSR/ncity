@@ -1,24 +1,30 @@
-// app/@modal/(.)card/[...id]/page.tsx
-'use client';
-
+// app/@modal/(.)card/[id]/page.tsx
 import React from 'react';
-import { useParams } from 'next/navigation'; // Импортируем клиентский хук
 import StoreCard from '@/components/StoreCard';
-import VacancyList from '@/components/Home/Job/VacancyList/VacancyList';
+import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
 
-export default function InterceptorModalPage() {
-    const params = useParams();
+interface Props {
+    params: Promise<{ id: string }>; // В Next.js 15 params — это Promise
+}
 
-    // Перехватчик [...id] возвращает массив. Достаем первый элемент.
-    // Если id нет в URL, params.id будет undefined
-    const idArray = params?.id;
-    const id = Array.isArray(idArray) ? idArray[0] : idArray;
+export default async function InterceptorModalPage({ params }: Props) {
+    const { id } = await params;
 
-    if (!id) return null;
+    // Функция-маппер: определяет, какой контент рендерить внутри модалки на основе ID в URL
+    const renderWidgetContent = (cardId: string) => {
+        if (cardId === 'vacancy') {
+            return <VacancyList />;
+        }
+
+        // Сюда можно добавить условия для других карточек, например:
+        // if (cardId === 'promo') return <PromoDetails />;
+
+        return <div>Контент для карточки {cardId} не найден</div>;
+    };
 
     return (
         <StoreCard id={id}>
-            {/*{id === 'vacancy' && <VacancyList />}*/}
+            {renderWidgetContent(id)}
         </StoreCard>
     );
 }

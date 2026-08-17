@@ -199,9 +199,7 @@ export default function StoreCard({ id, children }: StoreCardProps) {
     const router = useRouter();
     const pathname = usePathname();
 
-    // 🔥 СВЕРХБЫСТРАЯ ПРОВЕРКА: pathname на клиенте меняется в 0-ю миллисекунду!
-    // Компонент на главной странице мгновенно перерендерится и запустит анимацию,
-    // пока параллельный роут еще только думает и ждет сервер.
+    // Модалка открыта, только если URL строго соответствует этой карточке
     const isOpen = pathname === `/card/${id}`;
 
     return (
@@ -210,8 +208,12 @@ export default function StoreCard({ id, children }: StoreCardProps) {
                 <motion.div
                     layoutId={`card-bg-${id}`}
                     className={s.expandedCard}
+                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 >
-                    <button className={s.closeButton} onClick={() => router.back()}>
+                    <button
+                        className={s.closeButton}
+                        onClick={() => router.back()}
+                    >
                         ✕
                     </button>
                     <div className={s.innerScrollableContent}>

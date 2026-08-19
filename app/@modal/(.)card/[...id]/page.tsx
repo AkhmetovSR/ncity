@@ -1,4 +1,6 @@
-import { Suspense } from 'react';
+'use client';
+
+import { use } from 'react';
 import ModalClientContainer from './ModalClientContainer';
 import Vacancy from '@/app/components/Vacancy';
 import AboutUs from '@/app/components/AboutUs';
@@ -10,22 +12,16 @@ const COMPONENT_MAP: Record<string, React.ComponentType> = {
     'contacts': Contacts,
 };
 
-interface ModalProps {
-    params: Promise<{ id: string[] }>;
-}
-
-export default async function InterceptedCardModal({ params }: ModalProps) {
-    const { id } = await params;
+export default function InterceptedCardModal({ params }: { params: Promise<{ id: string[] }> }) {
+    const { id } = use(params);
     const currentId = id?.[0] || '';
-
     const SelectedComponent = COMPONENT_MAP[currentId];
 
     return (
         <ModalClientContainer id={currentId}>
             {SelectedComponent ? (
-                <Suspense fallback={<div style={{ color: '#000' }}>Загрузка...</div>}>
-                    <SelectedComponent />
-                </Suspense>
+                /* Рендерим напрямую без Suspense для сохранения Shared Layout анимации */
+                <SelectedComponent />
             ) : (
                 <div style={{ color: '#000' }}>Контент не найден</div>
             )}

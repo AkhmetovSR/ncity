@@ -1,0 +1,18 @@
+/* app/@modal/(.)card/[...id]/Loader.module.css */
+.skeletonWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 16px;
+    animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.line {
+    background-color: #e5e7eb;
+    border-radius: 9999px;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .5; }
+}

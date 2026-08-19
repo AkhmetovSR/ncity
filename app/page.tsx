@@ -1,21 +1,17 @@
-// app/page.tsx
-import React from "react";
-import Main from "@/components/Main/Main"; // Импортируем наше интерактивное клиентское ядро интерфейса
+import HomeGridClient from './HomeGridClient';
 
-/**
- * 🌟 ГЛАВНАЯ СТРАНИЦА ПОРТАЛА (Server Component / SSR)
- * Этот компонент выполняется строго на сервере Next.js [INDEX].
- * Роботы Яндекса и Google увидят чистый, готовый к индексации HTML-код главной страницы.
- */
 export default function HomePage() {
+    const cards = [
+        { id: '1', path: 'vacancy', title: 'Вакансии', desc: 'Присоединяйтесь к нашей команде' },
+        { id: '2', path: 'about-us', title: 'О нас', desc: 'Узнайте больше о нашей компании' },
+        { id: '3', path: 'contacts', title: 'Контакты', desc: 'Свяжитесь с нами в любое время' }
+    ];
+
     return (
-        <Main
-            initialActiveId={null}
-            initialVacancyId={null}
-        />
+        <main className="min-h-screen bg-gray-50 p-8">
+            <h1 className="text-3xl font-bold mb-8 text-center text-gray-900">Главная страница</h1>
+            {/* Просто передаем данные в клиентскую сетку */}
+            <HomeGridClient cards={cards} />
+        </main>
     );
 }
-
-
-// Команда для локального PWA-тестирования по HTTPS на мобильном устройстве:
-// "dev": "next dev --experimental-https --hostname 192.168.0.100"

@@ -1,30 +1,44 @@
-// app/@modal/(.)card/[id]/page.tsx
-import React from 'react';
-import StoreCard from '@/components/StoreCard';
-import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
+import { Suspense } from 'react';
+import ModalClientContainer from './ModalClientContainer';
+import Vacancy from '@/app/components/Vacancy';
+import AboutUs from '@/app/components/AboutUs';
+import Contacts from '@/app/components/Contacts';
+import loaderStyles from './Loader.module.css'; // Импорт стилей лоадера
 
-interface Props {
-    params: Promise<{ id: string }>; // В Next.js 15 params — это Promise
+const COMPONENT_MAP: Record<string, React.ComponentType> = {
+    'vacancy': Vacancy,
+    'about-us': AboutUs,
+    'contacts': Contacts,
+};
+
+interface ModalProps {
+    params: Promise<{ id: string[] }>;
 }
 
-export default async function InterceptorModalPage({ params }: Props) {
+export default async function InterceptedCardModal({ params }: ModalProps) {
     const { id } = await params;
-
-    // Функция-маппер: определяет, какой контент рендерить внутри модалки на основе ID в URL
-    const renderWidgetContent = (cardId: string) => {
-        if (cardId === 'vacancy') {
-            return <VacancyList />;
-        }
-
-        // Сюда можно добавить условия для других карточек, например:
-        // if (cardId === 'promo') return <PromoDetails />;
-
-        return <div>Контент для карточки {cardId} не найден</div>;
-    };
+    const currentId = id?.[0] || '';
+    const SelectedComponent = COMPONENT_MAP[currentId];
 
     return (
-        <StoreCard id={id}>
-            {renderWidgetContent(id)}
-        </StoreCard>
+        <ModalClientContainer id={currentId}>
+            {SelectedComponent ? (
+                <Suspense
+                    fallback={
+                        <div className={loaderStyles.skeletonWrapper}>
+                            <div className={loaderStyles.line} style={{ height: '16px', width: '25%' }} />
+                            <div className={loaderStyles.line} style={{ height: '32px', width: '75%', borderRadius: '12px', marginTop: '8px' }} />
+                            <div className={loaderStyles.line} style={{ height: '16px', width: '100%', marginTop: '24px' }} />
+                            <div className={loaderStyles.line} style={{ height: '16px', width: '83%' }} />
+                            <div className={loaderStyles.line} style={{ height: '16px', width: '66%' }} />
+                        </div>
+                    }
+                >
+                    <SelectedComponent />
+                </Suspense>
+            ) : (
+                <div>Контент не найден</div>
+            )}
+        </ModalClientContainer>
     );
 }

@@ -9,14 +9,9 @@ const COMPONENT_MAP: Record<string, React.ComponentType> = {
     'contacts': Contacts,
 };
 
-interface PageProps {
-    params: Promise<{ id: string[] }>;
-}
-
-export default async function StaticCardPage({ params }: PageProps) {
+export default async function StaticCardPage({ params }: { params: Promise<{ id: string[] }> }) {
     const { id } = await params;
     const currentId = id?.[0] || '';
-
 
     const SelectedComponent = COMPONENT_MAP[currentId];
 
@@ -25,9 +20,8 @@ export default async function StaticCardPage({ params }: PageProps) {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl w-full border border-gray-100">
-                {/* Чистый рендеринг без анимации для SEO-ботов и прямых заходов */}
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#09090b', padding: '16px' }}>
+            <div style={{ backgroundColor: '#fff', borderRadius: '16px', padding: '32px', maxWidth: '550px', width: '100%' }}>
                 <SelectedComponent />
             </div>
         </div>

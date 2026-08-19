@@ -8,9 +8,8 @@ export default function HomePage() {
     ];
 
     return (
-        <main className="min-h-screen bg-gray-50 p-8">
-            <h1 className="text-3xl font-bold mb-8 text-center text-gray-900">Главная страница</h1>
-            {/* Просто передаем данные в клиентскую сетку */}
+        <main style={{ padding: '32px 16px' }}>
+            <h1 style={{ color: '#fff', textAlign: 'center', marginBottom: '32px' }}>Главная страница</h1>
             <HomeGridClient cards={cards} />
         </main>
     );

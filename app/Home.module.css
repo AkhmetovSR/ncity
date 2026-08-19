@@ -1,49 +1,39 @@
 .grid {
     display: grid;
     grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: 24px;
-    max-width: 1024px;
+    gap: 16px;
+    max-width: 600px;
     margin: 0 auto;
-    justify-items: center;
-}
-
-@media (min-width: 768px) {
-    .grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
 }
 
 .cardNode {
     padding: 24px;
-    background-color: #ffffff;
-    border-radius: 16px; /* Строго совпадает с модалкой */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    border: 1px solid #f3f4f6;
+    background-color: #18181b;
+    border-radius: 16px;
+    border: 1px solid #27272a;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /*height: 192px; !* h-48 *!*/
-    text-decoration: none;
-    width: 70%;
-    height: 90%;
+    height: 160px;
+    color: #fff;
+    box-sizing: border-box;
 }
 
 .title {
     font-size: 20px;
     font-weight: 600;
-    color: #1f2937;
     margin: 0 0 8px 0;
 }
 
 .desc {
     font-size: 14px;
-    color: #6b7280;
+    color: #a1a1aa;
     margin: 0;
 }
 
 .linkText {
-    color: #2563eb;
+    color: #3b82f6;
     font-size: 14px;
     font-weight: 500;
     align-self: flex-end;

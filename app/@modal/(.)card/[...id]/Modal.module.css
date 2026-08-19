@@ -1,5 +1,3 @@
-/* app/@modal/(.)card/[...id]/Modal.module.css */
-
 .backdrop {
     position: fixed;
     inset: 0;
@@ -7,26 +5,26 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(12px);
-    padding: 24px;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    padding: 16px;
 }
 
 .modalNode {
     position: relative;
     width: 100%;
-    max-width: 672px;
+    max-width: 550px;
     background-color: #ffffff;
     border-radius: 16px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    border: 1px solid #f3f4f6;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
+    max-height: 85vh;
 
-    /* КРИТИЧЕСКИ ВАЖНО ДЛЯ ИСПРАВЛЕНИЯ МОРГАНИЯ: */
-    overflow: hidden;         /* Не дает внутреннему контенту вылезать при изменении размеров */
-    contain: paint;           /* Изолирует отрисовку блока, запрещая браузеру показывать его раньше времени */
-    opacity: 0;               /* Базовое состояние в CSS — полностью скрыто, чтобы первый кадр не моргал */
+    /* Фикс моргания первого кадра: */
+    overflow: hidden;
+    contain: paint;
+    opacity: 0;
 }
 
 .closeButton {
@@ -35,28 +33,14 @@
     right: 16px;
     padding: 8px;
     border-radius: 50%;
-    background-color: #f9fafb;
-    border: 1px solid rgba(229, 231, 235, 0.5);
-    color: #9ca3af;
+    background-color: #f4f4f5;
+    border: none;
+    color: #71717a;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     z-index: 10;
 }
 
-.closeButton:hover {
-    background-color: #f3f4f6;
-    color: #374151;
-}
-
-.closeIcon {
-    width: 20px;
-    height: 20px;
-}
-
 .scrollContent {
-    padding: 32px;
+    padding: 24px;
     overflow-y: auto;
-    color: #111827;
 }

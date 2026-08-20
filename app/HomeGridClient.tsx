@@ -105,7 +105,11 @@ export default function HomeGridClient({ cards, initialActiveId }: HomeGridClien
             */}
             <ModalAnimateWrapper>
                 {activeId && SelectedComponent && (
-                    <ModalClientContainer id={activeId} onClose={() => setActiveId('')}>
+                    <ModalClientContainer
+                        key={activeId} // КРИТИЧЕСКИ ВАЖНО: принудительно разделяет контексты анимации
+                        id={activeId}
+                        onClose={() => setActiveId('')}
+                    >
                         <SelectedComponent />
                     </ModalClientContainer>
                 )}

@@ -2,7 +2,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 // Укажите правильный путь к вашему Modal.module.css
 import styles from '@/app/components/Modal.module.css';
 
@@ -12,7 +12,7 @@ interface ContainerProps {
     onClose: () => void; // Принимаем экшен закрытия от родительской сетки
 }
 
-export default function ModalClientContainer({ id, children, onClose }: ContainerProps)   {
+export default function ModalClientContainer({ id, children }: ContainerProps)   {
     // const overlayRef = useRef<HTMLDivElement>(null);
 
     // Универсальная функция закрытия модалки

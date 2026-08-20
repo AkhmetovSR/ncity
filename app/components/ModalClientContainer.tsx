@@ -1,23 +1,29 @@
 // app/components/ModalClientContainer.tsx
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useEffect, useRef } from 'react';
-// Импортируйте ваши стили модалки. Укажите правильный путь к вашему Modal.module.css
+// Укажите правильный путь к вашему Modal.module.css
 import styles from '@/app/components/Modal.module.css';
 
 interface ContainerProps {
     id: string;
     children: React.ReactNode;
+    onClose: () => void; // Принимаем экшен закрытия от родительской сетки
 }
 
-export default function ModalClientContainer({ id, children }: ContainerProps) {
-    const router = useRouter();
-    const overlayRef = useRef<HTMLDivElement>(null);
+export default function ModalClientContainer({ id, children, onClose }: ContainerProps)   {
+    // const overlayRef = useRef<HTMLDivElement>(null);
 
-    const handleClose = () => router.back();
+    // Универсальная функция закрытия модалки
+    const handleClose = () => {
+        // 1. Мгновенно убираем модалку из стейта, чтобы запустилась анимация схлопывания (exit)
+        onClose();
+        // 2. Нативно возвращаем URL на главную за 0 мс (работает без интернета)
+        window.history.pushState(null, '', '/');
+    };
 
+    // Слушаем клавишу Escape для закрытия
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') handleClose();
@@ -27,7 +33,8 @@ export default function ModalClientContainer({ id, children }: ContainerProps) {
     }, []);
 
     return (
-        <div ref={overlayRef} onClick={(e) => e.target === overlayRef.current && handleClose()} className={styles.backdrop}>
+        /* Клик по бэкдропу закрывает модалку */
+        // <div ref={overlayRef} onClick={(e) => e.target === overlayRef.current && handleClose()} className={styles.backdrop}>
             <motion.div
                 layoutId={id}
                 initial={{ opacity: 0 }}
@@ -44,6 +51,6 @@ export default function ModalClientContainer({ id, children }: ContainerProps) {
                     {children}
                 </div>
             </motion.div>
-        </div>
+        // </div>
     );
 }

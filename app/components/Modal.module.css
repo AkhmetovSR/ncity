@@ -11,15 +11,17 @@
 }
 
 .modalNode {
-    position: relative;
-    width: 100%;
-    max-width: 550px;
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    inset: 2.5vw;
+    /*max-width: 550px;*/
     background-color: #ffffff;
     border-radius: 16px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    /*box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);*/
     display: flex;
     flex-direction: column;
-    max-height: 85vh;
+    /*max-height: 85vh;*/
 
     /* Фикс моргания первого кадра: */
     overflow: hidden;

@@ -1,48 +1,43 @@
-// app/[[[...slug]]]/page.tsx
+// app/[[...slug]]/page.tsx
 import HomeGridClient from '../HomeGridClient';
-import ModalClientContainer from '@/app/components/ModalClientContainer';
-import ModalAnimateWrapper from '@/app/components/ModalAnimateWrapper';
-import Vacancy from '@/app/components/Vacancy';
-import AboutUs from '@/app/components/AboutUs';
-import Contacts from '@/app/components/Contacts';
-
-const COMPONENT_MAP: Record<string, React.ComponentType> = {
-    'vacancy': Vacancy,
-    'about-us': AboutUs,
-    'contacts': Contacts,
-};
 
 interface CatchAllProps {
     params: Promise<{ slug?: string[] }>;
 }
 
+/**
+ * Серверный компонент-контроллер.
+ * Отвечает за SEO и первоначальный рендеринг страницы на сервере.
+ */
 export default async function CatchAllPage({ params }: CatchAllProps) {
+    // 1. Получаем параметры пути на сервере (в Next.js params — это Promise)
     const { slug } = await params;
 
+    // Стабильный массив данных карточек для генерации сетки
     const cards = [
         { id: '1', path: 'vacancy', title: 'Вакансии', desc: 'Присоединяйтесь к нашей команде' },
         { id: '2', path: 'about-us', title: 'О нас', desc: 'Узнайте больше о нашей компании' },
         { id: '3', path: 'contacts', title: 'Контакты', desc: 'Свяжитесь с нами в любое время' }
     ];
 
-    // Безопасно проверяем первый элемент через опциональную цепочку ?.
-    const isModalOpen = slug?.[0] === 'card';
-    const currentId = isModalOpen ? slug?.[1] || '' : '';
-    const SelectedComponent = COMPONENT_MAP[currentId];
+    // 2. Определяем, открыта ли карточка при ПРЯМОМ заходе (например, из поисковика)
+    // Если URL вида /card/vacancy, то slug будет ['card', 'vacancy']
+    const initialModalOpen = slug?.[0] === 'card';
+    const initialActiveId = initialModalOpen ? slug?.[1] || '' : '';
 
     return (
         <main style={{ padding: '32px 16px' }}>
             <h1 style={{ color: '#fff', textAlign: 'center', marginBottom: '32px' }}>Главная страница</h1>
 
-            <HomeGridClient cards={cards} />
-
-            <ModalAnimateWrapper>
-                {isModalOpen && SelectedComponent && (
-                    <ModalClientContainer id={currentId}>
-                        <SelectedComponent />
-                    </ModalClientContainer>
-                )}
-            </ModalAnimateWrapper>
+            {/*
+              Передаем сетке не только карточки, но и начальное состояние роута.
+              Если пользователь обновит страницу на /card/vacancy, клиентский компонент
+              сразу узнает, какую модалку нужно открыть при гидратации.
+            */}
+            <HomeGridClient
+                cards={cards}
+                initialActiveId={initialActiveId}
+            />
         </main>
     );
 }

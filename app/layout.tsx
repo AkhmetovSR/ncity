@@ -13,12 +13,12 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-    title: "Нягань",
+    title: "asd",
     description: "Мобильное приложение для поиска работы",
     appleWebApp: {
         capable: true,
         statusBarStyle: "black-translucent",
-        title: "Н",
+        title: "x",
     },
 };
 

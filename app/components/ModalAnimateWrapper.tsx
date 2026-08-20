@@ -1,14 +1,13 @@
+// app/components/ModalAnimateWrapper.tsx
 'use client';
+
 import { AnimatePresence } from "framer-motion";
-import { usePathname } from "next/navigation";
 
 export default function ModalAnimateWrapper({ children }: { children: React.ReactNode }) {
-    const pathname = usePathname();
-    const isModalActive = pathname.includes('/card/');
-
     return (
+        /* mode="popLayout" часто работает лучше для layoutId, но оставляем "wait", если вам так привычнее */
         <AnimatePresence mode="wait">
-            {isModalActive ? children : null}
+            {children}
         </AnimatePresence>
     );
 }

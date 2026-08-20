@@ -1,3 +1,4 @@
+// app/HomeGridClient.tsx
 'use client';
 
 import Link from 'next/link';
@@ -15,7 +16,17 @@ export default function HomeGridClient({ cards }: { cards: Card[] }) {
     return (
         <div className={styles.grid}>
             {cards.map((card) => (
-                <Link key={card.id} href={`/card/${card.path}`} scroll={false} style={{ textDecoration: 'none' }}>
+                /*
+                  Используем стандартный Link. Next.js поймет, что роут [ ...slug ]
+                  совпадает с текущим, и выполняет мягкий клиентский переход
+                  без размонтирования компонента сетки.
+                */
+                <Link
+                    key={card.id}
+                    href={`/card/${card.path}`}
+                    scroll={false}
+                    style={{ textDecoration: 'none' }}
+                >
                     <motion.div
                         layoutId={card.path}
                         className={styles.cardNode}

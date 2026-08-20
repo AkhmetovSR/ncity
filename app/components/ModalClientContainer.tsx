@@ -1,9 +1,11 @@
+// app/components/ModalClientContainer.tsx
 'use client';
 
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useEffect, useRef } from 'react';
-import styles from './Modal.module.css';
+// Импортируйте ваши стили модалки. Укажите правильный путь к вашему Modal.module.css
+import styles from '@/app/components/Modal.module.css';
 
 interface ContainerProps {
     id: string;

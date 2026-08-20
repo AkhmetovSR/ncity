@@ -1,4 +1,4 @@
-export default async function AboutUs() {
+export default function AboutUs() {
     return (
         <div className="space-y-4">
             <h2 className="text-2xl font-bold text-gray-900">О компании</h2>

@@ -1,8 +1,8 @@
+// app/layout.tsx
 import React from "react";
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import s from "./layout.module.css";
-import ModalAnimateWrapper from "@/app/components/ModalAnimateWrapper";
 
 export const viewport: Viewport = {
     themeColor: "#09090b",
@@ -24,31 +24,25 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
                                        children,
-                                       modal
                                    }: {
     children: React.ReactNode;
-    modal: React.ReactNode;
 }) {
     return (
         <html lang="ru">
         <body className={s.rootBody}>
         <div className={s.mainContent}>
+            {/* Теперь здесь рендерится только стабильное дерево children */}
             {children}
-
-            {/* Слот модалки с AnimatePresence для анимации закрытия */}
-            <ModalAnimateWrapper>
-                {modal}
-            </ModalAnimateWrapper>
         </div>
 
         <Script id="register-pwa-sw" strategy="afterInteractive">
             {`
-                    if ('serviceWorker' in navigator) {
-                        window.addEventListener('load', function() {
-                            navigator.serviceWorker.register('/sw.js').catch(err => console.error(err));
-                        });
-                    }
-                `}
+                        if ('serviceWorker' in navigator) {
+                            window.addEventListener('load', function() {
+                                navigator.serviceWorker.register('/sw.js').catch(err => console.error(err));
+                            });
+                        }
+                    `}
         </Script>
         </body>
         </html>

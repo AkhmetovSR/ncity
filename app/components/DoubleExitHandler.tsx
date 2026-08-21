@@ -9,54 +9,69 @@ export default function DoubleExitHandler() {
     const pathname = usePathname();
     const [showToast, setShowToast] = useState(false);
 
-    // Используем Refs, чтобы избежать перезапуска эффекта при изменении стейта
     const isReadyRef = useRef(false);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    // Храним статус: заперли ли мы уже браузер на главной
+    const isLockedRef = useRef(false);
 
     useEffect(() => {
-        // Логика работает исключительно на Главной странице
-        if (pathname !== '/') return;
+        // Условие: мы находимся в домашней зоне (корень или открытая модалка карточки)
+        const isHomeZone = pathname === '/' || pathname.startsWith('/card/');
 
-        // Создаем фантомный хэш в истории браузера
-        if (!window.location.hash.includes('main')) {
-            window.history.pushState(null, '', '#main');
+        if (!isHomeZone) {
+            // ЕСЛИ ПОЛЬЗОВАТЕЛЬ УШЕЛ ИЗ ДОМАШНЕЙ ЗОНЫ (например, на /profile):
+            // Если история была заперта, мы обязаны сделать шаг назад,
+            // чтобы убрать фантомную запись и сделать стек истории абсолютно плоским.
+            if (isLockedRef.current) {
+                isLockedRef.current = false;
+                window.history.back();
+            }
+            return;
         }
 
-        const handlePopState = () => {
-            // Если это второе нажатие в течение 2 секунд — выходим с сайта
+        // Если мы в домашней зоне и история еще не заперта — запираем её чистым пушем
+        if (!isLockedRef.current && window.history.state?.isAppRoot !== true) {
+            window.history.pushState({ isAppRoot: true }, '', pathname);
+            isLockedRef.current = true;
+        }
+
+        const handlePopState = (e: PopStateEvent) => {
+            // Если в стейте истории нет флага корня — значит, пользователь перемещается внутри сайта, не трогаем его
+            if (window.history.state?.isAppRoot !== true) {
+                isLockedRef.current = false;
+                return;
+            }
+
+            // Если это второе нажатие в течение 2 секунд — полностью закрываем приложение / вкладку
             if (isReadyRef.current) {
                 window.history.go(-1);
                 return;
             }
 
-            // --- ПЕРВОЕ НАЖАТИЕ НАЗАД ---
+            // --- ПЕРВОЕ НАЖАТИЕ НАЗАД НА ГЛАВНОЙ ---
             setShowToast(true);
             isReadyRef.current = true;
 
-            // Возвращаем фантомный хэш на место, временно запирая пользователя
-            window.history.pushState(null, '', '#main');
+            // Возвращаем запирающий элемент в стек истории на место
+            window.history.pushState({ isAppRoot: true }, '', pathname);
 
-            // Сбрасываем предыдущий таймер, если пользователь кликает слишком часто
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
-            // Окно ожидания второго клика — 2 секунды
             timeoutRef.current = setTimeout(() => {
                 isReadyRef.current = false;
                 setShowToast(false);
             }, 2000);
         };
 
-        // Подписываемся на системную кнопку «Назад»
         window.addEventListener('popstate', handlePopState);
 
         return () => {
             window.removeEventListener('popstate', handlePopState);
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
         };
-    }, [pathname]); // Зависит только от пути, рассинхрон исключен
+    }, [pathname]);
 
-    // Рендерим плашку только на Главной и только по триггеру
-    if (!showToast || pathname !== '/') return null;
+    if (!showToast) return null;
 
     return (
         <div className={styles.toast}>

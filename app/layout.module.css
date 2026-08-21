@@ -39,3 +39,21 @@
     justify-items: center;
     /*border: 1px solid blue;*/
 }
+
+/*.rootBody {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    background-color: #09090b;*/
+/*    font-family: system-ui, -apple-system, sans-serif;*/
+/*}*/
+
+.mainContent {
+    min-height: 100vh;
+    box-sizing: border-box;
+
+    /*
+       Резервируем место внизу экрана:
+       64px (высота меню) + безопасная зона смартфона + 16px (дополнительный зазор)
+    */
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 16px);
+}

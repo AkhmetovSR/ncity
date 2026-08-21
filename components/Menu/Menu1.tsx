@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import s from '@/components/Menu/Menu.module.css';
 
-export default function Menu() {
+export default function Menu1() {
     const pathname = usePathname();
 
     return (

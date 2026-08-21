@@ -1,0 +1,97 @@
+/* app/components/Menu.module.css */
+
+/* Главный фиксированный контейнер меню (накладывает эффект матового стекла) */
+.Menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50; /* Выше контента, но ниже бэкдропа модалки (у которой 100+) */
+
+    /* Эффект матового стекла Apple (Glassmorphism) для светлой темы по умолчанию */
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    /* Тонкая фирменная граница сверху */
+    border-top: 0.5px solid rgba(0, 0, 0, 0.15);
+
+    /* Учет нижней полосы на iPhone (Safe Area) */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-sizing: content-box;
+}
+
+/* Автоматическая адаптация под темную тему операционной системы */
+@media (prefers-color-scheme: dark) {
+    .Menu {
+        background-color: rgba(29, 29, 31, 0.75);
+        border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* Внутренний контейнер для ссылок с центрированием */
+.linksContainer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 49px; /* Эталонная высота Tab Bar в iOS */
+    width: 100%;
+    max-width: 600px; /* Чтобы меню не расползалось на планшетах */
+    margin: 0 auto;
+    padding: 0 12px;
+    box-sizing: border-box;
+}
+
+/* Стилизация интерактивной ссылки-вкладки */
+.link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+    text-decoration: none;
+    gap: 2px;
+
+    /* Цвета для неактивного состояния (iOS Gray) */
+    color: #8E8E93;
+    fill: none;
+    stroke: #8E8E93;
+
+    transition: color 0.2s ease, stroke 0.2s ease, fill 0.2s ease;
+    -webkit-tap-highlight-color: transparent; /* Убирает дефолтный синий клик в Safari */
+}
+
+.link:focus {
+    outline: none;
+}
+
+/* Стили для текстовой метки внутри ссылки */
+.link span {
+    font-size: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+}
+
+/* Активное состояние для светлой темы (iOS Accent Blue) */
+.link.active {
+    color: #007AFF;
+    stroke: #007AFF;
+}
+
+/* Заливка иконки при активности (имитация стиля SF Symbols) */
+.link.active svg {
+    fill: #007AFF;
+}
+
+/* Настройки темной темы для активного состояния (iOS Dark Accent Blue) */
+@media (prefers-color-scheme: dark) {
+    .link.active {
+        color: #0A84FF;
+        stroke: #0A84FF;
+    }
+    .link.active svg {
+        fill: #0A84FF;
+    }
+}

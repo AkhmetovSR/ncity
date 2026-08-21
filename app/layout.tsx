@@ -1,8 +1,10 @@
 // app/layout.tsx
 import React from "react";
-import type { Metadata, Viewport } from "next";
+import type {Metadata, Viewport} from "next";
 import Script from "next/script";
 import s from "./layout.module.css";
+import Menu from "@/app/components/Menu";
+import DoubleExitHandler from "@/app/components/DoubleExitHandler";
 
 export const viewport: Viewport = {
     themeColor: "#09090b",
@@ -30,11 +32,12 @@ export default function RootLayout({
     return (
         <html lang="ru">
         <body className={s.rootBody}>
+        <DoubleExitHandler />
         <div className={s.mainContent}>
             {/* Теперь здесь рендерится только стабильное дерево children */}
             {children}
         </div>
-
+        <Menu/>
         <Script id="register-pwa-sw" strategy="afterInteractive">
             {`
                         if ('serviceWorker' in navigator) {

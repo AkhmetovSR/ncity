@@ -38,7 +38,7 @@
 
 /*!* Темная тема (включается автоматически, если ОС пользователя в dark mode) *!*/
 /*@media (prefers-color-scheme: dark) {*/
-/*    .Menu {*/
+/*    .Menu1 {*/
 /*        background-color: rgba(29, 29, 31, 0.75);*/
 /*        border-top: 0.5px solid rgba(255, 255, 255, 0.1);*/
 /*    }*/

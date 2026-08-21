@@ -49,15 +49,37 @@ export default function HomeGridClient({ cards, initialActiveId }: HomeGridClien
         window.history.pushState(null, '', `/card/${path}`);
     };
 
+    // // 3. Синхронизация с системной кнопкой «Назад» в браузере
+    // useEffect(() => {
+    //     const handlePopState = () => {
+    //         // Проверяем текущий URL. Если мы вернулись на корень, сбрасываем стейт
+    //         const isRoot = window.location.pathname === '/';
+    //         if (isRoot) {
+    //             setActiveId('');
+    //         } else {
+    //             // Если вернулись на другую карточку (из истории), извлекаем её id
+    //             const pathParts = window.location.pathname.split('/');
+    //             const cardId = pathParts[pathParts.length - 1];
+    //             if (COMPONENT_MAP[cardId]) setActiveId(cardId);
+    //         }
+    //     };
+    //
+    //     window.addEventListener('popstate', handlePopState);
+    //     return () => window.removeEventListener('popstate', handlePopState);
+    // }, []);
     // 3. Синхронизация с системной кнопкой «Назад» в браузере
     useEffect(() => {
+        // ЕСЛИ зашли по прямой ссылке (initialActiveId не пустой),
+        // вешаем на текущую страницу истории метку прямого захода
+        if (initialActiveId) {
+            window.history.replaceState({ isDirectEntry: true }, '');
+        }
+
         const handlePopState = () => {
-            // Проверяем текущий URL. Если мы вернулись на корень, сбрасываем стейт
             const isRoot = window.location.pathname === '/';
             if (isRoot) {
                 setActiveId('');
             } else {
-                // Если вернулись на другую карточку (из истории), извлекаем её id
                 const pathParts = window.location.pathname.split('/');
                 const cardId = pathParts[pathParts.length - 1];
                 if (COMPONENT_MAP[cardId]) setActiveId(cardId);
@@ -66,7 +88,8 @@ export default function HomeGridClient({ cards, initialActiveId }: HomeGridClien
 
         window.addEventListener('popstate', handlePopState);
         return () => window.removeEventListener('popstate', handlePopState);
-    }, []);
+    }, [initialActiveId]); // Добавили initialActiveId в зависимости для безопасности
+
 
     const SelectedComponent = COMPONENT_MAP[activeId];
 

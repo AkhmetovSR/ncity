@@ -11,17 +11,14 @@ export default function DoubleExitHandler() {
 
     const isReadyRef = useRef(false);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-    // Храним статус: заперли ли мы уже браузер на главной
     const isLockedRef = useRef(false);
 
     useEffect(() => {
-        // Условие: мы находимся в домашней зоне (корень или открытая модалка карточки)
-        const isHomeZone = pathname === '/' || pathname.startsWith('/card/');
-
-        if (!isHomeZone) {
-            // ЕСЛИ ПОЛЬЗОВАТЕЛЬ УШЕЛ ИЗ ДОМАШНЕЙ ЗОНЫ (например, на /profile):
-            // Если история была заперта, мы обязаны сделать шаг назад,
-            // чтобы убрать фантомную запись и сделать стек истории абсолютно плоским.
+        // Логика перехвата работает исключительно на чистом корне '/'
+        // Если открыты модалки (/card/...) или профиль — компонент полностью спит
+        if (pathname !== '/') {
+            // Если пользователь кликнул в меню на другую вкладку,
+            // плавно убираем за собой блокирующую запись, делая стек истории плоским
             if (isLockedRef.current) {
                 isLockedRef.current = false;
                 window.history.back();
@@ -29,34 +26,43 @@ export default function DoubleExitHandler() {
             return;
         }
 
-        // Если мы в домашней зоне и история еще не заперта — запираем её чистым пушем
-        if (!isLockedRef.current && window.history.state?.isAppRoot !== true) {
-            window.history.pushState({ isAppRoot: true }, '', pathname);
+        // Запираем историю на главной странице чистым дубликатом без хэшей.
+        // Передаем в стейт понятную метку 'app-root'
+        if (!isLockedRef.current && window.history.state?.type !== 'app-root') {
+            window.history.pushState({ type: 'app-root' }, '', '/');
             isLockedRef.current = true;
         }
 
-        const handlePopState = (e: PopStateEvent) => {
-            // Если в стейте истории нет флага корня — значит, пользователь перемещается внутри сайта, не трогаем его
-            if (window.history.state?.isAppRoot !== true) {
+        const handlePopState = () => {
+            // Защита: если событие поймано не на главной — полностью игнорируем
+            if (window.location.pathname !== '/') return;
+
+            // СЕНЬОР-АНАЛИЗ СОСТОЯНИЯ ИСТОРИИ:
+            // Если мы вернулись на главную, а в стейте остался маркер 'modal' или 'direct-modal',
+            // это означает, что пользователь только что нажал на крестик (или сделал свайп назад)
+            // внутри модального окна. Мы просто сбрасываем замок в false и молчим.
+            const currentStateType = window.history.state?.type;
+            if (currentStateType === 'modal' || currentStateType === 'direct-modal') {
                 isLockedRef.current = false;
                 return;
             }
 
-            // Если это второе нажатие в течение 2 секунд — полностью закрываем приложение / вкладку
+            // Если это второе нажатие в течение 2 секунд — полностью закрываем вкладку/PWA
             if (isReadyRef.current) {
                 window.history.go(-1);
                 return;
             }
 
-            // --- ПЕРВОЕ НАЖАТИЕ НАЗАД НА ГЛАВНОЙ ---
+            // --- ПЕРВОЕ НАЖАТИЕ НАЗАД НА ГЛАВНОЙ (РЕАЛЬНЫЙ ВЫХОД ИЗ ПРИЛОЖЕНИЯ) ---
             setShowToast(true);
             isReadyRef.current = true;
 
             // Возвращаем запирающий элемент в стек истории на место
-            window.history.pushState({ isAppRoot: true }, '', pathname);
+            window.history.pushState({ type: 'app-root' }, '', '/');
 
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
+            // Окно ожидания второго клика — 2 секунды
             timeoutRef.current = setTimeout(() => {
                 isReadyRef.current = false;
                 setShowToast(false);
@@ -71,7 +77,8 @@ export default function DoubleExitHandler() {
         };
     }, [pathname]);
 
-    if (!showToast) return null;
+    // Рендерим плашку только на Главной и только по триггеру
+    if (!showToast || pathname !== '/') return null;
 
     return (
         <div className={styles.toast}>

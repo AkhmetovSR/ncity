@@ -32,7 +32,7 @@ export default function RootLayout({
     return (
         <html lang="ru">
         <body className={s.rootBody}>
-        <DoubleExitHandler />
+        {/*<DoubleExitHandler />*/}
         <div className={s.mainContent}>
             {/* Теперь здесь рендерится только стабильное дерево children */}
             {children}

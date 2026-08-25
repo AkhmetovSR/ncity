@@ -4,13 +4,12 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from "framer-motion";
 import VacancyGrid from "./VacancyGrid";
-import VacancySheet from "./VacancySheet"; // Наша контролируемая шторка
-import VacancyCardContent from "./VacancyCardContent"; // Просто div с контентом описания
+import VacancySheet from "./VacancySheet";
+import VacancyCardContent from "./VacancyCardContent";
 import { useVacancies } from "@/hooks/useVacancies";
 import s from '@/components/Home/Job/VacancyList/VacancyList.module.css';
 
-// 🌟 СЕНЬОР-ФИКС: Обязательно добавляем export перед интерфейсом!
-export interface VacancyListProps {
+interface VacancyListProps {
     initialVacancyId: string;
 }
 
@@ -18,55 +17,51 @@ export default function VacancyList({ initialVacancyId }: VacancyListProps) {
     const { vacancies, loading, error, handleRetry } = useVacancies();
     const [activeVacancyId, setActiveVacancyId] = useState<string>(initialVacancyId);
 
+    // 🌟 СИНХРОНИЗАЦИЯ С ИСТОРИЕЙ (ПОЛНАЯ СИММЕТРИЯ ТВОЕЙ ГЛАВНОЙ)
     useEffect(() => {
-        // Если при первом заходе шторка уже открыта сервером, помечаем точку в истории
         if (initialVacancyId) {
             window.history.replaceState({ type: 'direct-vacancy-modal' }, '');
         }
 
-        // Слушаем ручной клик из сетки вакансий
-        const handleOpenSheet = (e: Event) => {
-            const customEvent = e as CustomEvent<string>;
-            setActiveVacancyId(customEvent.detail);
-        };
-
-        // Слушаем системную кнопку «Назад» в браузере (копия твоей логики синхронизации)
         const handlePopState = () => {
             const pathname = window.location.pathname;
+            // Если вернулись на корень раздела вакансий
             const isBaseVacancyRoute = pathname === '/vacancy' || pathname === '/vacancy/';
 
             if (isBaseVacancyRoute) {
-                setActiveVacancyId(''); // Плавно закрываем шторку
+                setActiveVacancyId(''); // Закрываем шторку
             } else {
+                // Если перемещаемся по истории вперед-назад между вакансиями
                 const pathParts = pathname.split('/');
                 const vacancyId = pathParts[pathParts.length - 1];
                 if (vacancyId) setActiveVacancyId(vacancyId);
             }
         };
 
-        window.addEventListener('open-vacancy-sheet', handleOpenSheet);
         window.addEventListener('popstate', handlePopState);
-
-        return () => {
-            window.removeEventListener('open-vacancy-sheet', handleOpenSheet);
-            window.removeEventListener('popstate', handlePopState);
-        };
+        return () => window.removeEventListener('popstate', handlePopState);
     }, [initialVacancyId]);
 
     return (
         <motion.div className={s.contentWrapper}>
             <div className={s.vacancyList}>
                 <AnimatePresence mode="wait">
-                    {loading && <VacancyGrid vacancies={[]} loading={true} />}
+                    {loading && (
+                        // Прокидываем пустую функцию в скелетоны, чтобы типы не ругались
+                        <VacancyGrid vacancies={[]} loading={true} onVacancyClick={() => {}} />
+                    )}
 
                     {!loading && !error && vacancies.length > 0 && (
-                        <VacancyGrid vacancies={vacancies} />
+                        // 🌟 ВОТ ОНА АНАЛОГИЯ: передаем функцию изменения стейта прямо в грид
+                        <VacancyGrid
+                            vacancies={vacancies}
+                            onVacancyClick={(id) => setActiveVacancyId(id)}
+                        />
                     )}
-                    {/* Твоя обработка ошибок и пустого стейта */}
                 </AnimatePresence>
             </div>
 
-            {/* 🌟 ШТОРКА: Работает как твой ModalAnimateWrapper + ModalClientContainer 🌟 */}
+            {/* Шторка анимируется через AnimatePresence на основе стейта activeVacancyId */}
             <AnimatePresence>
                 {activeVacancyId && (
                     <VacancySheet
@@ -74,7 +69,6 @@ export default function VacancyList({ initialVacancyId }: VacancyListProps) {
                         id={activeVacancyId}
                         onClose={() => setActiveVacancyId('')}
                     >
-                        {/* Внутрь шторки-контейнера просто прокидываем div с контентом */}
                         <VacancyCardContent id={activeVacancyId} />
                     </VacancySheet>
                 )}

@@ -1,46 +1,38 @@
 // components/Home/Job/VacancyList/VacancySheet.tsx
 'use client';
 
-import React, { useEffect } from "react";
-import { useRouter } from "next/navigation"; // Импортируем роутер как в твоем контейнере модалки
-import { motion } from "framer-motion";
-import s from "./VacancySheet.module.css";
+import { motion } from 'framer-motion';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import s from './VacancySheet.module.css';
 
 interface VacancySheetProps {
-    id: string;                 // Передаем ID для сохранения структуры (аналог layoutId, если используешь)
-    onClose: () => void;        // Функция сброса стейта в родительском компоненте
-    children: React.ReactNode;  // div с контентом описания
+    id: string;
+    children: React.ReactNode;
+    onClose: () => void;
 }
 
-export default function VacancySheet({ id, onClose, children }: VacancySheetProps) {
+export default function VacancySheet({ id, children, onClose }: VacancySheetProps) {
     const router = useRouter();
 
-    // 🌟 ОДИН В ОДИН ТВОЯ БОЕВАЯ ЛОГИКА handleClose 🌟
     const handleClose = () => {
-        // Проверяем, зашел ли пользователь на эту вакансию по прямой ссылке.
-        // Ищем маркер 'direct-vacancy-modal', который мы записали в VacancyList.
+        // Железобетонная копия твоей логики модалок
         const isDirect = window.history.state?.type === 'direct-vacancy-modal';
 
         if (isDirect) {
-            // КАНОН NEXT.JS: Если заход прямой из поисковика — делаем SPA-переход на базовый роут вакансий.
-            // URL меняется на '/vacancy', а AnimatePresence в родительском компоненте запустит exit-анимацию.
-            router.push('/vacancy');
             onClose();
+            router.push('/vacancy');
         } else {
-            // ОБЫЧНЫЙ ВАРИАНТ: Если кликнули внутри сайта — сначала уведомляем родительский стейт,
-            // чтобы запустить плавную exit-анимацию свайпа вниз, а затем делаем шаг назад в истории.
             onClose();
             window.history.back();
         }
     };
 
-    // Блокируем скролл страницы на фоне при монтировании шторки (iOS канон)
     useEffect(() => {
         document.body.style.overflow = 'hidden';
         return () => { document.body.style.overflow = ''; };
     }, []);
 
-    // Слушаем клавишу Escape для закрытия шторки физической клавиатурой (как в твоем коде)
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') handleClose();
@@ -50,43 +42,40 @@ export default function VacancySheet({ id, onClose, children }: VacancySheetProp
     }, [router]);
 
     return (
-        // Вся обертка рендерится внутри AnimatePresence родительского VacancyList
-        <div className={s.overlay} onClick={handleClose}>
-
-            {/* Плавный матовый задник Apple-style */}
+        <>
+            {/*
+              🌟 СЕНЬОР-ФИКС: Оверлеем и задником теперь является один плоский motion.div.
+              В момент вызова onClose() он мгновенно считывается как удаляемый,
+              плавно исчезает, и больше НЕ блокирует клики по карточкам сзади!
+            */}
             <motion.div
-                className={s.backdrop}
+                className={s.backdropOverlay}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
+                transition={{ type: 'tween', ease: [0.25, 1, 0.5, 1], duration: 0.35 }}
+                onClick={handleClose} // Клик по фону закрывает шторку
             />
 
-            {/* Выезжающая шторка с каноничной упругой пружиной */}
+            {/* Сама шторка рендерится как независимый узел на том же уровне */}
             <motion.div
+                layoutId={id} // Твоя нативная связка по id
                 className={s.sheet}
-                onClick={(e) => e.stopPropagation()} // Клик внутри шторки не закроет её
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
-                exit={{ y: "100%" }} // Анимация плавного уезда вниз при срабатывании handleClose
-                transition={{
-                    type: "spring",
-                    damping: 28,
-                    stiffness: 240,
-                    mass: 0.8
-                }}
+                exit={{ y: "100%" }}
+                transition={{ type: 'spring', damping: 30, stiffness: 260, mass: 0.8 }}
             >
-                {/* Серая полоска сверху имитирует действие кнопки закрытия */}
                 <div className={s.dragHandle} onClick={handleClose} />
 
                 <div className={s.content}>
-                    {children} {/* Рендерим переданный div с описанием */}
+                    {children}
 
                     <button className={s.closeButton} onClick={handleClose}>
                         Закрыть
                     </button>
                 </div>
             </motion.div>
-        </div>
+        </>
     );
 }

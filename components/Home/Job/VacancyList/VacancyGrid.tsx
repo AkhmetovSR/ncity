@@ -10,19 +10,21 @@ import s from './VacancyList.module.css';
 interface VacancyGridProps {
     vacancies: Vacancy[];
     loading?: boolean;
+    // 🌟 СЕНЬОР-ФИКС: Передаем функцию изменения стейта из родителя, как на главной!
+    onVacancyClick: (id: string) => void;
 }
 
-export default function VacancyGrid({ vacancies, loading = false }: VacancyGridProps) {
+export default function VacancyGrid({ vacancies, loading = false, onVacancyClick }: VacancyGridProps) {
 
-    // Обработчик клика по карточке вакансии (копия твоей логики handleCardClick)
+    // Обработчик клика по карточке вакансии (ТЕПЕРЬ ЭТО 100% КОПИЯ handleCardClick)
     const handleVacancyClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
         e.preventDefault(); // Прерываем переход, чтобы роутер Next.js не стирал DOM
 
-        // Пушим маркер 'vacancy-modal' в историю, чтобы DoubleExitHandler не путался
-        window.history.pushState({ type: 'vacancy-modal' }, '', `/vacancy/card/${id}`);
+        // 1. Мгновенно меняем стейт в родительском компоненте (без всяких кастомных событий!)
+        onVacancyClick(id);
 
-        // Генерируем кастомное событие, чтобы родительский VacancyList узнал об открытии шторки
-        window.dispatchEvent(new CustomEvent('open-vacancy-sheet', { detail: id }));
+        // 2. Пушим маркер в историю один в один по твоей логике
+        window.history.pushState({ type: 'vacancy-modal' }, '', `/vacancy/card/${id}`);
     };
 
     if (loading) {
@@ -45,6 +47,7 @@ export default function VacancyGrid({ vacancies, loading = false }: VacancyGridP
                     onClick={(e) => handleVacancyClick(e, String(vacancy.id))} // Перехват для живых людей
                     scroll={false}
                     className={s.vacancyCardLink}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
                 >
                     <motion.div
                         className={s.vacancyCard}

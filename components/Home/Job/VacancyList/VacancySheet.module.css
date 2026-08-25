@@ -1,82 +1,71 @@
 /* components/Home/Job/VacancyList/VacancySheet.module.css */
 
-/* Верхнеуровневый контейнер на весь экран */
-.overlay {
-    position: fixed;
+/* То точечное место, куда мы перенесли fixed-размытие на весь экран */
+.backdropOverlay {
+    /*position: fixed;*/
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 9999; /* Отображаем поверх всего интерфейса сайта */
-    display: flex;
-    align-items: flex-end; /* Прижимаем шторку к нижнему краю экрана */
-    justify-content: center;
+    z-index: 9998; /* Чуть ниже самой шторки */
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    cursor: pointer;
 }
 
-/* Затемняющийся задник с фирменным Apple-размытием */
-.backdrop {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.4); /* Полупрозрачный черный цвет */
-    backdrop-filter: blur(12px); /* Эффект матового стекла (iOS-style) */
-    -webkit-backdrop-filter: blur(12px); /* Поддержка для Safari */
-}
-
-/* Сама выезжающая панель (наш div-шторка) */
+/* Сама выезжающая шторка */
 .sheet {
-    position: relative;
+    position: fixed; /* 🌟 МЕНЯЕМ С RELATIVE НА FIXED */
+    bottom: 0;       /* Прижимаем строго к низу экрана */
+    /*left: 50%;       !* Центрируем по горизонтали *!*/
+    transform: translateX(-50%); /* Компенсируем центрирование */
+
     width: 100%;
-    max-width: 600px; /* Ограничение ширины панели на больших экранах */
+    max-width: 600px;
     background: #ffffff;
-    border-top-left-radius: 24px; /* Красивое скругление верхних углов */
+    border-top-left-radius: 24px;
     border-top-right-radius: 24px;
-    max-height: 85vh; /* Панель не должна доходить до самого верха экрана */
+    max-height: 85vh;
     display: flex;
     flex-direction: column;
     box-shadow: 0px -10px 40px rgba(0, 0, 0, 0.15);
     overflow: hidden;
+    z-index: 9999; /* Поверх бэкдропа */
 }
 
-/* Визуальная серая полоска-хэндл сверху панели, как на iPhone */
 .dragHandle {
     width: 36px;
     height: 5px;
-    background: #e5e5ea; /* Серый цвет системных элементов iOS */
+    background: #e5e5ea;
     border-radius: 2.5px;
-    margin: 12px auto 10px auto; /* Центрируем и делаем аккуратные отступы */
+    margin: 12px auto 10px auto;
     cursor: pointer;
-    flex-shrink: 0; /* Защита от сжатия полоски */
+    flex-shrink: 0;
 }
 
-/* Контейнер для children (твоего div-контента) */
 .content {
     padding: 8px 24px 32px 24px;
-    overflow-y: auto; /* Внутренний скролл, если описание вакансии очень длинное */
+    overflow-y: auto;
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-/* Кнопка закрытия внутри шторки */
 .closeButton {
-    margin-top: auto; /* Прижимает кнопку к самому низу контента шторки */
+    margin-top: auto;
     width: 100%;
     padding: 14px;
-    background: #f2f2f7; /* Светло-серый фон кнопки Apple */
-    color: #007aff; /* Системный синий цвет Apple для экшенов */
+    background: #f2f2f7;
+    color: #007aff;
     border: none;
     border-radius: 14px;
     font-weight: 600;
     font-size: 16px;
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.1s ease;
+    transition: background 0.2s ease;
 }
 
-/* Визуальный тактильный отклик при нажатии на кнопку */
 .closeButton:active {
     background: #e5e5ea;
-    transform: scale(0.99);
 }

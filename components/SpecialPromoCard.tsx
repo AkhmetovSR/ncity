@@ -37,9 +37,9 @@ export function SpecialPromoCard() {
               Оставляем StoreCard здесь. При клике он откроется за 0мс
               с контентом VacancyList, полностью игнорируя сетевой лаг Vercel
             */}
-            <StoreCard id={id} fallbackPreview={<VacancyList />}>
-                <VacancyList />
-            </StoreCard>
+            {/*<StoreCard id={id} fallbackPreview={<VacancyList />}>*/}
+            {/*    <VacancyList />*/}
+            {/*</StoreCard>*/}
         </div>
     );
 }

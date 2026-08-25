@@ -144,19 +144,20 @@
 // app/[[...slug]]/HomeGridClient.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import {useState, useEffect} from 'react';
+import {motion} from 'framer-motion';
 import s from '@/app/HomeGridClient.module.css';
 
 
 import ModalAnimateWrapper from '@/app/components/ModalAnimateWrapper';
 import ModalClientContainer from '@/app/components/ModalClientContainer';
-import Page from '@/app/vacancy/page';
+import Page from '@/app/vacancy/[[...vacancySlug]]/page';
 import AboutUs from '@/app/components/AboutUs';
 import Contacts from '@/app/components/Contacts';
+import Link from "next/link";
 
 const COMPONENT_MAP: Record<string, React.ComponentType> = {
-    'vacancy': Page,
+    // 'vacancy': Page,
     'about-us': AboutUs,
     'contacts': Contacts,
 };
@@ -173,17 +174,14 @@ interface HomeGridClientProps {
     initialActiveId: string;
 }
 
-export default function HomeGridClient({ cards, initialActiveId }: HomeGridClientProps) {
+export default function HomeGridClient({cards, initialActiveId}: HomeGridClientProps) {
     const [activeId, setActiveId] = useState<string>(initialActiveId);
 
     // Обработчик клика по карточке
-    const handleCardClick = (path: string) => {
+    const handleCardClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+        e.preventDefault();
         setActiveId(path);
-
-        // КАНОН NEXT.JS: Используем официальное HTML5 History API.
-        // Первым аргументом передаем объект состояния с типом 'modal'.
-        // Это наш маркер, который убережет DoubleExitHandler от ложных срабатываний.
-        window.history.pushState({ type: 'modal' }, '', `/card/${path}`);
+        window.history.pushState({type: 'modal'}, '', `/card/${path}`);
     };
 
     // Синхронизация с системной кнопкой «Назад»
@@ -191,7 +189,7 @@ export default function HomeGridClient({ cards, initialActiveId }: HomeGridClien
         // Если при первом заходе с сервера модалка уже открыта,
         // помечаем текущую точку в истории как 'direct-modal'
         if (initialActiveId) {
-            window.history.replaceState({ type: 'direct-modal' }, '');
+            window.history.replaceState({type: 'direct-modal'}, '');
         }
 
         const handlePopState = () => {
@@ -215,19 +213,20 @@ export default function HomeGridClient({ cards, initialActiveId }: HomeGridClien
         <>
             <div className={s.grid}>
                 {cards.map((card) => (
-                    <div
+                    <Link
                         key={card.id}
-                        onClick={() => handleCardClick(card.path)}
-                        style={{ cursor: 'pointer', textDecoration: 'none' }}
-                        role="button"
-                        tabIndex={0}
+                        href={`/card/${card.path}`} // Ссылка для роботов-индексаторов (SEO)
+                        onClick={(e) => handleCardClick(e, card.path)} // Перехват для живых пользователей
+                        scroll={false} // Предотвращаем прыжки экрана
+                        className={s.cardLinkWrapper} // Переносим стили (например, display: block)
+                        style={{textDecoration: 'none', color: 'inherit'}}
                     >
                         <motion.div
                             layoutId={card.path}
                             className={`${s.cardNode} ${s[card.path] || ''}`}
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.98 }}
-                            transition={{ type: 'tween', ease: [0.25, 1, 0.5, 1], duration: 0.45 }}
+                            whileHover={{scale: 1.01}}
+                            whileTap={{scale: 0.98}}
+                            transition={{type: 'tween', ease: [0.25, 1, 0.5, 1], duration: 0.45}}
                         >
                             <div>
                                 <h2 className={s.title}>{card.title}</h2>
@@ -235,7 +234,7 @@ export default function HomeGridClient({ cards, initialActiveId }: HomeGridClien
                             </div>
                             <span className={s.linkText}>Подробнее →</span>
                         </motion.div>
-                    </div>
+                    </Link>
                 ))}
             </div>
 
@@ -246,7 +245,7 @@ export default function HomeGridClient({ cards, initialActiveId }: HomeGridClien
                         id={activeId}
                         onClose={() => setActiveId('')}
                     >
-                        <SelectedComponent />
+                        <SelectedComponent/>
                     </ModalClientContainer>
                 )}
             </ModalAnimateWrapper>

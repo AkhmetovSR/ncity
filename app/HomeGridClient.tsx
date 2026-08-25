@@ -8,7 +8,7 @@ import s from '@/app/HomeGridClient.module.css';
 
 import ModalAnimateWrapper from '@/app/components/ModalAnimateWrapper';
 import ModalClientContainer from '@/app/components/ModalClientContainer';
-import Page from '@/app/vacancy/[[...vacancySlug]]/page';
+// import Page from '@/app/vacancy/[[...vacancySlug]]/page';
 import AboutUs from '@/app/components/AboutUs';
 import Contacts from '@/app/components/Contacts';
 import Link from "next/link";

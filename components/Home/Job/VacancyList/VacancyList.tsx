@@ -9,7 +9,8 @@ import VacancyCardContent from "./VacancyCardContent";
 import { useVacancies } from "@/hooks/useVacancies";
 import s from '@/components/Home/Job/VacancyList/VacancyList.module.css';
 
-interface VacancyListProps {
+// чтобы реестр страниц мог его прочитать и типизировать!
+export interface VacancyListProps {
     initialVacancyId: string;
 }
 

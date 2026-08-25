@@ -1,5 +1,5 @@
 // import { useState, useEffect, useMemo, useCallback } from 'react';
-// import { Vacancy } from '@/types/vacancy';
+// import { Page } from '@/types/vacancy';
 //
 // // Строгая типизация системных ошибок UI для безопасной обработки на фронтенде
 // type FetchError = {
@@ -33,7 +33,7 @@
 //  */
 // export function useVacancies() {
 //     // Хранилище сырых данных, полученных с бэкенда
-//     const [vacancies, setVacancies] = useState<Vacancy[]>([]);
+//     const [vacancies, setVacancies] = useState<Page[]>([]);
 //     // Флаг состояния загрузки для отображения скелетонов/лоадеров
 //     const [loading, setLoading] = useState(true);
 //     // Типизированный стейт ошибки (сеть или сбой сервера)
@@ -55,7 +55,7 @@
 //             // Если сервер ответил ошибкой (например, 500 или 404), генерируем исключение
 //             if (!res.ok) throw new Error(`Server status ${res.status}`);
 //
-//             const data: Vacancy[] = await res.json();
+//             const data: Page[] = await res.json();
 //             setVacancies(data);
 //         } catch (err) {
 //             // Если запрос отменен через AbortController, прерываем выполнение.

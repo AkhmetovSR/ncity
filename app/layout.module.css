@@ -1,59 +1,46 @@
-.rootBody{
+/* app/layout.module.css */
+.rootBody {
     position: fixed;
-    margin: 0 auto;
-    height: 99%;
+    top: 0;
+    left: 0;
+    margin: 0;
     width: 100%;
-    display: grid;
-    /*justify-items: center;*/
-    /*grid-template-rows: 88% 12%;*/
-    grid-template-rows: 90% 10%;
-    /*border: 1px solid red;*/
+    height: 100dvh;
     overflow: hidden;
-    /*background-color: #2b2d30;*/
-    background-color: #09090b; /* Цвет фона вашего приложения */
-    /*min-height: 100vh;*/
-    /*min-height: 100dvh; !* Использование динамической высоты экрана смартфона *!*/
-    /*min-width: 100dvw;*/
-
-    /* Автоматические безопасные отступы под челку сверху и системный индикатор снизу */
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-
-    /* Запрещаем выделение текста и серые вспышки при тапах на iOS */
+    background-color: #09090b;
+    display: grid;
+    align-items: end;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
+
+    /*border: 1px solid red;*/
 }
-/*.globalStackContainer {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    width: 100%;*/
-/*    height: 100%;*/
-/*    !* Оптимизация GPU для исключения микро-дерганий при скруглении углов *!*/
-/*    will-change: transform, border-radius;*/
-/*}*/
-.mainContent, .Menu{
-    height: 100%;
+.Main{
+    height: calc(100% - env(safe-area-inset-top));
+    /*padding-top: env(safe-area-inset-top, 0px);*/
+    display: grid;
+    grid-template-rows: 1fr 10%;
+    /*border: 1px solid red;*/
+}
+.Title{
+    border: 1px solid red;
+    /*margin-top: env(safe-area-inset-top, 0px);*/
+}
+.mainContent {
     width: 100%;
     overflow: hidden;
     display: grid;
-    justify-items: center;
+    height: 100%;
+
+    box-sizing: border-box;
     /*border: 1px solid blue;*/
 }
 
-/*.rootBody {*/
-/*    margin: 0;*/
-/*    padding: 0;*/
-/*    background-color: #09090b;*/
-/*    font-family: system-ui, -apple-system, sans-serif;*/
-/*}*/
-
-.mainContent {
-    min-height: 100vh;
-    box-sizing: border-box;
-
-    /*
-       Резервируем место внизу экрана:
-       64px (высота меню) + безопасная зона смартфона + 16px (дополнительный зазор)
-    */
-    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px) + 16px);
+.Menu {
+    height: 100%;
+    width: 100%;
+    /*background-color: #09090b;*/
+    overflow: hidden;
+    display: grid;
+    /*border: 1px solid white;*/
 }

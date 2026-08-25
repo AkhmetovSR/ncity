@@ -6,23 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import VacancyGrid from "./VacancyGrid";
 import { useVacancies } from "@/hooks/useVacancies";
 
-// 🔥 ДОБАВЛЯЕМ ЭКСПОРТ ИНТЕРФЕЙСА
-export interface VacancyListProps {
-    onVacancyClick?: (id: string) => void;
-    // другие пропсы если нужны
-}
-/**
- * Автономный компонент списка вакансий (VacancyList)
- * 100% декларативный, легкий и полностью очищенный от дублирующих стейтов.
- */
 export default function VacancyList() {
     const { vacancies, loading, error, handleRetry } = useVacancies();
-
-    // // Синхронизация темы оформления (ваша оригинальная логика)
-    // useEffect(() => {
-    //     const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' || 'dark';
-    //     document.documentElement.setAttribute('data-theme', savedTheme);
-    // }, []);
 
     return (
         <motion.div className={s.contentWrapper}>
@@ -55,10 +40,6 @@ export default function VacancyList() {
                     )}
 
                     {!loading && !error && vacancies.length > 0 && (
-                        /*
-                           🌟 СЕНЬОР-ФИКС: Мы убрали onCardClick.
-                           Выделенный файл VacancyGrid принимает только массив vacancies.
-                        */
                         <VacancyGrid vacancies={vacancies} />
                     )}
 

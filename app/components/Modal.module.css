@@ -8,15 +8,16 @@
     background-color: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(8px);
     padding: 16px;
+    border: 1px solid red;
 }
 
 .modalNode {
     position: absolute;
     width: 90%;
     height: 90%;
-    inset: 2.5vw;
+    inset: 5vh 5vw;
     /*max-width: 550px;*/
-    background-color: #808080;
+    background-color: #ffffff;
     border-radius: 16px;
     /*box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);*/
     display: flex;
@@ -26,7 +27,9 @@
     /* Фикс моргания первого кадра: */
     overflow: hidden;
     contain: paint;
+    /*border: 1px solid red;*/
     opacity: 0;
+    z-index: 100;
 }
 
 .closeButton {

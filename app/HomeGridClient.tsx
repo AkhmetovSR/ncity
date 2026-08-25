@@ -8,12 +8,12 @@
 // // Импортируем компоненты модалки и контента
 // import ModalAnimateWrapper from '@/app/components/ModalAnimateWrapper';
 // import ModalClientContainer from '@/app/components/ModalClientContainer';
-// import Vacancy from '@/app/components/Vacancy';
+// import Page from '@/app/components/Page';
 // import AboutUs from '@/app/components/AboutUs';
 // import Contacts from '@/app/components/Contacts';
 //
 // const COMPONENT_MAP: Record<string, React.ComponentType> = {
-//     'vacancy': Vacancy,
+//     'vacancy': Page,
 //     'about-us': AboutUs,
 //     'contacts': Contacts,
 // };
@@ -146,16 +146,17 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import styles from './Home.module.css';
+import s from '@/app/HomeGridClient.module.css';
+
 
 import ModalAnimateWrapper from '@/app/components/ModalAnimateWrapper';
 import ModalClientContainer from '@/app/components/ModalClientContainer';
-import Vacancy from '@/app/components/Vacancy';
+import Page from '@/app/vacancy/page';
 import AboutUs from '@/app/components/AboutUs';
 import Contacts from '@/app/components/Contacts';
 
 const COMPONENT_MAP: Record<string, React.ComponentType> = {
-    'vacancy': Vacancy,
+    'vacancy': Page,
     'about-us': AboutUs,
     'contacts': Contacts,
 };
@@ -212,7 +213,7 @@ export default function HomeGridClient({ cards, initialActiveId }: HomeGridClien
 
     return (
         <>
-            <div className={styles.grid}>
+            <div className={s.grid}>
                 {cards.map((card) => (
                     <div
                         key={card.id}
@@ -223,16 +224,16 @@ export default function HomeGridClient({ cards, initialActiveId }: HomeGridClien
                     >
                         <motion.div
                             layoutId={card.path}
-                            className={styles.cardNode}
+                            className={`${s.cardNode} ${s[card.path] || ''}`}
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.98 }}
                             transition={{ type: 'tween', ease: [0.25, 1, 0.5, 1], duration: 0.45 }}
                         >
                             <div>
-                                <h2 className={styles.title}>{card.title}</h2>
-                                <p className={styles.desc}>{card.desc}</p>
+                                <h2 className={s.title}>{card.title}</h2>
+                                <p className={s.desc}>{card.desc}</p>
                             </div>
-                            <span className={styles.linkText}>Подробнее →</span>
+                            <span className={s.linkText}>Подробнее →</span>
                         </motion.div>
                     </div>
                 ))}

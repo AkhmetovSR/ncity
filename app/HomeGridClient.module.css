@@ -1,9 +1,17 @@
 .grid {
     display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
+    grid-template-columns: repeat(3, 1fr);
+    /*grid-template-columns: repeat(1, minmax(0, 1fr));*/
     gap: 16px;
-    max-width: 600px;
-    margin: 0 auto;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    /*max-width: 600px;*/
+    /*margin: 0 auto;*/
+    border: 1px solid red;
+}
+.grid > div:first-child {
+    grid-column: 1 / -1;
 }
 
 .cardNode {
@@ -19,7 +27,9 @@
     color: #fff;
     box-sizing: border-box;
 }
-
+.vacancy{
+    background-color: #1A9B7A;
+}
 .title {
     font-size: 20px;
     font-weight: 600;

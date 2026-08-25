@@ -2,19 +2,23 @@
 
 /* Главный фиксированный контейнер меню (накладывает эффект матового стекла) */
 .Menu {
-    position: fixed;
+    height: 100%;
+    /*position: fixed;*/
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 50; /* Выше контента, но ниже бэкдропа модалки (у которой 100+) */
+    display: grid;
+    align-items: center;
+    justify-items: center;
 
     /* Эффект матового стекла Apple (Glassmorphism) для светлой темы по умолчанию */
-    background-color: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    /*background-color: rgba(0, 0, 0, 0.85);*/
+    /*backdrop-filter: blur(20px);*/
+    /*-webkit-backdrop-filter: blur(20px);*/
 
     /* Тонкая фирменная граница сверху */
-    border-top: 0.5px solid rgba(0, 0, 0, 0.15);
+    /*border-top: 0.5px solid rgba(0, 0, 0, 0.15);*/
 
     /* Учет нижней полосы на iPhone (Safe Area) */
     padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -24,7 +28,7 @@
 /* Автоматическая адаптация под темную тему операционной системы */
 @media (prefers-color-scheme: dark) {
     .Menu {
-        background-color: rgba(29, 29, 31, 0.75);
+        /*background-color: rgba(29, 29, 31, 0.75);*/
         border-top: 0.5px solid rgba(255, 255, 255, 0.1);
     }
 }
@@ -32,14 +36,18 @@
 /* Внутренний контейнер для ссылок с центрированием */
 .linksContainer {
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    height: 49px; /* Эталонная высота Tab Bar в iOS */
-    width: 100%;
-    max-width: 600px; /* Чтобы меню не расползалось на планшетах */
-    margin: 0 auto;
-    padding: 0 12px;
-    box-sizing: border-box;
+    /*justify-content: space-around;*/
+    /*align-items: center;*/
+    /*height: 49px; !* Эталонная высота Tab Bar в iOS *!*/
+    /*width: 100%;*/
+    /*max-width: 600px; !* Чтобы меню не расползалось на планшетах *!*/
+    /*margin: 0 auto;*/
+    /*padding: 0 12px;*/
+    /*box-sizing: border-box;*/
+    border: 1px solid white;
+    border-radius: 1rem;
+    width: 85%;
+    height: 80%;
 }
 
 /* Стилизация интерактивной ссылки-вкладки */

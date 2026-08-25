@@ -12,10 +12,6 @@ interface VacancyGridProps {
     loading?: boolean; // Флаг, определяющий, показывать скелетоны или реальные данные
 }
 
-/**
- * Презентационный компонент VacancyGrid (Apple iOS Style).
- * 100% декларативный. Полностью очищен от пропсов-колбэков и императивных кликов.
- */
 export default function VacancyGrid({ vacancies, loading = false }: VacancyGridProps) {
 
     // Если включен режим загрузки, рендерим сетку переливающихся заглушек в стиле App Store
@@ -44,14 +40,6 @@ export default function VacancyGrid({ vacancies, loading = false }: VacancyGridP
             transition={{ duration: 0.2 }}
         >
             {vacancies.map((vacancy, index) => (
-                /*
-                   🌟 СЕНЬОР-ФИКС 1: Оборачиваем карточку в нативный Next.js Link.
-                   Атрибут key переносится строго на корневой элемент итерации .map().
-
-                   🌟 СЕНЬОР-ФИКС 2: Путь href становится глубоким вложенным путем путей,
-                   что обеспечивает чистые, статические ЧПУ-адреса для ИИ-выдачи и гео-сервисов.
-                   scroll={false} запрещает прыжки скролла на смартфонах.
-                */
                 <Link
                     key={vacancy.id || index}
                     href={`/card/vacancy/${vacancy.id}`}

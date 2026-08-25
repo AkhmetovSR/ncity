@@ -27,8 +27,7 @@ export default async function CatchAllPage({ params }: CatchAllProps) {
 
     return (
         <main style={{ padding: '32px 16px' }}>
-            <h1 style={{ color: '#fff', textAlign: 'center', marginBottom: '32px' }}>Главная страница</h1>
-
+            {/*<h1 style={{ color: '#fff', textAlign: 'center', marginBottom: '32px' }}>Главная страница</h1>*/}
             {/*
               Передаем сетке не только карточки, но и начальное состояние роута.
               Если пользователь обновит страницу на /card/vacancy, клиентский компонент

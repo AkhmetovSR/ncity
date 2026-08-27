@@ -1,4 +1,5 @@
 // app/profile/page.tsx
+import { motion } from 'framer-motion';
 
 /**
  * Страница-заглушка Профиля пользователя.
@@ -6,7 +7,7 @@
  */
 export default function ContactsPage() {
     return (
-        <div style={{
+        <motion.div style={{
             padding: '32px 16px',
             color: '#fff',
             textAlign: 'center',
@@ -23,6 +24,6 @@ export default function ContactsPage() {
             <p style={{ color: '#71717a', fontSize: '15px', maxWidth: '280px', margin: '0 auto' }}>
                 Раздел находится в разработке. Здесь будет профиль соискателя и настройки PWA приложения.
             </p>
-        </div>
+        </motion.div>
     );
 }

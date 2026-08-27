@@ -1,6 +1,6 @@
 .Title{
     /*height: auto;*/
-    width: 80%;
+    width: 100%;
     /*padding: 2% 5%;*/
     /*height: 5rem;*/
     /*grid-column: 1 / -1;*/
@@ -10,8 +10,8 @@
     /*padding: 2% 3%;*/
     /*border: 1px solid blue;*/
     display: grid;
-    align-items: end;
-    /*justify-items: center;*/
+    align-items: center;
+    justify-items: center;
     /*overflow: hidden;*/
     /*user-select: none;*/
     /*-webkit-user-select: none; !* Chrome/Safari *!*/
@@ -19,11 +19,11 @@
     /*-ms-user-select: none; !* IE/Edge *!*/
     /*-webkit-user-drag: none;*/
     /*overflow: hidden;*/
-    /*border: 1px solid red;*/
+    /*border: 1px solid blue;*/
 }
 .TitleContent{
     /*border: 1px solid red;*/
-    /*width: 100%;*/
+    width: 80%;
     /*height: 100%;*/
     /*margin-top: 2%;*/
     /*padding-left: 3%;*/

@@ -1,14 +1,17 @@
-.backdrop {
+.overlayNode {
     position: fixed;
+    height: 100%;
+    width: 100%;
     inset: 0;
-    z-index: 50;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(8px);
-    padding: 16px;
-    border: 1px solid red;
+    /*z-index: 50;*/
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*justify-content: center;*/
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px);
+    /*padding: 16px;*/
+    z-index: 60;
+    /*border: 1px solid red;*/
 }
 
 .modalNode {
@@ -23,7 +26,7 @@
     display: flex;
     flex-direction: column;
     /*max-height: 85vh;*/
-
+    color: white;
     /* Фикс моргания первого кадра: */
     overflow: hidden;
     contain: paint;

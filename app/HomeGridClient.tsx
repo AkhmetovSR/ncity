@@ -12,9 +12,12 @@ import ModalClientContainer from '@/app/components/ModalClientContainer';
 import AboutUs from '@/app/components/AboutUs';
 import Contacts from '@/app/components/Contacts';
 import Link from "next/link";
+import Title from "@/components/Home/Title/Title";
+import PromoPage from "@/app/promo/page";
+import PromoCard from "@/app/components/PromoCard";
 
 const COMPONENT_MAP: Record<string, React.ComponentType> = {
-    // 'vacancy': Page,
+    'promo': PromoPage,
     'about-us': AboutUs,
     'contacts': Contacts,
 };
@@ -67,7 +70,17 @@ export default function HomeGridClient({cards, initialActiveId}: HomeGridClientP
     const SelectedComponent = COMPONENT_MAP[activeId];
 
     return (
-        <>
+        <div className={s.Main}>
+            <Title/>
+            <Link
+                href={`/card/promo`}
+                onClick={(e) => handleCardClick(e, 'promo')}
+                scroll={false}
+                className={s.LinkPromo}
+                style={{textDecoration: 'none', color: 'inherit'}}
+            >
+                <PromoCard/>
+            </Link>
             <div className={s.grid}>
                 {cards.map((card) => (
                     <Link
@@ -85,11 +98,11 @@ export default function HomeGridClient({cards, initialActiveId}: HomeGridClientP
                             whileTap={{scale: 0.98}}
                             transition={{type: 'tween', ease: [0.25, 1, 0.5, 1], duration: 0.45}}
                         >
-                            <div>
+                            <motion.div layout>
                                 <h2 className={s.title}>{card.title}</h2>
                                 <p className={s.desc}>{card.desc}</p>
-                            </div>
-                            <span className={s.linkText}>Подробнее →</span>
+                            </motion.div>
+                            <motion.span className={s.linkText} layout>Подробнее →</motion.span>
                         </motion.div>
                     </Link>
                 ))}
@@ -106,6 +119,6 @@ export default function HomeGridClient({cards, initialActiveId}: HomeGridClientP
                     </ModalClientContainer>
                 )}
             </ModalAnimateWrapper>
-        </>
+        </div>
     );
 }

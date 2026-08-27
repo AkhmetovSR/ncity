@@ -1,0 +1,21 @@
+.cardLinkWrapper {
+    height: 100%;
+    width: 100%;
+    /*overflow: hidden;*/
+    cursor: pointer;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    /*border: 1px solid blue;*/
+    /*z-index: 10000;*/
+}
+
+.card {
+    height: 90%;
+    width: 85%;
+    border-radius: 1rem;
+    background: linear-gradient(to bottom, #69FFD5, #B1FFE9);
+    display: grid;
+    align-items: center;
+    justify-items: center;
+}

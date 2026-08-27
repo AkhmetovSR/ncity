@@ -15,7 +15,7 @@ export default async function CatchAllPage({ params }: CatchAllProps) {
 
     // Стабильный массив данных карточек для генерации сетки
     const cards = [
-        { id: '1', path: 'vacancy', title: 'Вакансии', desc: 'Присоединяйтесь к нашей команде' },
+        // { id: '1', path: 'vacancy', title: 'Вакансии', desc: 'Присоединяйтесь к нашей команде' },
         { id: '2', path: 'about-us', title: 'О нас', desc: 'Узнайте больше о нашей компании' },
         { id: '3', path: 'contacts', title: 'Контакты', desc: 'Свяжитесь с нами в любое время' }
     ];
@@ -26,7 +26,7 @@ export default async function CatchAllPage({ params }: CatchAllProps) {
     const initialActiveId = initialModalOpen ? slug?.[1] || '' : '';
 
     return (
-        <main style={{ padding: '32px 16px' }}>
+        <main>
             {/*<h1 style={{ color: '#fff', textAlign: 'center', marginBottom: '32px' }}>Главная страница</h1>*/}
             {/*
               Передаем сетке не только карточки, но и начальное состояние роута.

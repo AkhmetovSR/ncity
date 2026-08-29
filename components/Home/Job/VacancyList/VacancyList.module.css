@@ -294,6 +294,7 @@
     border: 1px solid rgba(255, 255, 255, 0.02);
     position: relative;
     overflow: hidden;
+    background-color: red;
 }
 
 /* Сеньорский скелетон: вместо банального мигания создаем эффект бегущего шелкового блика (Shimmer) */

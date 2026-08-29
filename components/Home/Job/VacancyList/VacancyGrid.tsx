@@ -39,7 +39,7 @@ export default function VacancyGrid({ vacancies, loading = false, onVacancyClick
     }
 
     return (
-        <motion.div key="list" className={s.listGrid} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+        <motion.div key="list" className={s.listGrid} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2 }}>
             {vacancies.map((vacancy, index) => (
                 <Link
                     key={vacancy.id || index}
@@ -51,9 +51,9 @@ export default function VacancyGrid({ vacancies, loading = false, onVacancyClick
                 >
                     <motion.div
                         className={s.vacancyCard}
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.03 + 0.05, duration: 0.25, ease: "easeOut" }}
+                        // initial={{ opacity: 0, y: 15 }}
+                        // animate={{ opacity: 1, y: 0 }}
+                        // transition={{ delay: index * 0.03 + 0.05, duration: 0.25, ease: "easeOut" }}
                         whileHover={{ scale: 1.01 }}
                         whileTap={{ scale: 0.98 }}
                     >

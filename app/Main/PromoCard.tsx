@@ -1,7 +1,7 @@
 // app/components/PromoCard.tsx
 'use client';
 
-import s from "@/app/components/PromoCard.module.css";
+import s from "@/app/Main/PromoCard.module.css";
 import { motion } from 'framer-motion';
 
 export default function PromoCard() {

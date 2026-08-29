@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import styles from '@/app/components/Menu.module.css';
+import styles from '@/app/Main/Menu.module.css';
 
 interface TabItem {
     name: string;

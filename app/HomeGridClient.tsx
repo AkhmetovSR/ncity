@@ -6,15 +6,15 @@ import {motion} from 'framer-motion';
 import s from '@/app/HomeGridClient.module.css';
 
 
-import ModalAnimateWrapper from '@/app/components/ModalAnimateWrapper';
-import ModalClientContainer from '@/app/components/ModalClientContainer';
+import ModalAnimateWrapper from '@/app/Main/ModalAnimateWrapper';
+import ModalClientContainer from '@/app/Main/ModalClientContainer';
 // import Page from '@/app/vacancy/[[...vacancySlug]]/page';
-import AboutUs from '@/app/components/AboutUs';
-import Contacts from '@/app/components/Contacts';
+import AboutUs from '@/app/Main/AboutUs';
+import Contacts from '@/app/Main/Contacts';
 import Link from "next/link";
 import Title from "@/components/Home/Title/Title";
-import PromoPage from "@/app/promo/page";
-import PromoCard from "@/app/components/PromoCard";
+import PromoPage from "@/app/MainPages/promo/page";
+import PromoCard from "@/app/Main/PromoCard";
 
 const COMPONENT_MAP: Record<string, React.ComponentType> = {
     'promo': PromoPage,

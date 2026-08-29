@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { useEffect, useCallback } from 'react'; // 1. Импортируем useCallback
 import { useRouter } from 'next/navigation';
-import styles from '@/app/components/Modal.module.css';
+import styles from '@/app/Main/Modal.module.css';
 
 interface ContainerProps {
     id: string;

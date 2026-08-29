@@ -3,8 +3,8 @@ import React from "react";
 import type {Metadata, Viewport} from "next";
 import Script from "next/script";
 import s from "@/app/layout.module.css"; // Стили для базовой разметки (body, контейнеры)
-import Menu from "@/app/components/Menu";
-import Title from "@/components/Home/Title/Title"; // Компонент нижнего навигационного меню
+import Menu from "@/app/Main/Menu";
+import {VacancyProvider} from "@/app/vacancy/_context/VacancyContext";
 
 /**
  * НАСТРОЙКИ ЭКРАНА (VIEWPORT) ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ
@@ -62,28 +62,30 @@ export default function RootLayout({
     return (
         <html lang="ru">
         <body className={s.rootBody}>
-        <div className={s.Main}>
-            {/*<div className={s.Title}>*/}
+        <VacancyProvider>
+            <div className={s.Main}>
+                {/*<div className={s.Title}>*/}
                 {/*<Title/>*/}
-            {/*</div>*/}
-            {/*
+                {/*</div>*/}
+                {/*
           Основной контейнер для страниц приложения.
           Внутри s.mainContent в CSS обязательно нужно задать padding-top: env(safe-area-inset-top);
           чтобы отодвинуть текст вакансий из-под физической челки айфона.
         */}
-            <div className={s.mainContent}>
-                {children} {/* Сюда подставляется контент текущей страницы */}
-            </div>
+                <div className={s.mainContent}>
+                    {children} {/* Сюда подставляется контент текущей страницы */}
+                </div>
 
-            {/*
+                {/*
           Нижнее меню навигации приложения.
           Внутри компонента Menu в CSS нужно задать padding-bottom: env(safe-area-inset-bottom);
           чтобы кнопки меню не накладывались на системную полоску закрытия приложений на iPhone.
         */}
-            <div className={s.Menu}>
-                <Menu/>
+                <div className={s.Menu}>
+                    <Menu/>
+                </div>
             </div>
-        </div>
+        </VacancyProvider>
 
 
         {/*

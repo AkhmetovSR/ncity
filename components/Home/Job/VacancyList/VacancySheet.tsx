@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useCallback } from 'react'; // 1. Добавили useCallback сюда
 import { useRouter } from 'next/navigation';
 import s from './VacancySheet.module.css';
-import styles from "@/app/components/Modal.module.css";
+import styles from "@/app/Main/Modal.module.css";
 
 interface VacancySheetProps {
     id: string;

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import StoreCard from '@/components/StoreCard';
 import Job from "@/components/Home/Job/Job";
-import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
+import VacancyList from "@/app/vacancy/_components/VacancyList";
 import s from '@/components/SpecialPromoCard.module.css';
 
 export function SpecialPromoCard() {

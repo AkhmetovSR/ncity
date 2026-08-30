@@ -4,37 +4,36 @@
 
 /* Корневая обертка зажимает блок в жесткие рамки, активируя внутренний скролл */
 .contentWrapper {
-    width: 100%;
     height: 100%;
+    width: 100%;
     display: grid;
-    align-items: center;
     justify-items: center;
-    /*position: fixed;*/
-    /*flex-direction: column;*/
     overflow: hidden; /* Гарантирует, что при уменьшении масштаба края контента ровно скруглятся */
-    /*background-color: #202020;*/
-    /*will-change: transform, border-radius; !* Оптимизация видеокарты для плавной анимации *!*/
-    /*border-radius: 1.5rem;*/
-    border: 1px solid white;
-    /*padding: 1rem;*/
+    /*border: 1px solid red;*/
 }
-
+.Title{
+text-align: center;
+    color: white;
+    line-height: 0.5;
+}
 /* Унифицированный контейнер для списка вакансий и скелетонов */
 .vacancyList,
 .skeletonContainer {
-    height: 95%;
+    height: 100%;
     width: 90%;
-    overflow-y: auto;
-    /*padding: 20px 16px 40px 16px; !* Фирменные отступы iOS *!*/
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*gap: 12px; !* Компактное расстояние между карточками в стиле списков iOS *!*/
-    -webkit-overflow-scrolling: touch; /* Плавная инерция прокрутки на iPhone */
-    /*border: 1px solid red;*/
+    overflow: hidden;
     border-radius: 1rem;
-    border: 1px solid red;
 }
-
+/* Сеточный контейнер списка */
+.listGrid {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    gap: 12px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch; /* Плавная инерция прокрутки на iPhone */
+}
 /* Кастомный ультра-тонкий скроллбар в стиле macOS/iOS */
 .vacancyList::-webkit-scrollbar,
 .skeletonContainer::-webkit-scrollbar {
@@ -64,10 +63,13 @@
 .vacancyCard {
     background: #1C1C1E; /* Системный серый цвет Apple для карточек (System Background Secondary) [1] */
     border-radius: 16px; /* Скругление углов по гайдлайнам iOS */
-    border: 1px solid rgba(255, 255, 255, 0.04); /* Тончайшая неоновая микро-граница */
+    /*border: 1px solid rgba(255, 255, 255, 0.04); !* Тончайшая неоновая микро-граница *!*/
     cursor: pointer;
-    overflow: hidden;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    padding: 2rem;
+    border: 1px solid grey;
 }
 
 /* Сеньорский интерактив при тапе/клике (акцентное подсвечивание вместо грубых теней) */
@@ -76,7 +78,11 @@
 }
 
 .vacancyContent {
-    padding: 1rem 1rem;
+    height: 90%;
+    width: 90%;
+    /*border: 1px solid red;*/
+    /*padding: 1rem 1rem;*/
+    /*margin-top: 1rem;*/
 }
 
 .cardHeader {
@@ -274,13 +280,7 @@
     transform: scale(0.96);
 }
 
-/* Сеточный контейнер списка */
-.listGrid {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
+
 
 /* ==========================================================================
    5. АНИМАЦИЯ СКЕЛЕТОНОВ (ШЕЛКОВЫЙ ПУЛЬС)

@@ -1,5 +1,5 @@
 // app/vacancy/_hooks/useVacancies.ts
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Vacancy } from '@/types/vacancy';
 import { useVacancyContext } from '@/app/vacancy/_context/VacancyContext';
 
@@ -15,30 +15,27 @@ const parseDate = (dateStr: string): Date => {
 };
 
 export function useVacancies() {
+    // Получаем глобальное состояние из контекста
     const { vacancies, setVacancies, hasLoadedOnce, setHasLoadedOnce } = useVacancyContext();
 
-    const [loading, setLoading] = useState(!hasLoadedOnce);
-    // Флаг загрузки именно СЛЕДУЮЩЕЙ порции (чтобы не показывать главный скелетон)
-    const [loadingMore, setLoadingMore] = useState(false);
+    // 🌟 СЕНЬОР-ФИКС: Реактивный loading. Он автоматически станет false,
+    // как только контекст завершит фоновую предзагрузку данных.
+    const loading = !hasLoadedOnce;
+
+    const [loadingMore, setLoadingMore] = useState(false); // Лоадер бесконечного скролла
     const [error, setError] = useState<FetchError>(null);
     const [sortBy, setSortBy] = useState<'date' | 'salary-asc' | 'salary-desc'>('date');
-    // Флаг, что в базе больше нет вакансий (чтобы зря не слать запросы)
     const [hasMore, setHasMore] = useState(true);
 
     const LIMIT = 50;
 
     /**
-     * Основная функция запроса.
-     * @param isInitial - истина, если это самый первый заход на страницу
+     * Функция дозагрузки следующих порций данных (вызывается при скролле или ошибке)
      */
     const fetchVacancies = useCallback(async (signal: AbortSignal, isInitial = false) => {
-        // Вычисляем offset на основе текущего количества вакансий на "складе"
-        // Если это первичный SWR-запрос фона при возврате на страницу, offset = 0
         const currentOffset = isInitial ? 0 : vacancies.length;
 
-        if (isInitial && !hasLoadedOnce) {
-            setLoading(true);
-        } else if (!isInitial) {
+        if (!isInitial) {
             setLoadingMore(true);
         }
 
@@ -47,23 +44,20 @@ export function useVacancies() {
         }
 
         try {
-            // Стучимся в наш новый эндпоинт внутри папки vacancy
             const res = await fetch(`/vacancy/api?limit=${LIMIT}&offset=${currentOffset}`, { signal });
             if (!res.ok) throw new Error(`Server status ${res.status}`);
 
             const newData: Vacancy[] = await res.json();
 
             if (newData.length < LIMIT) {
-                setHasMore(false); // Если пришло меньше 50, значит БД опустела
+                setHasMore(false); // Данные в БД закончились
             }
 
             setVacancies(prev => {
                 if (isInitial) {
-                    // При первичном SWR-запросе полностью обновляем топ (первые 50)
-                    return newData;
+                    return newData; // Предотвращает дубли, если сработал ручной ретрай первого экрана
                 }
-                // При скролле — склеиваем старый кэш с новыми данными
-                return [...prev, ...newData];
+                return [...prev, ...newData]; // Склеиваем порции при скролле
             });
 
             if (isInitial) setHasLoadedOnce(true);
@@ -77,26 +71,21 @@ export function useVacancies() {
                 setError({ type: 'server', message: 'Не удалось загрузить данные.' });
             }
         } finally {
-            setLoading(false);
             setLoadingMore(false);
         }
-    }, [vacancies.length, hasLoadedOnce, setVacancies, setHasLoadedOnce]);
+    }, [vacancies.length, error, setVacancies, setHasLoadedOnce]);
 
-    // Эффект первичного монтирования (срабатывает при каждом переходе на страницу)
-    useEffect(() => {
-        const controller = new AbortController();
-        // Запускаем как первичный запрос (isInitial = true)
-        void fetchVacancies(controller.signal, true);
-        return () => controller.abort();
-    }, []); // 🌟 Важно: пустой массив зависимостей, чтобы SWR срабатывал строго 1 раз при заходе
+    // 🌟 СЕНЬОР-ФИКС: Здесь больше нет дефолтного useEffect!
+    // Запрос топа теперь полностью делегирован файлу VacancyContext.tsx
 
-    // Функция, которую мы будем вызывать, когда скролл дойдет до середины
+    // Триггер бесконечного скролла (offset > 0)
     const loadMore = useCallback(() => {
         if (loadingMore || !hasMore || error) return;
         const controller = new AbortController();
         void fetchVacancies(controller.signal, false);
     }, [loadingMore, hasMore, error, fetchVacancies]);
 
+    // Публичный метод для ручного повтора запроса при сбоях
     const handleRetry = () => {
         const controller = new AbortController();
         void fetchVacancies(controller.signal, vacancies.length === 0);
@@ -114,10 +103,10 @@ export function useVacancies() {
 
     return {
         vacancies: processedVacancies,
-        loading,
-        loadingMore, // Отдаем наружу, чтобы снизу списка показать мелкий лоадер
-        hasMore,     // Отдаем наружу, чтобы знать, нужно ли еще скроллить
-        loadMore,    // 🌟 Функция-триггер для подгрузки следующей пачки
+        loading, // Вычисляется "на лету" из контекста
+        loadingMore,
+        hasMore,
+        loadMore,
         error,
         sortBy,
         setSortBy,

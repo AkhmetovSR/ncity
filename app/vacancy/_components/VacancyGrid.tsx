@@ -54,8 +54,8 @@ export default function VacancyGrid({ vacancies, loading = false, onVacancyClick
                         // initial={{ opacity: 0, y: 15 }}
                         // animate={{ opacity: 1, y: 0 }}
                         // transition={{ delay: index * 0.03 + 0.05, duration: 0.25, ease: "easeOut" }}
-                        whileHover={{ scale: 1.01 }}
-                        whileTap={{ scale: 0.98 }}
+                        // whileHover={{ scale: 1.01 }}
+                        // whileTap={{ scale: 0.98 }}
                     >
                         <div className={s.vacancyContent}>
                             <div className={s.cardHeader}>
@@ -73,10 +73,10 @@ export default function VacancyGrid({ vacancies, loading = false, onVacancyClick
                                         </div>
                                     </div>
                                 </div>
-                                <div className={s.details}>
-                                    <div className={s.WatchVacancy}>▶</div>
-                                    <div className={s.dateWrapper}>{vacancy.date}</div>
-                                </div>
+                                {/*<div className={s.details}>*/}
+                                    {/*<div className={s.WatchVacancy}>▶</div>*/}
+                                    {/*<div className={s.dateWrapper}>{vacancy.date}</div>*/}
+                                {/*</div>*/}
                             </div>
                         </div>
                     </motion.div>

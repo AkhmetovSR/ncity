@@ -1,7 +1,7 @@
 // app/vacancy/[[...vacancySlug]]/page.tsx
 
 import React from "react";
-import VacancyList from "@/components/Home/Job/VacancyList/VacancyList";
+import VacancyList from "@/app/vacancy/_components/VacancyList";
 import s from "@/app/vacancy/[[...vacancySlug]]/vacancy.module.css";
 
 interface VacancyCatchAllProps {

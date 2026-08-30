@@ -1,6 +1,6 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-import { VacancyListProps } from '@/components/Home/Job/VacancyList/VacancyList';
+import { VacancyListProps } from '@/app/vacancy/_components/VacancyList';
 import IA from "@/components/Home/AI/IA";
 
 // 1. Обычные пропсы для стандартных карточек
@@ -15,7 +15,7 @@ const B = dynamic<DefaultPageProps>(() => import('@/components/Home/b/B'));
 const WaterBalance = dynamic<DefaultPageProps>(() => import('@/components/freeService/WaterBalance/WaterBalance'));
 
 // Родные пропсы для списка вакансий
-const VacancyList = dynamic<VacancyListProps>(() => import('@/components/Home/Job/VacancyList/VacancyList'));
+const VacancyList = dynamic<VacancyListProps>(() => import('@/app/vacancy/_components/VacancyList'));
 
 export interface CardData {
     id: string;

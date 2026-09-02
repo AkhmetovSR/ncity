@@ -70,6 +70,16 @@ export default function VacancyForm({ isOpen, onClose }: VacancyFormProps) {
         }
     };
 
+    const handleCloseForm = () => {
+        onClose(); // setIsFormOpen(false) из родителя
+
+        // Если в URL висит параметр формы, откатываем историю на один шаг назад
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('add')) {
+            window.history.back();
+        }
+    };
+
     return (
         <AnimatePresence>
             {isOpen && (
@@ -80,7 +90,7 @@ export default function VacancyForm({ isOpen, onClose }: VacancyFormProps) {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0, pointerEvents: 'none' }}
                         transition={{ type: 'tween', ease: [0.25, 1, 0.5, 1], duration: 0.45 }}
-                        onClick={onClose}
+                        onClick={handleCloseForm}
                         className={styles.overlayNode}
                     />
 
@@ -97,7 +107,7 @@ export default function VacancyForm({ isOpen, onClose }: VacancyFormProps) {
 
                         <div className={s.modalHeader}>
                             <h2>Добавить вакансию</h2>
-                            <button type="button" className={s.closeButton} onClick={onClose}>&times;</button>
+                            <button type="button" className={s.closeButton} onClick={handleCloseForm}>&times;</button>
                         </div>
 
                         <form className={s.form} onSubmit={handleSubmit}>

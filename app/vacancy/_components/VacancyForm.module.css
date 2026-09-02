@@ -34,6 +34,8 @@
 }
 
 .modalContent {
+    position: absolute;
+    bottom: 0;
     background-color: #18181b; /* Темная тема в тон PWA */
     color: #f4f4f5;
     width: 100%;
@@ -41,10 +43,12 @@
     max-height: 85vh;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
-    padding: 24px;
+    /*padding: 24px;*/
     overflow-y: auto;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+    /*box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);*/
     padding-bottom: calc(env(safe-area-inset-bottom) + 24px); /* Отступ от домашней полосы iPhone */
+    z-index: 65;
+    border: 2px solid red;
 }
 
 @media (min-width: 501px) {

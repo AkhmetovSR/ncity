@@ -167,6 +167,12 @@ export default function VacancyList({ initialVacancyId }: VacancyListProps) {
         const handlePopState = () => {
             const pathname = window.location.pathname;
             const isBaseVacancyRoute = pathname === '/vacancy' || pathname === '/vacancy/';
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Проверяем, убрал ли браузер параметр формы из URL
+            if (!urlParams.has('add')) {
+                setIsFormOpen(false);
+            }
 
             if (isBaseVacancyRoute) {
                 setActiveVacancyId('');
@@ -187,7 +193,15 @@ export default function VacancyList({ initialVacancyId }: VacancyListProps) {
             {/* 🌟 СЕНЬОР-ФИКС: Плавающая кнопка "+" для добавления вакансии */}
             <button
                 className={fs.addButton}
-                onClick={() => setIsFormOpen(true)}
+                onClick={() => {
+                    setIsFormOpen(true);
+                    try {
+                        // Добавляем параметр ?add=true в историю, чтобы "Назад" знала о форме
+                        window.history.pushState({ type: 'vacancy-form' }, '', `${window.location.pathname}?add=true`);
+                    } catch (e) {
+                        console.warn(e);
+                    }
+                }}
                 title="Добавить вакансию"
             >
                 +

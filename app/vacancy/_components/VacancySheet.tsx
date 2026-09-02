@@ -1,3 +1,4 @@
+// app/vacancy/_components/VacancySheet.tsx
 'use client';
 
 import { motion } from 'framer-motion';

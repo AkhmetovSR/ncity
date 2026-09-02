@@ -33,7 +33,7 @@
     z-index: 100;
 }
 
-.modalContent {
+.modalSheet {
     position: absolute;
     bottom: 0;
     background-color: #18181b; /* Темная тема в тон PWA */
@@ -48,14 +48,21 @@
     /*box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);*/
     padding-bottom: calc(env(safe-area-inset-bottom) + 24px); /* Отступ от домашней полосы iPhone */
     z-index: 65;
-    border: 2px solid red;
+    /*border: 2px solid red;*/
+    display: grid;
+    /*align-items: end;*/
+    justify-items: center;
 }
-
+.content{
+    height: 100%;
+    width: 85%;
+    /*border: 1px solid blue;*/
+}
 @media (min-width: 501px) {
     .modalOverlay {
         align-items: center; /* На ПК центрируем по экрану */
     }
-    .modalContent {
+    .modalSheet {
         border-radius: 16px;
         max-height: 90vh;
     }

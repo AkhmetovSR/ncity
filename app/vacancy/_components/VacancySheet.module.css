@@ -7,30 +7,22 @@
     left: 0;
     right: 0;
     z-index: 1000;
-
-    /* Размеры шторки по стандартам iOS (не на весь экран, оставляем зазор сверху) */
     height: 90vh;
     background-color: #ffffff;
-
-    /* Скругление только верхних углов */
     border-radius: 24px 24px 0 0;
-
-    /* Мягкая премиальная тень Apple */
     box-shadow: 8px 32px rgba(0, 0, 0, 0.08);
 
-    /* Используем Flexbox, чтобы четко разделить ручку драга и зону контента */
+    /* 🌟 СЕНЬОР-ФИКС: Включаем Flexbox, чтобы жестко зафиксировать шапку и подвал */
     display: flex;
     flex-direction: column;
     overflow: hidden;
-
-    /* Поддержка темной темы на системном уровне */
     color-scheme: light;
 }
 
-/* Индикатор перетаскивания (Капсула Apple) */
+/* Индикатор перетаскивания (Ручка драга) */
 .dragHandle {
     width: 100%;
-    height: 36px; /* Создаем комфортную зону для захвата пальцем */
+    height: 24px; /* Уменьшаем высоту, так как ниже будет большая информативная шапка */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -39,25 +31,16 @@
     background-color: #ffffff;
 }
 
-/* Сама серая полосочка внутри хэндла */
 .dragHandle::before {
     content: '';
     width: 36px;
     height: 5px;
     background-color: rgba(0, 0, 0, 0.15);
     border-radius: 2.5px;
-    transition: background-color 0.2s ease;
 }
 
-.dragHandle:active {
-    cursor: grabbing;
-}
-
-.dragHandle:active::before {
-    background-color: rgba(0, 0, 0, 0.3);
-}
-
-/* Обертка для контента, занимающая всё оставшееся пространство */
+/* 🌟 СЕНЬОР-ФИКС: Область контента теперь просто занимает всё доступное
+   пространство и сжимается, если контента слишком много */
 .content {
     flex: 1;
     display: flex;
@@ -66,18 +49,6 @@
     position: relative;
 }
 
-/* Нативная кнопка закрытия Apple (опционально, если осталась, но лучше делать текстовой/крестиком) */
 .closeButton {
-    display: none; /* В Apple-стиле шторки закрываются свайпом вниз или тапом по оверлею */
+    display: none;
 }
-
-/* 💡 Дополнение: для размытия фона оверлея добавьте в ваш глобальный CSS / Modal.module.css:
-.overlayNode {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    z-index: 999;
-}
-*/

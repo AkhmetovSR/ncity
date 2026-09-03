@@ -45,14 +45,14 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '50', 10);
     const offset = parseInt(searchParams.get('offset') || '0', 10);
 
-    // 1. Проверяем наличие куки сессии в браузере
+    // 1. Проверяем наличие куки сессии
     const cookieStore = request.cookies;
     const existingSession = cookieStore.get('anon_session_id')?.value;
 
     let sessionId = existingSession;
     let isNewSession = false;
 
-    // 2. Если куки нет — генерируем новый безопасный ID
+    // 2. Если куки нет — генерируем новый ID
     if (!sessionId) {
         sessionId = `anon_${globalThis.crypto?.randomUUID() || Math.random().toString(36).substring(2)}`;
         isNewSession = true;
@@ -61,23 +61,29 @@ export async function GET(request: NextRequest) {
     try {
         const vacancies = await getActiveVacancies(limit, offset);
 
-        const response = NextResponse.json(vacancies, {
-            status: 200,
-            headers: {
-                'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=59',
-            },
-        });
+        const response = NextResponse.json(vacancies, { status: 200 });
 
-        // 3. 🌟 СЕНЬОР-ФИКС: Намертво запекаем куку, адаптированную под localhost и prod
+        // 3. Установка заголовков кэширования
+        // 🌟 СЕНЬОР-ФИКС 1: Если мы ставим новую куку (Set-Cookie), кэшировать ответ НЕЛЬЗЯ,
+        // иначе первый сгенерированный ID закэшируется на сервере/CDN и прилетит ВСЕМ пользователям!
+        if (isNewSession) {
+            response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+        } else {
+            response.headers.set('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
+        }
+
+        // 4. Запекаем куку
         if (isNewSession && sessionId) {
             response.cookies.set('anon_session_id', sessionId, {
-                httpOnly: true,     // Защита от кражи через JS (XSS)
-                sameSite: 'strict', // Защита от межсайтовых атак (CSRF)
-                maxAge: 60 * 60 * 24 * 365, // Срок жизни — 1 год
-                path: '/',          // Доступна для всех страниц и API-роутов сайта
+                httpOnly: true,
+                path: '/',
+                maxAge: 60 * 60 * 24 * 365,
 
-                // 🌟 ГЛАВНЫЙ ФИКС БАГА: на localhost (development) отключаем secure,
-                // чтобы браузеры не блокировали куку на незащищенном http-протоколе.
+                // 🌟 СЕНЬОР-ФИКС 2: Меняем 'strict' на 'lax'.
+                // Режим 'strict' часто сбрасывает куку в PWA/webview при холодных стартах с главного экрана смартфона.
+                sameSite: 'lax',
+
+                // Авто-определение secure: на VPS (production) будет true
                 secure: process.env.NODE_ENV === 'production',
             });
         }
@@ -88,9 +94,7 @@ export async function GET(request: NextRequest) {
 
         return NextResponse.json([], {
             status: 200,
-            headers: {
-                'Cache-Control': 'no-store, max-age=0'
-            }
+            headers: { 'Cache-Control': 'no-store, max-age=0' }
         });
     }
 }

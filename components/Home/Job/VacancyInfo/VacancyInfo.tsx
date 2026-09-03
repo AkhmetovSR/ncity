@@ -4,7 +4,7 @@
 import React from "react";
 import BottomSheet from "@/components/UI/BottomSheet/BottomSheet";
 import VacancyHeader from "@/components/Home/Job/VacancyInfo/VacancyHeader/VacancyHeader";
-import VacancyContent from "@/components/Home/Job/VacancyInfo/VacancyContent/VacancyContent";
+import VacancyContent from "@/app/vacancy/_components/VacancyContent";
 import { Vacancy } from "@/types/vacancy";
 
 interface VacancyInfoProps {

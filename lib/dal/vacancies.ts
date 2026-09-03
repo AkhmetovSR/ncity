@@ -1,38 +1,3 @@
-// import pool from '@/lib/db';
-// import { Vacancy } from '@/types/vacancy';
-//
-// /**
-//  * Извлекает список активных вакансий из базы данных.
-//  * Автоматически форматирует поля под интерфейс фронтенда.
-//  */
-// export async function getActiveVacancies(): Promise<Vacancy[]> {
-//     const query = `
-//         SELECT
-//             id,
-//             title AS profession,
-//             salary,
-//             company_name AS company,
-//             schedule,
-//             region,
-//             address,
-//             experience,
-//             education,
-//             contact_phone,
-//             contact_email,
-//             contact_website,
-//             description,
-//             requirements,
-//             is_active,
-//             to_char(created_at, 'DD.MM.YYYY') AS date
-//         FROM vacancies
-//         WHERE is_active = TRUE
-//         ORDER BY id DESC;
-//     `;
-//
-//     // pool.query автоматически управляет коннекшенами под капотом
-//     const { rows } = await pool.query<Vacancy>(query);
-//     return rows;
-// }
 // lib/dal/vacancies.ts
 import pool from '@/lib/db';
 import { Vacancy } from '@/types/vacancy';
@@ -44,17 +9,18 @@ export async function getActiveVacancies(limit: number = 50, offset: number = 0)
     const query = `
         SELECT 
             id,
+            author_id,                    -- 🌟 СЕНЬОР-ФИКС: Обязательно достаем ID автора из БД
             title AS profession,
             salary,
-            company_name AS organization, -- Поправил под ваш тип, в SQL было AS company
+            company_name AS organization, 
             schedule,
-            region AS district,           -- Поправил под ваш тип, в SQL было AS region
+            region AS district,           
             address,
             experience,
             education,
-            contact_phone AS phone,       -- Поправил под ваш тип
-            contact_email AS email,       -- Поправил под ваш тип
-            contact_website AS website,   -- Поправил под ваш тип
+            contact_phone AS phone,       
+            contact_email AS email,       
+            contact_website AS website,   
             description,
             requirements,
             is_active,
@@ -62,10 +28,41 @@ export async function getActiveVacancies(limit: number = 50, offset: number = 0)
         FROM vacancies
         WHERE is_active = TRUE
         ORDER BY id DESC
-        LIMIT $1 OFFSET $2; -- 🌟 СЕНЬОР-ФИКС: Пагинация на уровне базы данных
+        LIMIT $1 OFFSET $2; 
     `;
 
-    // Передаем параметры в безопасный массив значений pool.query
     const { rows } = await pool.query<Vacancy>(query, [limit, offset]);
     return rows;
+}
+
+/**
+ * 🌟 СЕНЬОР-ФИКС: Функция для сохранения новой вакансии в БД с привязкой к автору.
+ */
+export async function createVacancy(vacancyData: Vacancy & { author_id: string }): Promise<void> {
+    const query = `
+        INSERT INTO vacancies (
+            author_id,
+            title,
+            salary,
+            company_name,
+            region,
+            schedule,
+            description,
+            requirements,
+            is_active
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, TRUE);
+    `;
+
+    const values = [
+        vacancyData.author_id,
+        vacancyData.profession,
+        vacancyData.salary || null,
+        vacancyData.organization,
+        vacancyData.district || null,
+        vacancyData.schedule || null,
+        vacancyData.description,
+        vacancyData.requirements || null
+    ];
+
+    await pool.query(query, values);
 }

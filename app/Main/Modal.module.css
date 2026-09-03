@@ -11,7 +11,7 @@
     backdrop-filter: blur(6px);
     /*padding: 16px;*/
     z-index: 60;
-    /*border: 1px solid red;*/
+    border: 1px solid red;
 }
 
 .modalNode {
@@ -30,9 +30,9 @@
     /* Фикс моргания первого кадра: */
     overflow: hidden;
     contain: paint;
-    /*border: 1px solid red;*/
+    border: 10px solid red;
     opacity: 0;
-    z-index: 100;
+    z-index: 70;
 }
 
 .closeButton {

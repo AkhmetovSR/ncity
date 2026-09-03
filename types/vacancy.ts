@@ -15,6 +15,7 @@ export interface VacancyApiItem {
 
 export interface Vacancy {
     id?: string;
+    author_id?: string; // 🌟 СЕНЬОР-ФИКС: Поле для привязки вакансии к её создателю (Яндекс ID) в будущем, а сейчас анонимная кука
     page?: number;
     profession: string;
     salary: string;
@@ -33,5 +34,6 @@ export interface Vacancy {
     education?: string;
     _id?: number;
 }
+
 
 //    "dev": "next dev --experimental-https --hostname 192.168.0.100",

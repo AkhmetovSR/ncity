@@ -1,4 +1,4 @@
-// middleware.ts
+// proxy.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -11,10 +11,10 @@ interface RateLimitRecord {
 const ipCache = new Map<string, RateLimitRecord>();
 
 // Конфигурация лимитов: максимум 3 запроса за 5 минут (300 000 миллисекунд)
-const LIMIT_WINDOW = 1 * 60 * 1000; // 1 минута
+const LIMIT_WINDOW = 60 * 1000; // 1 минута
 const MAX_REQUESTS = 5;
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
     const now = Date.now();
 
     // 1. Извлекаем IP-адрес пользователя (подходит для Vercel и стандартных прокси)

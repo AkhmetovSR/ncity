@@ -1,0 +1,144 @@
+/* app/vacancy/_components/VacancyContent.module.css */
+
+/* Главный скролл-контейнер контента */
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 16px 40px 16px; /* Отступы по бокам и большой отступ снизу */
+
+    /* Включаем нативный скролл с физикой Apple */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* Сетка базовой информации */
+.infoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+/* Карточка базовой информации */
+.infoCard {
+    background: #F2F2F7; /* Системный серый цвет Apple (System Gray 6) */
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.infoIcon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.infoContent {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* Мелкий блеклый текст заголовка карточки */
+.infoLabel {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #8E8E93; /* Системный серый Apple (System Gray) */
+    font-weight: 500;
+}
+
+/* Основное жирное значение */
+.infoValue {
+    font-size: 14px;
+    color: #1C1C1E; /* Почти черный (Label Color) */
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+/* Секции (Описание, Требования, Контакты) */
+.section, .contactsSection {
+    margin-top: 28px;
+}
+
+.sectionTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1C1C1E;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Контейнеры для длинных текстов */
+.contentBox {
+    background: #ffffff;
+}
+
+.paragraph {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #3A3A3C; /* Облегченный черный для больших текстов */
+    margin-bottom: 12px;
+}
+
+/* Сетка контактов */
+.contactsGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Ссылки-контакты в стиле ячеек настроек iOS (Settings Cells) */
+.contactCard {
+    background: #F2F2F7;
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+/* Эффект нажатия в стиле Apple */
+.contactCard:active {
+    background: #E5E5EA; /* Чуть темнее при тапе */
+    transform: scale(0.99);
+}
+
+.contactIcon {
+    font-size: 22px;
+    margin-right: 14px;
+}
+
+.contactInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    flex: 1;
+}
+
+.contactLabel {
+    font-size: 12px;
+    color: #8E8E93;
+}
+
+.contactValue {
+    font-size: 16px;
+    font-weight: 600;
+    color: #007AFF; /* Фирменный синий цвет ссылок Apple (System Blue) */
+}
+
+/* Стрелочка перехода справа */
+.contactArrow {
+    font-size: 16px;
+    color: #C7C7CC; /* Серый цвет элементов навигации iOS */
+    font-weight: 300;
+    transition: transform 0.2s ease;
+}
+
+.contactCard:hover .contactArrow {
+    transform: translateX(2px);
+}

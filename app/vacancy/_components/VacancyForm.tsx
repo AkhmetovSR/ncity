@@ -4,14 +4,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import s from './VacancyForm.module.css';
-import styles from "@/app/Main/Modal.module.css"; // Импортируем ваши стили overlayNode
+import styles from "@/app/Main/Modal.module.css";
+import { useAuth } from '@/app/_context/AuthContext'; // 🌟 СЕНЬОР-ФИКС: Импортируем хук авторизации
 
 interface VacancyFormProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
-// Типизация для хранения серверных ошибок Zod по полям формы
 interface FormErrors {
     profession?: string[];
     organization?: string[];
@@ -24,6 +24,8 @@ interface FormErrors {
 }
 
 export default function VacancyForm({ isOpen, onClose }: VacancyFormProps) {
+    const { user } = useAuth(); // 🌟 СЕНЬОР-ФИКС: Достаем текущего юзера (имитацию Яндекса)
+
     const [profession, setProfession] = useState('');
     const [salary, setSalary] = useState('');
     const [organization, setOrganization] = useState('');
@@ -34,22 +36,17 @@ export default function VacancyForm({ isOpen, onClose }: VacancyFormProps) {
     const [hpEmail, setHpEmail] = useState('');
 
     const [submitting, setSubmitting] = useState(false);
-    // Стейт для хранения и отображения ошибок валидации
     const [errors, setErrors] = useState<FormErrors>({});
 
-    // Блокировка скролла страницы при открытии формы (как в шторке)
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = '';
         }
-        return () => {
-            document.body.style.overflow = '';
-        };
+        return () => { document.body.style.overflow = ''; };
     }, [isOpen]);
 
-    // Слушатель клавиши Escape для закрытия формы (как в шторке)
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape' && isOpen) handleCloseForm();
@@ -60,9 +57,8 @@ export default function VacancyForm({ isOpen, onClose }: VacancyFormProps) {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setErrors({}); // Сбрасываем ошибки перед новой попыткой
+        setErrors({});
 
-        // Первичная клиентская проверка на заполненность обязательных полей
         if (!profession.trim() || !organization.trim() || !description.trim()) {
             setErrors({ global: 'Пожалуйста, заполните все обязательные поля (*).' });
             return;
@@ -70,13 +66,15 @@ export default function VacancyForm({ isOpen, onClose }: VacancyFormProps) {
 
         setSubmitting(true);
         try {
-            // Отправляем данные на наш защищенный API-роут
             const response = await fetch('/vacancy/api/create', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    // 🌟 СЕНЬОР-ФИКС: Передаем реальный анонимный ID из нашей HttpOnly куки.
+                    // Если сессия еще загружается, временно передаем пустую строку.
+                    author_id: user?.id || '',
                     profession,
                     salary: salary || undefined,
                     organization,
@@ -84,15 +82,14 @@ export default function VacancyForm({ isOpen, onClose }: VacancyFormProps) {
                     schedule: schedule || undefined,
                     description,
                     requirements: requirements || undefined,
-                    // Передаем значение ловушки на сервер
                     hpEmail: hpEmail
                 }),
             });
 
+
             const data = await response.json();
 
             if (!response.ok) {
-                // Если сервер вернул 400 из-за Zod, записываем детальные ошибки по полям
                 if (data.details) {
                     setErrors(data.details);
                 } else {
@@ -101,7 +98,7 @@ export default function VacancyForm({ isOpen, onClose }: VacancyFormProps) {
                 return;
             }
 
-            // Если всё успешно: очищаем форму
+            // Если всё успешно — очищаем поля и закрываем форму
             setProfession('');
             setSalary('');
             setOrganization('');
@@ -109,17 +106,18 @@ export default function VacancyForm({ isOpen, onClose }: VacancyFormProps) {
             setSchedule('');
             setDescription('');
             setRequirements('');
-
-            // Закрываем окно с очисткой истории браузера
+            setHpEmail('');
             handleCloseForm();
-            alert('Вакансия отправлена на модерацию!');
-        } catch (error) {
-            console.error('Ошибка отправки формы:', error);
-            setErrors({ global: 'Произошла сетевая ошибка. Попробуйте позже.' });
+
+        } catch (err) {
+            console.error(err);
+            setErrors({ global: 'Ошибка сети. Попробуйте позже.' });
         } finally {
             setSubmitting(false);
         }
     };
+
+    // ... далее ваш неизмененный JSX разметки формы
 
     const handleCloseForm = () => {
         onClose(); // setIsFormOpen(false) из родителя
